@@ -1,0 +1,46 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fw="clr-namespace:Framework;assembly=Framework"
+             xmlns:ft="clr-namespace:Framework.UI;assembly=Framework"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             x:Class="VirtualSteward.App" RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+     <Application.Resources>
+         <ResourceDictionary>
+             <FontFamily x:Key="JetbrainsFont">avares://Framework/Assets/Fonts#Jetbrains</FontFamily>
+             <FontFamily x:Key="ManropeFont">avares://Framework/Assets/Fonts#Manrope</FontFamily>
+             <FontFamily x:Key="LucideIcon">avares://Framework/Assets/Fonts#lucide</FontFamily>
+             <FontFamily x:Key="ShadUIIcon">avares://Framework/Assets/Fonts#shadui</FontFamily>
+
+             <ResourceDictionary.ThemeDictionaries>
+                 <ResourceInclude Source="/Themes/Light.axaml" x:Key="Light" />
+                 <ResourceInclude Source="/Themes/Dark.axaml" x:Key="Dark" />
+             </ResourceDictionary.ThemeDictionaries>
+         </ResourceDictionary>
+     </Application.Resources>
+
+    <Application.Styles>
+        <shadui:ShadTheme />
+        <fw:FrameworkTheme />
+
+        <Style Selector="TextBlock.LucideIcon">
+            <Setter Property="Height" Value="18" />
+            <Setter Property="Width" Value="18" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="{StaticResource LucideIcon}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="ExtraLight" />
+        </Style>
+        <Style Selector="TextBlock.ShadUIIcon">
+            <Setter Property="Height" Value="18" />
+            <Setter Property="Width" Value="18" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="{StaticResource ShadUIIcon}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="ExtraLight" />
+        </Style>
+    </Application.Styles>
+</Application>

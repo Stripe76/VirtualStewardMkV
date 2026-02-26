@@ -1,0 +1,3 @@
+[submodule "ACLibrary"]
+	path = ACLibrary
+	url = git@github.com:Stripe76/ACLibrary.git

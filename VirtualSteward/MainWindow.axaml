@@ -1,0 +1,31 @@
+<shadui:Window x:Class="VirtualSteward.MainWindow"
+               Width="1024"
+               Height="768"
+               Icon="/Assets/favicon.ico"
+               SaveWindowState="True"
+               TitleFontWeight="SemiBold"
+               WindowStartupLocation="CenterScreen"
+               EnableTrafficLightPositioning="True"
+               TrafficLightOffset="5,8"
+               xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:converters="clr-namespace:VirtualSteward.Converters"
+               Title="Virtual Steward MkV" Loaded="Window_Loaded" Closing="Window_Closing"> 
+    <shadui:Window.LogoContent>
+        <Image Source="Assets/favicon.ico" Width="16" Margin="8,0,4,0"/>
+    </shadui:Window.LogoContent>
+    <shadui:Window.RightWindowTitleBarContent>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button
+                Background="{DynamicResource SidebarBackgroundColor}"
+                Command="{Binding SwitchThemeCommand}"
+                CornerRadius="{DynamicResource MdCornerRadius}"
+                Width="30" Height="30"
+                ToolTip.Tip="Switch Theme">
+                <TextBlock Classes="LucideIcon" Text="{Binding CurrentTheme, Converter={x:Static converters:ThemeModeConverters.ToLucideIcon}}" />
+            </Button>
+        </StackPanel>
+    </shadui:Window.RightWindowTitleBarContent>
+    <ContentControl Content="{Binding}"/>
+</shadui:Window>

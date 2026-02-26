@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ACLibrary/ACLibrary.csproj" />
+  <Project Path="Framework/Framework.csproj" />
+  <Project Path="ShadUI/ShadUI.csproj" />
+  <Project Path="VirtualSteward/VirtualSteward.csproj" />
+</Solution>

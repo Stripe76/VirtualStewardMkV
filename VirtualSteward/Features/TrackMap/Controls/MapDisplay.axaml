@@ -1,0 +1,15 @@
+<UserControl x:Class="VirtualSteward.Features.TrackMap.Controls.MapDisplay"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             PointerPressed="Track_MouseDown" PointerReleased="Track_MouseUp" PointerMoved="Track_MouseMove" PointerWheelChanged="Track_MouseWheel" SizeChanged="MapDisplay_SizeChanged">
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <ItemsControl ItemsSource="{Binding Layers}"/>
+        <ItemsControl ItemsSource="{Binding NewLayers}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><Grid/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <TextBlock Text="{Binding DebugString}" VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

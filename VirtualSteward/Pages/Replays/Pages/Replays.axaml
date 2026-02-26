@@ -1,0 +1,33 @@
+<UserControl x:Class="VirtualSteward.Pages.Replays.Pages.Replays"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Pages.Replays"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:Replays/>
+    </Design.DataContext>
+    <UserControl.Styles>
+        <StyleInclude Source="../Styles/Replays.axaml"/>
+    </UserControl.Styles>
+    
+    <Grid RowDefinitions="Auto * Auto" ColumnDefinitions="Auto *">
+        <ContentControl Grid.RowSpan="3" Grid.ColumnSpan="2" Content="{Binding TrackMap.Map}"/>
+        <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Toolbar}"/>
+        <ItemsControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Timelines.Timelines}"></ItemsControl>
+        <ScrollViewer Grid.Row="1" Grid.Column="0">
+            <ItemsControl ItemsSource="{Binding Players}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Headers}"/>
+        <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Footers}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><WrapPanel Classes="StatusBar"/></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</UserControl>

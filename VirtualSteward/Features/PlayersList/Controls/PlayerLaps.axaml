@@ -1,0 +1,24 @@
+<UserControl x:Class="VirtualSteward.Features.PlayersList.Controls.PlayerLaps"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="50">
+    <Design.DataContext>
+        <vm:VMPlayerLap/>
+    </Design.DataContext>
+    
+    <ItemsControl ItemsSource="{Binding}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel Classes="PlayerLaps"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <ToggleButton Classes="PlayerLap" Content="{Binding}" ToolTip.Tip="{Binding LapTimeText}" IsChecked="{Binding IsSelected}"/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

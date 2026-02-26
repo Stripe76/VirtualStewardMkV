@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Framework.UI.Controls.SideBar">
+    <shadui:Sidebar
+        Background="{DynamicResource CardBackgroundColor}"
+        BorderThickness="0,0,1,0"
+        Expanded="{Binding #Toggler.IsChecked}"
+        ItemIconContentSpacing="12"
+        MinWidth="56"
+        Padding="8"
+        Width="255">
+
+        <Grid RowDefinitions="* Auto">
+
+            <StackPanel Spacing="4">
+                <ItemsControl ItemsSource="{Binding Items.Items}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <shadui:SidebarItem Content="{Binding HeaderTitle}" IsChecked="{Binding IsActive}">
+                                <shadui:SidebarItem.Icon>
+                                    <Viewbox>
+                                        <TextBlock Text="{Binding Icon}" Classes="LucideIcon" Foreground="{DynamicResource ForegroundColor}"/>
+                                    </Viewbox>
+                                </shadui:SidebarItem.Icon>
+                            </shadui:SidebarItem>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <ToggleButton
+                Grid.Row="1"
+                Height="32"
+                HorizontalAlignment="Left"
+                Name="Toggler"
+                Padding="8"
+                Theme="{DynamicResource SideTogglerTheme}"
+                VerticalAlignment="Bottom"
+                Width="32">
+                <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf2dc;" /></Viewbox>
+            </ToggleButton>
+            
+        </Grid>
+        
+    </shadui:Sidebar>
+</UserControl>

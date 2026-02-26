@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>../../../Binaries/VirtualSteward MkV/Debug/</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+      <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.3.11" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\Fonts\JetBrainsMono.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\JetBrainsMono.ttf" />
+      <None Remove="Assets\Fonts\lucide.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\lucide.ttf" />
+      <None Remove="Assets\Fonts\Manrope-Bold.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-Bold.ttf" />
+      <None Remove="Assets\Fonts\Manrope-ExtraBold.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-ExtraBold.ttf" />
+      <None Remove="Assets\Fonts\Manrope-ExtraLight.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-ExtraLight.ttf" />
+      <None Remove="Assets\Fonts\Manrope-Light.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-Light.ttf" />
+      <None Remove="Assets\Fonts\Manrope-Medium.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-Medium.ttf" />
+      <None Remove="Assets\Fonts\Manrope-Regular.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-Regular.ttf" />
+      <None Remove="Assets\Fonts\Manrope-SemiBold.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\Manrope-SemiBold.ttf" />
+      <None Remove="Assets\Fonts\shadui.ttf" />
+      <AvaloniaResource Include="Assets\Fonts\shadui.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Settings\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ShadUI\ShadUI.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="clr-namespace:VirtualSteward.Features.Timelines.Classes">
+
+    <ControlTheme TargetType="m:Marker" x:Key="Marker">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <TextBlock Name="PART_Thumb" Foreground="{DynamicResource MutedColor}" Text="{Binding Title}"/>
+        </ControlTemplate>
+      </Setter>
+  </ControlTheme>
+</ResourceDictionary>

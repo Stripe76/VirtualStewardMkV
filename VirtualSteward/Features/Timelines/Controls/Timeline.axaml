@@ -1,0 +1,51 @@
+<UserControl x:Class="VirtualSteward.Features.Timelines.Controls.Timeline"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:m="clr-namespace:VirtualSteward.Features.Timelines.Classes"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.Timelines.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50" SizeChanged="Control_OnSizeChanged">
+    <Design.DataContext>
+        <vm:VMTimeline/>
+    </Design.DataContext>
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="../Styles/Timelines.axaml"/>
+                <ResourceInclude Source="../Styles/Markers.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid RowDefinitions="Auto">
+        <StackPanel Orientation="Vertical" Background="{DynamicResource BackgroundColor60}">
+            <Slider Value="{Binding CurrentFrame}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
+            <Grid>
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceInclude Source="../Styles/Scrubs.axaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Grid.Resources>
+                
+                <ItemsControl ItemsSource="{Binding Markers}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><Grid/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <m:Marker Theme="{StaticResource Marker}" Value="{Binding Position}" Minimum="{Binding Start}" Maximum="{Binding End}" Orientation="Horizontal" VerticalAlignment="Center" PointerPressed="Marker_OnPointerPressed"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                <Slider Value="{Binding ScrubA}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
+                <Slider Value="{Binding ScrubB}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
+            </Grid>
+            <Slider Value="{Binding CurrentFrame}" Minimum="{Binding ScrubA}" Maximum="{Binding ScrubB}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

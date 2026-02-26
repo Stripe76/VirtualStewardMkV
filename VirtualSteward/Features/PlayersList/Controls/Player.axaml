@@ -1,0 +1,39 @@
+<UserControl x:Class="VirtualSteward.Features.PlayersList.Controls.Player"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" d:DesignWidth="250">
+    <Design.DataContext>
+        <vm:VMPlayer/>
+    </Design.DataContext>
+    
+    <shadui:Card Classes.Accent="{Binding IsActive}" Classes.Selected="{Binding IsSelected}" Classes="PlayerInfo" PointerPressed="HandleClick">
+        <shadui:Card.Header>
+            <shadui:CardDescription>
+                <Grid Classes="PlayerInfo" ColumnDefinitions="Auto * Auto">
+                    <Ellipse Grid.Column="0" Classes="PlayerInfo" Fill="{Binding LineStyle.Color}"/>
+                    <TextBlock Grid.Column="1" Text="{Binding PlayerInfo.PlayerName}"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <ToggleButton Classes="PlayerInfo" IsChecked="{Binding IsExpanded}">
+                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf173;" /></Viewbox>
+                        </ToggleButton>
+                        <Button Classes="PlayerInfo">
+                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf28e;" /></Viewbox>
+                        </Button>
+                        <Button Classes="PlayerInfo">
+                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf317;" /></Viewbox>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </shadui:CardDescription>
+        </shadui:Card.Header>
+        <Grid RowDefinitions="Auto 3 Auto" IsVisible="{Binding IsExpanded}" Width="250">
+            <ContentControl Grid.Row="0" Content="{Binding Laps}"/>
+            <Separator Grid.Row="1" Width="60" HorizontalAlignment="Center"/>
+            <ContentControl Grid.Row="2" Content="{Binding BestLaps}"/>
+        </Grid>
+    </shadui:Card>
+</UserControl>

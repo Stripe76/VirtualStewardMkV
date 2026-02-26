@@ -1,0 +1,28 @@
+<UserControl x:Class="VirtualSteward.Features.TrackMap.Controls.MapImages"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.TrackMap.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMMapImagesLayer/>
+    </Design.DataContext>
+    
+    <Panel>
+        <ItemsControl ItemsSource="{Binding Images}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><Panel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding Image}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.Styles>
+                <Style Selector="ContentPresenter" x:DataType="vm:VMMapImage">
+                    <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+                </Style>
+            </ItemsControl.Styles>
+        </ItemsControl>
+    </Panel>
+</UserControl>

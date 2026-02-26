@@ -1,0 +1,31 @@
+<UserControl x:Class="VirtualSteward.Features.PlayersCars.Controls.PlayersCars"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersCars.ViewModels"
+             xmlns:vm1="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMPlayersCarsLayer/>
+    </Design.DataContext>
+    
+    <Grid>
+        <ItemsControl ItemsSource="{Binding Players}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><Canvas/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas RenderTransform="{Binding CarImage.Transforms}">
+                        <Image Source="{Binding CarImage.Image}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.Styles>
+                <Style Selector="ContentPresenter" x:DataType="vm1:VMPlayer">
+                    <Setter Property="Canvas.Left" Value="{Binding CarImage.Position.X}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding CarImage.Position.Y}"/>
+                </Style>
+            </ItemsControl.Styles>
+        </ItemsControl>
+    </Grid>
+</UserControl>
