@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
     xmlns:shadui="clr-namespace:ShadUI"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -42,7 +42,8 @@
             </StackPanel>
         </Border>
     </Design.PreviewWith>
-    <ControlTheme TargetType="Button" x:Key="ButtonStyle">
+    
+    <ControlTheme TargetType="RepeatButton" x:Key="RepeatButtonStyle">
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Padding" Value="10" />
@@ -283,7 +284,7 @@
         </Style>
     </ControlTheme>
     <ControlTheme
-        BasedOn="{StaticResource ButtonStyle}"
-        TargetType="Button"
-        x:Key="{x:Type Button}" />
+        BasedOn="{StaticResource RepeatButtonStyle}"
+        TargetType="RepeatButton"
+        x:Key="{x:Type RepeatButton}" />
 </ResourceDictionary>

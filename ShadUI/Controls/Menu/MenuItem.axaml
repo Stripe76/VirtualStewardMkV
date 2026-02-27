@@ -24,11 +24,11 @@
             <ControlTemplate>
                 <Panel>
                     <Border
+                        Name="BaseBackground"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
-                        Name="BaseBackground"
                         Opacity="1">
                         <Border.Transitions>
                             <Transitions>
@@ -61,13 +61,12 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <ContentPresenter
+                                    Name="Icon"
                                     Content="{TemplateBinding Icon}"
                                     Height="8"
                                     HorizontalAlignment="Center"
-                                    IsVisible="{TemplateBinding Icon,
-                                                                Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    IsVisible="{TemplateBinding Icon,Converter={x:Static ObjectConverters.IsNotNull}}"
                                     Margin="0,0,8,0"
-                                    Name="Icon"
                                     VerticalAlignment="Center" />
                                 <ContentPresenter
                                     Content="{TemplateBinding Header}"
@@ -96,12 +95,11 @@
                                     VerticalAlignment="Center"
                                     Width="10" />
                                 <TextBlock
-                                    FontSize="12"
-                                    Grid.Column="3"
-                                    IsVisible="{TemplateBinding InputGesture,
-                                                                Converter={x:Static ObjectConverters.IsNotNull}}"
-                                    Margin="8,0,0,0"
                                     Name="InputGestureText"
+                                    Grid.Column="3"
+                                    FontSize="12"
+                                    IsVisible="{TemplateBinding InputGesture,Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Margin="8,0,0,0"
                                     Opacity="0.5"
                                     Text="{TemplateBinding InputGesture,
                                                            Converter={StaticResource KeyGestureConverter}}"
@@ -168,7 +166,10 @@
         <Style Selector="^:open /template/ Border#BaseBackground">
             <Setter Property="Opacity" Value="0" />
         </Style>
-
+        <Style Selector="^:checked:toggle /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource InfoColor60}" />
+        </Style>
+        
         <Style Selector="^:open /template/ LayoutTransformControl#LayoutTransform">
             <Style.Animations>
                 <Animation

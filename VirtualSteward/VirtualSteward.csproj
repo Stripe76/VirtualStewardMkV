@@ -34,7 +34,6 @@
 
     <ItemGroup>
       <Folder Include="Features\CurrentReplay\Controls\" />
-      <Folder Include="Features\TrackMap\Dialogs\" />
       <Folder Include="Pages\" />
     </ItemGroup>
 

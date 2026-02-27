@@ -77,6 +77,8 @@ public partial class Feature : UIItem
         templates.Add(new FuncDataTemplate<SideBar>((_, _) => new Controls.SideBar()));
         templates.Add(new FuncDataTemplate<Toolbar>((_, _) => new Controls.Toolbar()));
         templates.Add(new FuncDataTemplate<ActivePage>((_, _) => new Controls.ActivePage()));
+
+        templates.Add(new FuncDataTemplate<RepeatCommand>((_, _) => new Controls.RepeatCommand()));
         templates.Add(new FuncDataTemplate<FeatureCommand>((_, _) => new Controls.FeatureCommand()));
     }
 
@@ -124,12 +126,26 @@ public partial class Feature : UIItem
 
 public class FeatureCommand : UIItem
 {
-    public string Icon { get; set; } = "";
+    public string Icon 
+    { 
+        get;
+        set
+        {
+            field = value;
+            
+            OnPropertyChanged(nameof(Icon));
+        }
+    } = "";
     public string Text { get; set; } = "";
     public string Tooltip { get; set; } = "";
 
     public ICommand? RoutedCommand { get; set; } = null;
     //public CommandBinding? CommandBinding { get; set; } = null;
+}
+
+public class RepeatCommand : FeatureCommand
+{
+    
 }
 
 public class FeatureCommandList : ObservableCollection<FeatureCommand>

@@ -18,7 +18,7 @@ public class VMReplay : UIBase
     public string TrackID = string.Empty;
     public string TrackVariantID = string.Empty;
 
-    public double ReplayFrequency = 0f;
+    public double ReplayFrequency = 33f;
     public uint TrackObjectsNumber = 0;
 
     public int TailDataRecords = 0;

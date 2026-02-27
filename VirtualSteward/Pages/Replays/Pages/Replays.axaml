@@ -14,8 +14,14 @@
     
     <Grid RowDefinitions="Auto * Auto" ColumnDefinitions="Auto *">
         <ContentControl Grid.RowSpan="3" Grid.ColumnSpan="2" Content="{Binding TrackMap.Map}"/>
+        
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Toolbar}"/>
-        <ItemsControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Timelines.Timelines}"></ItemsControl>
+        
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Margin="0,0,10,0">
+            <ItemsControl ItemsSource="{Binding Timelines.Timelines}"/>
+            <ItemsControl ItemsSource="{Binding Headers}"/>
+        </StackPanel>
+        
         <ScrollViewer Grid.Row="1" Grid.Column="0">
             <ItemsControl ItemsSource="{Binding Players}">
                 <ItemsControl.ItemsPanel>
@@ -23,7 +29,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
-        <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Headers}"/>
+        
         <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Footers}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate><WrapPanel Classes="StatusBar"/></ItemsPanelTemplate>

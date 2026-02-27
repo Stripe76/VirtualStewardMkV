@@ -13,6 +13,7 @@ using VirtualSteward.Features.ReplayLoading;
 using VirtualSteward.Features.Tracklines;
 using VirtualSteward.Features.TrackMap;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.Realtime;
 using VirtualSteward.Features.Timelines;
 
 namespace VirtualSteward.Pages.Replays;
@@ -43,15 +44,16 @@ public class Replays : StateFeature
         Toolbar = new Toolbar();
         TrackMap = new TrackMap( templates );
         Timelines = new ReplayTimelines( state,templates,Players );
-        ReplayLoading = new ReplayLoading( state,templates,filesManager,Headers );
         
-        ReplayLoading.AddCommands(Toolbar);
-
         _ = new CurrentReplay( state,window );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
         _ = new PlayersList( templates,TrackMap,state.Players );
         _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
+        _ = new Realtime( state,templates,Timelines.ReplayTimeline ).AddPage( Headers );
+
+        ReplayLoading = new ReplayLoading( state,templates,filesManager,Headers );
+        ReplayLoading.AddCommands(Toolbar);
     }
     
     public override void AddDataTemplates(DataTemplates templates)

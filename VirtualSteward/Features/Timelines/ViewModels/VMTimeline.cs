@@ -23,6 +23,7 @@ public partial class VMTimeline : UIItem
 
   public VMTimelineMarkerList Markers { get; } = [];
 
+  /*
   private double _replayFrequency = 0f;
 
   public string CurrentTime
@@ -33,6 +34,7 @@ public partial class VMTimeline : UIItem
   {
     get => ScrubsToTimeString( ScrubA,ScrubB,_replayFrequency );
   }
+  */
 
   public VMTimeline( string name,VMPlayerList players )
   {
@@ -47,11 +49,27 @@ public partial class VMTimeline : UIItem
     CurrentFrame = 0;
   }
 
+  public void SetCurrentFrame( uint frame,bool smoothing,bool updateServer )
+  {
+    _currentFrame = frame;
+
+    OnPropertyChanged( nameof( CurrentFrame ) );
+    //OnPropertyChanged( nameof( CurrentTime ) );
+
+    if( !IsActive )
+      IsActive = true;
+
+    //if( updateServer )
+      //UpdateServer( );
+    //UpdatePlayerCarsPosition( smoothing && _followPlayer == null );
+  }
+
   private void SetPlayerLapsMarkers( VMPlayer player )
   {
     //using( new BindingListBatchUpdate<VMTimelineMarker>( Markers ) )
     {
       Markers.Clear( );
+      
       foreach( VMPlayerLap lap in player.Laps )
       {
         VMTimelineMarker marker = new( lap.LapName,lap.StartFrame )

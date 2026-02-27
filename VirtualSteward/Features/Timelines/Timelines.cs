@@ -27,5 +27,8 @@ public class ReplayTimelines : StateFeature
     {
         ReplayTimeline.ScrubA = 0;
         ReplayTimeline.ScrubB = ReplayTimeline.End;
+
+        if( ReplayTimeline.Players.Count > 0 )
+            ReplayTimeline.Players[0].IsActive = true;
     }
 }
