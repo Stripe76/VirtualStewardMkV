@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 // ReSharper disable once CheckNamespace
 namespace ShadUI;
@@ -52,6 +53,12 @@ public static class ToastBuilderExtensions
     {
         builder.ActionLabel = label;
         builder.Action = action;
+        return builder;
+    }
+
+    public static ToastBuilder WithDismissListen(this ToastBuilder builder, INotifyPropertyChanged listen)
+    {
+        builder.DismissListen = listen;
         return builder;
     }
 

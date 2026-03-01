@@ -166,7 +166,7 @@
         <Style Selector="^:open /template/ Border#BaseBackground">
             <Setter Property="Opacity" Value="0" />
         </Style>
-        <Style Selector="^:checked:toggle /template/ Border">
+        <Style Selector="^:checked /template/ Border">
             <Setter Property="Background" Value="{DynamicResource InfoColor60}" />
         </Style>
         

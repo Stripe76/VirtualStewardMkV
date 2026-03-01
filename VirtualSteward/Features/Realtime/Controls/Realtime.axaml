@@ -24,8 +24,8 @@
                 <MenuItem.Header>
                     <Viewbox><TextBlock Text="&#xf26e;" Classes="LucideIcon" Foreground="{DynamicResource MutedColor}"/></Viewbox>
                 </MenuItem.Header>
-                <MenuItem Header="Loop replay" Command="{Binding SetLoopReplayCommand}" ToggleType="CheckBox" IsChecked="{Binding LoopReplay}"/>
-                <MenuItem Header="Only selection" Command="{Binding SetLoopScrubsCommand}" ToggleType="CheckBox" IsChecked="{Binding LoopSrubs}"/>
+                <MenuItem Header="Loop replay" Command="{Binding SetLoopReplayCommand}" IsChecked="{Binding LoopReplay}"/>
+                <MenuItem Header="Only selection" Command="{Binding SetLoopScrubsCommand}" IsChecked="{Binding LoopScrubs}"/>
             </MenuItem>
         </Menu>
     </StackPanel>

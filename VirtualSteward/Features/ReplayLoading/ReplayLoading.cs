@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using Avalonia.Controls.Templates;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Controls.Templates;
 
 using ACLibrary.Replays;
-using Avalonia.Media;
 using Framework.UI;
 
 using VirtualSteward.Classes;
@@ -21,6 +21,8 @@ namespace VirtualSteward.Features.ReplayLoading;
 public partial class ReplayLoading : StateFeature
 {
 	private readonly FilesManager _fileManager;
+	private readonly MessageManager _messageManager;
+	
 	private readonly VMProgress _progress = new();
 
 	[ObservableProperty] private string _title = "Current file:";
@@ -33,9 +35,10 @@ public partial class ReplayLoading : StateFeature
 	}
 	*/
 
-	public ReplayLoading( State state,DataTemplates templates,FilesManager fileManager,UIBaseList? progressList = null ) : base( state,templates )
+	public ReplayLoading( State state,DataTemplates templates,FilesManager fileManager,MessageManager messageManager ) : base( state,templates )
 	{
 		_fileManager = fileManager;
+		_messageManager = messageManager;
 		
 		_commands.Add(
 			new FeatureCommand( )
@@ -46,7 +49,6 @@ public partial class ReplayLoading : StateFeature
 				RoutedCommand = LoadReplayCommand
 			}
 		);
-		progressList?.Add(_progress);
 	}
 
 	public override void AddDataTemplates( DataTemplates templates )
@@ -57,13 +59,6 @@ public partial class ReplayLoading : StateFeature
 	{
 		foreach (var command in Commands)
 			commands.Add(command);
-	}
-
-	public override Feature AddProgress(UIBaseList controls)
-	{
-		controls.Add(_progress);
-
-		return this;
 	}
 
 	public override void OnReplayChanged(VMReplay replay)
@@ -91,7 +86,9 @@ public partial class ReplayLoading : StateFeature
 		{
 			//using (new WaitCursor())
 			{
-				LoadReplay( file,_state,_fileManager,_progress );
+				_messageManager.ShowProgress("Loading replay file",_progress);
+				
+				LoadReplay( file,_state,_fileManager,_messageManager,_progress );
 			}
 		}
 	}
@@ -101,7 +98,7 @@ public partial class ReplayLoading : StateFeature
 		return true;
 	}
 
-	private static async void LoadReplay( IStorageFile file,State state,FilesManager filesManager,VMProgress? progress = null )
+	private static async void LoadReplay( IStorageFile file,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
 	{
 		try
 		{
@@ -152,17 +149,20 @@ public partial class ReplayLoading : StateFeature
 					state.Replay = replay;
 				}
 				progress?.Report( -1 );
+				messageManager.ShowSuccess("Replay loaded");
 			}
 		}
 		catch( TaskAlreadyRunning )
 		{
 			//logger?.Error("Task already running: {message}", tx.Task);
+			messageManager.ShowError("Error loading replay","Another replay is already loading");
 		}
-		catch( Exception  )
+		catch( Exception ex )
 		{
 			//logger?.Error("Error in LoadReplayFileAsync: {message}", ex.Message);
 
 			progress?.Report( -2 );
+			messageManager.ShowError("Error loading replay",ex.Message);
 		}
 	}
 

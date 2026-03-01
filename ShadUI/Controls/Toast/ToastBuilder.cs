@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 // ReSharper disable once CheckNamespace
 namespace ShadUI;
@@ -25,7 +26,7 @@ public sealed class ToastBuilder
 
     internal object? Content { get; set; }
 
-    internal double Delay { get; set; } = 10;
+    internal double Delay { get; set; } = 5;
 
     internal string ActionLabel { get; set; } = string.Empty;
     internal Action? Action { get; set; }
@@ -33,6 +34,8 @@ public sealed class ToastBuilder
     internal bool DismissOnClick { get; set; }
 
     internal ToastPosition? Position { get; set; }
+
+    internal INotifyPropertyChanged? DismissListen { get; set; }
 
     internal ToastBuilder CreateToast(string title)
     {
@@ -54,6 +57,7 @@ public sealed class ToastBuilder
         _toast.CanDismissByClicking = DismissOnClick;
         _toast.Action = Action;
         _toast.Position = Position;
+        _toast.DismissListen = DismissListen;
         _manager.Queue(_toast);
     }
 }

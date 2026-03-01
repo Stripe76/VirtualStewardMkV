@@ -11,7 +11,7 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
                xmlns:converters="clr-namespace:VirtualSteward.Converters"
-               Title="Virtual Steward MkV" Loaded="Window_Loaded" Closing="Window_Closing"> 
+               Title="Virtual Steward MkV" Loaded="Window_Loaded" Closing="Window_Closing">
     <shadui:Window.LogoContent>
         <Image Source="Assets/favicon.ico" Width="16" Margin="8,0,4,0"/>
     </shadui:Window.LogoContent>

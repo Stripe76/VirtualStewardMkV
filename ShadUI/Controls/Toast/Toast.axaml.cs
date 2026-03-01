@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Animation.Easings;
@@ -22,6 +23,14 @@ internal class Toast : ContentControl, IDisposable
     public double Delay { get; set; }
 
     public ToastPosition? Position { get; set; }
+
+    public INotifyPropertyChanged? DismissListen
+    {
+        set
+        {
+            value?.PropertyChanged += (sender, args) => { if (args.PropertyName.Equals("DismissToast")) _manager?.Dismiss(this); };
+        }
+    }
 
     private DispatcherTimer? _timer;
     private double _timeLapsed;

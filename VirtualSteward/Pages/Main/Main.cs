@@ -18,9 +18,12 @@ public partial class Main : Feature
     private readonly State _state;
     private readonly Settings _settings;
     private readonly FilesManager _fileManager;
+    private readonly MessageManager _messageManager;
 
     public SideBar SideBar { get; }
     public ActivePage Pages { get; } = new ( );
+
+    public ToastManager ToastManager { get; } = new ();
    
     // ReSharper disable VirtualMemberCallInConstructor
     public Main( MainWindow window,DataTemplates templates,ThemeWatcher themeWatcher,Settings settings,Settings carsSettings )
@@ -30,10 +33,11 @@ public partial class Main : Feature
         _state = new State(_fileManager);
         
         _themeWatcher = themeWatcher;
+        _messageManager = new MessageManager(ToastManager);
 
         _ = new Features.ProgressBar.ProgressBar(templates);
 
-        Pages.Add(new Replays.Replays( _state,templates,"Replays",window,_fileManager ),false,true);
+        Pages.Add( new Replays.Replays( _state,templates,"Replays",window,_fileManager,_messageManager ),false,true );
 
         SideBar = new SideBar( Pages );
 

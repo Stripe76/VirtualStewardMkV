@@ -39,7 +39,7 @@ public class Replays : StateFeature
         get => _state.Players;
     }
     
-    public Replays(State state,DataTemplates templates,string title,Window window,FilesManager filesManager) : base(state,templates,title)
+    public Replays(State state,DataTemplates templates,string title,Window window,FilesManager filesManager,MessageManager messageManager) : base(state,templates,title)
     {
         Toolbar = new Toolbar();
         TrackMap = new TrackMap( templates );
@@ -52,7 +52,7 @@ public class Replays : StateFeature
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
         _ = new Realtime( state,templates,Timelines.ReplayTimeline ).AddPage( Headers );
 
-        ReplayLoading = new ReplayLoading( state,templates,filesManager,Headers );
+        ReplayLoading = new ReplayLoading( state,templates,filesManager,messageManager );
         ReplayLoading.AddCommands(Toolbar);
     }
     

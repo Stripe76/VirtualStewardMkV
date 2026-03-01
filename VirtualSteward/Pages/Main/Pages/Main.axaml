@@ -4,13 +4,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Pages.Main"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Design.DataContext>
         <vm:Main/>
     </Design.DataContext>
-    
+
     <Grid ColumnDefinitions="Auto *">
         <ContentControl Grid.Column="0" Content="{Binding SideBar}"/>
         <ContentControl Grid.Column="1" Content="{Binding Pages}"/>
+
+        <shadui:ToastHost Grid.Column="1" Manager="{Binding ToastManager}"/>
     </Grid>
 </UserControl>
