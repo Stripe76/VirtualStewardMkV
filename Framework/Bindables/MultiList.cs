@@ -14,6 +14,7 @@ public interface IMultiListItem : INotifyPropertyChanged
   bool IsVisible { get; set;  }
   bool IsSelected { get; set;  }
   bool IsHighlighted { get; set;  }
+  bool DeleteItem { get; set;  }
 }
 
 public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiListItem
@@ -257,6 +258,10 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
         {
           _visibleList.Remove(item);
         }
+      }
+      else if (e.PropertyName == nameof(IMultiListItem.DeleteItem))
+      {
+        Remove( item );
       }
     }
   }

@@ -23,9 +23,9 @@
                         <Button Classes="PlayerInfo">
                             <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf28e;" /></Viewbox>
                         </Button>
-                        <Button Classes="PlayerInfo">
+                        <ToggleButton Classes="PlayerInfo" IsChecked="{Binding DeleteItem}" >
                             <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf317;" /></Viewbox>
-                        </Button>
+                        </ToggleButton>
                     </StackPanel>
                 </Grid>
             </shadui:CardDescription>

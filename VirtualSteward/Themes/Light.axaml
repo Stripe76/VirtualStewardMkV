@@ -33,6 +33,7 @@
     <!--  notification colors  -->
     <Color x:Key="InfoColor">#0288D1</Color>
     <Color x:Key="InfoColor60">#990288D1</Color>
+    <Color x:Key="InfoColor40">#660288D1</Color>
     <Color x:Key="InfoColor20">#330288D1</Color>
     <Color x:Key="InfoColor10">#190288D1</Color>
     <Color x:Key="InfoColor5">#0D0288D1</Color>
@@ -67,7 +68,7 @@
 
     <Color x:Key="SidebarBackgroundColor">#FFFFFF</Color>
 
-    <Color x:Key="SwitchBackgroundColor">#E5E5E5</Color>
+    <Color x:Key="SwitchBackgroundColor">Transparent</Color>
     <Color x:Key="SwitchForegroundColor">#FFFFFF</Color>
 
     <Color x:Key="TabItemSelectedColor">#FFFFFF</Color>

@@ -47,7 +47,7 @@ public class Replays : StateFeature
         
         _ = new CurrentReplay( state,window );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
-        _ = new PlayersList( templates,TrackMap,state.Players );
+        _ = new PlayersList( templates );
         _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
         _ = new Realtime( state,templates,Timelines.ReplayTimeline ).AddPage( Headers );

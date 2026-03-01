@@ -4,9 +4,9 @@
     <Color x:Key="Black20">#33000000</Color>
     <Color x:Key="ForegroundColor">#E5E5E5</Color>
     <Color x:Key="ForegroundLeadColor">#A1A1AA</Color>
-    <Color x:Key="BackgroundColor">#FF181818</Color>
-    <Color x:Key="BackgroundColor60">#99181818</Color>
-    <Color x:Key="BackgroundColor20">#33181818</Color>
+    <Color x:Key="BackgroundColor">#191A1C</Color>
+    <Color x:Key="BackgroundColor60">#99191A1C</Color>
+    <Color x:Key="BackgroundColor20">#33191A1C</Color>
     <Color x:Key="MutedColor">#A0A0A9</Color>
     <Color x:Key="BorderColor">#353535</Color>
     <Color x:Key="BorderColor60">#262626</Color>
@@ -36,6 +36,7 @@
     <!--  notification colors  -->
     <Color x:Key="InfoColor">#2979FF</Color>
     <Color x:Key="InfoColor60">#992979FF</Color>
+    <Color x:Key="InfoColor40">#143577</Color>
     <Color x:Key="InfoColor20">#091933</Color>
     <Color x:Key="InfoColor10">#192979FF</Color>
     <Color x:Key="InfoColor5">#0D2979FF</Color>
@@ -65,13 +66,13 @@
     <Color x:Key="DialogOverlayColor">#000000</Color>
     <Color x:Key="DialogBackgroundColor">#0A0A0A</Color>
 
-    <Color x:Key="TitleBarBackgroundColor">#181818</Color>
-    <Color x:Key="WindowBackgroundColor">#181818</Color>
+    <Color x:Key="TitleBarBackgroundColor">#191A1C</Color>
+    <Color x:Key="WindowBackgroundColor">#191A1C</Color>
     <Color x:Key="WindowButtonHoverColor">#0DFAFAFA</Color>
 
-    <Color x:Key="SidebarBackgroundColor">#181818</Color>
+    <Color x:Key="SidebarBackgroundColor">#212224</Color>
 
-    <Color x:Key="SwitchBackgroundColor">#282828</Color>
+    <Color x:Key="SwitchBackgroundColor">Transparent</Color>
     <Color x:Key="SwitchForegroundColor">#FAFAFA</Color>
 
     <Color x:Key="TabItemSelectedColor">#09090B</Color>

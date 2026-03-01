@@ -55,7 +55,10 @@ public partial class  Realtime : StateFeature
 
   public override void OnReplayChanged( VMReplay replay )
   {
+    _playCommand.Icon = "\xf29d;";
     _realtimeReplay.Stop( );
+    _realtimeReplay.PlaySpeed = 1;
+    _realtimeReplay.PlaySlowMotion = 1;
     _realtimeReplay.Replay = replay;
     //_realtimeReplay = new VMRealtimeTimeline( _state.Replay,_realtimeReplay.Timeline,(uint)(1000.0 / _state.Replay.ReplayFrequency) );
   }

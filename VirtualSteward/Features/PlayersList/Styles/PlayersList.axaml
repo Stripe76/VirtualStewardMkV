@@ -46,7 +46,7 @@
     </Style>
 
     <Style Selector="shadui|Card.Accent">
-        <Setter Property="Background" Value="{DynamicResource InfoColor20}"/>
+        <Setter Property="Background" Value="{DynamicResource InfoColor40}"/>
     </Style>
     <Style Selector="shadui|Card.Selected">
         <Setter Property="Background" Value="{DynamicResource SuccessColor20}"/>

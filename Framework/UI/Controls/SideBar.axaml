@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Framework.UI.Controls.SideBar">
     <shadui:Sidebar
-        Background="{DynamicResource CardBackgroundColor}"
+        Background="{DynamicResource SidebarBackgroundColor}"
         BorderThickness="0,0,1,0"
         Expanded="{Binding #Toggler.IsChecked}"
         ItemIconContentSpacing="12"

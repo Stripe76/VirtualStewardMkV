@@ -4,9 +4,9 @@
     <Color x:Key="Black20">#33000000</Color>
     <Color x:Key="ForegroundColor">#E5E5E5</Color>
     <Color x:Key="ForegroundLeadColor">#A1A1AA</Color>
-    <Color x:Key="BackgroundColor">#FF181818</Color>
-    <Color x:Key="BackgroundColor60">#99181818</Color>
-    <Color x:Key="BackgroundColor20">#33181818</Color>
+    <Color x:Key="BackgroundColor">#191A1C</Color>
+    <Color x:Key="BackgroundColor60">#99191A1C</Color>
+    <Color x:Key="BackgroundColor20">#33191A1C</Color>
     <Color x:Key="MutedColor">#A0A0A9</Color>
     <Color x:Key="BorderColor">#353535</Color>
     <Color x:Key="BorderColor60">#262626</Color>
@@ -58,9 +58,9 @@
     <!--  specific control colors  -->
     <Color x:Key="BusyAreaOverlayColor">#1971717A</Color>
 
-    <Color x:Key="CardBackgroundColor">#171717</Color>
-    <Color x:Key="CardBackgroundColor60">#99171717</Color>
-    <Color x:Key="CardBackgroundColor20">#33171717</Color>
+    <Color x:Key="CardBackgroundColor">#191A1C</Color>
+    <Color x:Key="CardBackgroundColor60">#99191A1C</Color>
+    <Color x:Key="CardBackgroundColor20">#33191A1C</Color>
 
     <Color x:Key="DialogOverlayColor">#000000</Color>
     <Color x:Key="DialogBackgroundColor">#0A0A0A</Color>
