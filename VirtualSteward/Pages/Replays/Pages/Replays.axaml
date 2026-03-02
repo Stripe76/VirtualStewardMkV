@@ -14,8 +14,11 @@
     
     <Grid RowDefinitions="Auto * Auto" ColumnDefinitions="Auto *">
         <ContentControl Grid.RowSpan="3" Grid.ColumnSpan="2" Content="{Binding TrackMap.Map}"/>
-        
-        <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Toolbar}"/>
+
+        <Grid Classes="Toolbar" ColumnDefinitions="* Auto" Grid.Row="0" Grid.Column="0">
+            <ContentControl Content="{Binding LeftToolbar}"/>
+            <ContentControl Grid.Column="1" Content="{Binding RightToolbar}"/>
+        </Grid>
         
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" Margin="0,0,10,0">
             <ItemsControl ItemsSource="{Binding Timelines.Timelines}"/>

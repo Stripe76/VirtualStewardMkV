@@ -22,13 +22,14 @@ public partial class Feature : UIItem
             AddDataTemplates(templates);
     }
 
-    public virtual void AddDataTemplates(DataTemplates templates)
+    public virtual Feature AddDataTemplates(DataTemplates templates)
     {
         //templates.Add(new FuncDataTemplate<Module>((value,namescope) => new Controls.ReplayLoadingPanel()));
+        return this;
     }
-    public virtual void AddCommands(UIItemList commands)
+    public virtual Feature AddCommands(UIItemList commands)
     {
-        
+        return this;
     }
 
     public virtual Feature AddPage(UIBaseList pages, string? headerTitle = null)

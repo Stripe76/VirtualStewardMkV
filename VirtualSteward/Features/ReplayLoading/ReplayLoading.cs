@@ -53,14 +53,16 @@ public partial class ReplayLoading : StateFeature
 		);
 	}
 
-	public override void AddDataTemplates( DataTemplates templates )
+	public override Feature AddDataTemplates( DataTemplates templates )
 	{
 		//templates.Add( new FuncDataTemplate<ReplayLoading>( ( value,namescope ) => new Controls.ReplayLoadingPanel( ) ) );
+		return this;
 	}
-	public override void AddCommands(UIItemList commands)
+	public override Feature AddCommands( UIItemList commands )
 	{
-		foreach (var command in Commands)
-			commands.Add(command);
+		foreach( var command in Commands )
+			commands.Add( command );
+		return this;
 	}
 
 	public override void OnReplayChanged(VMReplay replay)

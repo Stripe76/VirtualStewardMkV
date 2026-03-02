@@ -30,9 +30,11 @@ public class PlayersCars : Feature
         map.AddLayerNew(new VMPlayersCarsLayer(_players));
     }
 
-    public override void AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates(DataTemplates templates)
     {
         templates.Add(new FuncDataTemplate<VMPlayersCarsLayer>((_, _) => new Controls.PlayersCars( )));
+
+        return this;
     }
 
     private void UpdatePlayersCars()

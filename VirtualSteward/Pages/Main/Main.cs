@@ -45,9 +45,11 @@ public partial class Main : Feature
         AddDefaultDataTemplates(templates);
     }
 
-    public override void AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates(DataTemplates templates)
     {
         templates.Add( new FuncDataTemplate<Main>( (_,_) => new Features.Main.Pages.Main( ) ) );
+
+        return this;
     }
 
     public void OnWindowLoaded( )

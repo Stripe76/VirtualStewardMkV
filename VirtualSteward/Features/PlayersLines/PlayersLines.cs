@@ -27,9 +27,10 @@ public class PlayersLines : Feature
         map.NewLayers.Add(new VMMapLinesLayer(_lines));
     }
 
-    public override void AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates(DataTemplates templates)
     {
         //templates.Add(new FuncDataTemplate<VMPlayersLinesLayer>((_, _) => new Controls.PlayersLines()));
+        return this;
     }
 
     private void UpdateLines()

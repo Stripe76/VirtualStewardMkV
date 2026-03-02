@@ -21,9 +21,11 @@ public class TrackMap : Feature
     Map.NewLayers.Add(layer);
   }
 
-  public override void AddDataTemplates( DataTemplates templates )
+  public override Feature AddDataTemplates( DataTemplates templates )
   {
     templates.Add( new FuncDataTemplate<VMMap>( (_,_) => new Controls.MapDisplay( ) ) );
     templates.Add( new FuncDataTemplate<VMMapLinesLayer>( (_,_) => new Controls.MapLines( ) ) );
+
+    return this;
   }
 }

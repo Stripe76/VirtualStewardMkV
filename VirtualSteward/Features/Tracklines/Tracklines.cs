@@ -57,9 +57,11 @@ public class Tracklines : StateFeature
     _map?.AddLayer( _tracklinesLayer = new VMLayerTracklineFile( _tracklineFiles.SelectedItems ) { IsVisible = false },true );
   }
 
-  public override void AddDataTemplates( DataTemplates templates )
+  public override Feature AddDataTemplates( DataTemplates templates )
   {
     templates.Add(new FuncDataTemplate<TracklineFileValue>( (_,_) => new MultiListInput()));
+
+    return this;
   }
 
   public override Feature AddFooter(UIBaseList pages, string? headerTitle = null)

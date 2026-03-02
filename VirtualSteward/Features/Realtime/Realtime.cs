@@ -40,10 +40,11 @@ public partial class  Realtime : StateFeature
     Commands.Add( new FeatureCommand() { Icon = "\xf1d9;", Text = "Fast forward", Tooltip = "Fast forward", RoutedCommand = FastForwardCommand } );
   }
 
-  public override void AddDataTemplates( DataTemplates templates )
+  public override Feature AddDataTemplates( DataTemplates templates )
   {
     templates.Add( new FuncDataTemplate<Realtime>( (_,_) => new Controls.Realtime() ) );
     //templates.Add( new FuncDataTemplate<VMRealtime>( (_,_) => new Controls.Realtime() ) );
+    return this;
   }
 
   public override Feature AddPage(UIBaseList pages, string? headerTitle = null)

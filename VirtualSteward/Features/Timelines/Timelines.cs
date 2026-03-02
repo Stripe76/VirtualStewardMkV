@@ -1,10 +1,9 @@
 using Avalonia.Controls.Templates;
-
+using Framework.UI;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.Timelines.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
-using VirtualSteward.Features.Timelines.Classes;
 
 namespace VirtualSteward.Features.Timelines;
 
@@ -18,9 +17,11 @@ public class ReplayTimelines : StateFeature
         Timelines.Add(new VMTimeline("Replay timeline",players));
     }
 
-    public override void AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates(DataTemplates templates)
     {
         templates.Add(new FuncDataTemplate<VMTimeline>( (_, _) => new Controls.Timeline()) );
+
+        return this;
     }
 
     public override void OnReplayChanged(VMReplay replay)

@@ -3,7 +3,7 @@
 
     <StyleInclude Source="../../../Features/PlayersList/Styles/PlayersList.axaml" />
 
-    <Style Selector="StackPanel.Toolbar">
+    <Style Selector="Grid.Toolbar">
         <Setter Property="MinWidth" Value="280"/>
     </Style>
     <Style Selector="WrapPanel.StatusBar">

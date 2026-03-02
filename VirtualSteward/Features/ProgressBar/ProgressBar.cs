@@ -6,8 +6,10 @@ namespace VirtualSteward.Features.ProgressBar;
 
 public class ProgressBar(DataTemplates templates) : Feature(templates)
 {
-    public override void AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates(DataTemplates templates)
     {
         templates.Add(new FuncDataTemplate<VMProgress>((_,_) => new Controls.ProgressBar() ));
+
+        return this;
     }
 }

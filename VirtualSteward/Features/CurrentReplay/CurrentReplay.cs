@@ -21,6 +21,9 @@ public class CurrentReplay( State state,Window window ) :  StateFeature( state )
     OnPropertyChanged( nameof( CarName ) );
     OnPropertyChanged( nameof( TrackName ) );
 
-    window.Title = $"{TrackName} - {CarName} - {_windowTitle}";
+    if( _state.Replay.IsLoaded )
+      window.Title = $"{TrackName} - {CarName} - {_windowTitle}";
+    else
+      window.Title = _windowTitle;
   }
 }
