@@ -8,9 +8,13 @@
     <Design.DataContext>
         <vm:VMPlayerInfoEditing/>
     </Design.DataContext>
-    
+
     <Grid RowDefinitions="Auto Auto Auto">
-        <TextBox Text="{Binding PlayerName}" Margin="4"/>
+        <TextBox Text="{Binding PlayerName}" Margin="4">
+            <Interaction.Behaviors>
+                <FocusOnAttachedToVisualTreeBehavior/>
+            </Interaction.Behaviors>
+        </TextBox>
         <ComboBox Grid.Row="1" ItemsSource="{Binding Skins}" SelectedItem="{Binding SelectedSkin}" Foreground="{DynamicResource MutedColor}" Margin="4" PointerPressed="InputElement_OnPointerPressed"/>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Command="{Binding AcceptCommand}" IsDefault="True" Background="Transparent" Foreground="{DynamicResource SuccessColor}" Margin="4">
