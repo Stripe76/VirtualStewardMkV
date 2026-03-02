@@ -1,26 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 using Avalonia;
-using Avalonia.Media;
 
 using ACLibrary.Replays;
-
+using CommunityToolkit.Mvvm.ComponentModel;
 using Framework.UI;
 using Framework.Bindables;
 
 using VirtualSteward.Datasources;
 using VirtualSteward.Datasources.ViewModels;
+using VirtualSteward.Features.CarSelection.ViewModels;
 using VirtualSteward.Features.TrackMap.ViewModels;
 
 namespace VirtualSteward.Features.PlayersList.ViewModels;
 
-public partial class VMPlayer : UIItem, IComparable<VMPlayer>
+public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 {
   private readonly int _playerID = 0;
 
+  [ObservableProperty] private bool _isEditingMode;
+  
   public CarDatasource Datasource { get; }
 
   public VMPlayerInfo PlayerInfo { get; }
@@ -29,22 +30,26 @@ public partial class VMPlayer : UIItem, IComparable<VMPlayer>
 
   public VMPlayerLapList Laps
   {
-    get => field ??= CreateLapsList();
+    get => field ??= CreateLapsList( );
   } = null;
   public VMPlayerLapList BestLaps
   {
-    get => field ??= CreateBestLapsList();
+    get => field ??= CreateBestLapsList( );
   } = null;
 
-  public VMPlayer(int idPlayer, ReplayCar replayCar, ReplayTail replayTail,VMMapImage carImage,VMMapLineStyle lineStyle)
+  public VMPlayerInfoEditing InfoEditing { get; }
+
+  public VMPlayer( int idPlayer,ReplayCar replayCar,ReplayTail replayTail,VMCarInfo carInfo,VMCarSkinInfo skinInfo,VMMapLineStyle lineStyle,VMMapImage carImage )
   {
     _playerID = idPlayer;
 
-    PlayerInfo = new VMPlayerInfo(replayCar);
-    Datasource = new ReplayFileDatasource(replayCar, replayTail);
-    
+    PlayerInfo = new VMPlayerInfo( replayCar,carInfo,skinInfo );
+    Datasource = new ReplayFileDatasource( replayCar,replayTail );
+
     CarImage = carImage;
     LineStyle = lineStyle;
+
+    InfoEditing = new VMPlayerInfoEditing( this );
   }
 
   private VMPlayerLapList CreateLapsList()
@@ -159,21 +164,6 @@ public partial class VMPlayer : UIItem, IComparable<VMPlayer>
     if (obj == null)
       return 0;
     return _playerID.CompareTo(obj._playerID);
-  }
-}
-
-
-public partial class VMPlayerInfo : UIItem
-{
-  [ObservableProperty] private string _playerName;
-  [ObservableProperty] private string _playerTeam;
-  [ObservableProperty] private string _playerNation;
-  
-  public VMPlayerInfo( ReplayCar replayCar )
-  {
-    _playerName = replayCar.PlayerName;
-    _playerTeam = replayCar.PlayerTeam;
-    _playerNation = replayCar.PlayerNation;
   }
 }
 

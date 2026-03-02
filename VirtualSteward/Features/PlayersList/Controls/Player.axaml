@@ -13,21 +13,24 @@
     <shadui:Card Classes.Accent="{Binding IsActive}" Classes.Selected="{Binding IsSelected}" Classes="PlayerInfo" PointerPressed="HandleClick">
         <shadui:Card.Header>
             <shadui:CardDescription>
-                <Grid Classes="PlayerInfo" ColumnDefinitions="Auto * Auto">
-                    <Ellipse Grid.Column="0" Classes="PlayerInfo" Fill="{Binding LineStyle.Color}"/>
-                    <TextBlock Grid.Column="1" Text="{Binding PlayerInfo.PlayerName}"/>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <ToggleButton Classes="PlayerInfo" IsChecked="{Binding IsExpanded}">
-                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf173;" /></Viewbox>
-                        </ToggleButton>
-                        <Button Classes="PlayerInfo">
-                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf28e;" /></Viewbox>
-                        </Button>
-                        <ToggleButton Classes="PlayerInfo" IsChecked="{Binding DeleteItem}" >
-                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf317;" /></Viewbox>
-                        </ToggleButton>
-                    </StackPanel>
-                </Grid>
+                <Panel>
+                    <Grid Classes="PlayerInfo" ColumnDefinitions="Auto * Auto" IsVisible="{Binding !IsEditingMode}">
+                        <Ellipse Grid.Column="0" Classes="PlayerInfo" Fill="{Binding LineStyle.Color}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding PlayerInfo.PlayerName}" ToolTip.Tip="{Binding PlayerInfo}" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <ToggleButton Classes="PlayerInfo" IsChecked="{Binding IsExpanded}">
+                                <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf173;" /></Viewbox>
+                            </ToggleButton>
+                            <ToggleButton Classes="PlayerInfo" IsChecked="{Binding IsEditingMode}">
+                                <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf28e;" /></Viewbox>
+                            </ToggleButton>
+                            <ToggleButton Classes="PlayerInfo" IsChecked="{Binding DeleteItem}" >
+                                <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf317;" /></Viewbox>
+                            </ToggleButton>
+                        </StackPanel>
+                    </Grid>
+                    <ContentControl Content="{Binding InfoEditing}" IsVisible="{Binding IsEditingMode}"/>
+                </Panel>
             </shadui:CardDescription>
         </shadui:Card.Header>
         <Grid RowDefinitions="Auto 3 Auto" IsVisible="{Binding IsExpanded}" Width="250">

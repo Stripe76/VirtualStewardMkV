@@ -39,7 +39,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\CurrentReplay\Controls\" />
       <Folder Include="Pages\" />
     </ItemGroup>
 
