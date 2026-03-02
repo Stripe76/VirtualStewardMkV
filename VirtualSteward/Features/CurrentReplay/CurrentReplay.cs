@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.ViewModels;
 
 namespace VirtualSteward.Features.CurrentReplay;
 
@@ -22,7 +23,7 @@ public class CurrentReplay( State state,Window window ) :  StateFeature( state )
   public override void OnReplayChanged( VMReplay replay )
   {
     //_state.CurrentCar = _state.GetCarInfo( replay.CarID );
-    _state.Track = _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,true );
+    _state.Track = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,true ) );
 
     //OnPropertyChanged( nameof( CarName ) );
     OnPropertyChanged( nameof( TrackName ) );

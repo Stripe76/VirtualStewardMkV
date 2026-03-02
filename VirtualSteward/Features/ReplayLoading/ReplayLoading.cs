@@ -8,9 +8,11 @@ using Avalonia.Platform.Storage;
 using Avalonia.Controls.Templates;
 
 using ACLibrary.Replays;
+
 using Framework.UI;
 
 using VirtualSteward.Classes;
+using VirtualSteward.Features.CarSelection.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ProgressBar.ViewModel;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
@@ -122,15 +124,18 @@ public partial class ReplayLoading : StateFeature
 					int id = 0;
 					foreach( var newCar in acReplay.Cars )
 					{
-						//VMCarInfo carInfo = state.GetCarInfo( newCar.CarID );
+						VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),filesManager.ACCarsFolder );
 						IImmutableSolidColorBrush carColor = VMMapLineStyle.LineColors[id % VMMapLineStyle.LineColors.Count];
 						
 						VMPlayer newPlayer = new ( 
 							id,
 							newCar,
 							acReplay.TailData[id],
-							new VMMapImage( filesManager.GetCarImage( newCar.CarID,newCar.CarSkinID,carColor ) ),
-							new VMMapLineStyle( 2,carColor ))
+							carInfo,
+							carInfo.GetSkin( newCar.CarSkinID ),
+							new VMMapLineStyle( 2,carColor ),
+							new VMMapImage( filesManager.GetCarImage( newCar.CarID,newCar.CarSkinID,carColor ) )
+							)
 						{
 							//PlayerName = newCar.PlayerName
 							//ShowDetails = true

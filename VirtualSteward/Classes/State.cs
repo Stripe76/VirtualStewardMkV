@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using ACLibrary.Cars;
 using ACLibrary.Tracks;
 using Avalonia.Controls.Templates;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Framework.UI;
-
 using VirtualSteward.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
@@ -16,7 +16,9 @@ namespace VirtualSteward.Classes;
 public partial class State : ObservableObject
 {
     private readonly FilesManager _filesMmanger;
-    private readonly SortedList<string,VMTrackInfo> _tracks = [];
+
+    private readonly SortedList<string,CarInfo> _cars = [];
+    private readonly SortedList<string,TrackInfo> _tracks = [];
     
     [ObservableProperty] private VMReplay _replay = new();
     [ObservableProperty] private VMTrackInfo _track = new( "","" );
@@ -28,10 +30,26 @@ public partial class State : ObservableObject
         _filesMmanger = filesManager;
     }
 
-    public VMTrackInfo GetTrackInfo( string trackID,string variantID,bool setCSPSettingsFile )
+    public CarInfo GetCarInfo( string carID )
+    {
+        if( _cars.TryGetValue( carID,out CarInfo? value ) )
+            return value;
+        
+        CarInfo? info = CarInfo.LoadCarInfo( _filesMmanger.ACCarsFolder,carID );
+        if( info != null )
+        {
+            lock( _cars )
+            {
+                _cars.TryAdd( carID,info );
+            }
+            return info;
+        }
+        return new CarInfo( carID );
+    }
+    public TrackInfo GetTrackInfo( string trackID,string variantID,bool setCSPSettingsFile )
     {
         string key = trackID + "_" + variantID;
-        if( _tracks.TryGetValue( key,out VMTrackInfo? value ) )
+        if( _tracks.TryGetValue( key,out TrackInfo? value ) )
         {
             //if( setCSPSettingsFile && value.CSPSettingsFilePath == null )
 //                value.CSPSettingsFilePath = GetCSPSettingsFile( value.TrackID );
@@ -46,14 +64,12 @@ public partial class State : ObservableObject
 
             lock( _tracks )
             {
-                if( !_tracks.ContainsKey( key ) )
-                    _tracks.Add( key,newInfo );
+                _tracks.TryAdd( key,info );
             }
-            return newInfo;
+            return info;
         }
-        return new VMTrackInfo( trackID,variantID );
+        return new TrackInfo( trackID,variantID );
     }
-
 }
 
 public class StateFeature : Feature

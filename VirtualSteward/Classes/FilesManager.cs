@@ -17,6 +17,8 @@ public class FilesManager
   private Settings _carsSettings;
 
   public string VSCarsFolder => Path.Combine(_vsFolder, "Cars");
+
+  public string ACCarsFolder => Path.Combine(_acFolder,"content","cars"); 
   public string ACTracksFolder => Path.Combine(_acFolder,"content","tracks"); 
 
   public FilesManager(Settings settings, Settings carsSettings)
