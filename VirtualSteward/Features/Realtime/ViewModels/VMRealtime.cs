@@ -11,7 +11,7 @@ public abstract class VMRealtime : UIItem
   private DispatcherTimer? _timerPlay = null;
   private readonly Stopwatch _timeSource = new ( );
 
-  private bool _isPlaying = false,_isSelected = false;
+  private bool _isPlaying = false;
   private int _playSpeed = 1,_playSlowMotion = 1;
 
   private uint _timeOffset,_lastTick;
@@ -26,11 +26,6 @@ public abstract class VMRealtime : UIItem
   {
     get => _isPlaying || Playing( );
     set { SetProperty( ref _isPlaying,value ); }
-  }
-  public bool IsSelected
-  {
-    get => _isSelected;
-    set => SetProperty( ref _isSelected,value );
   }
 
   public int PlaySpeed

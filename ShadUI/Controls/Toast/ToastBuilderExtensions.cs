@@ -56,6 +56,12 @@ public static class ToastBuilderExtensions
         return builder;
     }
 
+    /// <summary>
+    ///     Sets the dismiss listen object, toast will dismiss when receiving the "DismissToast" property changed
+    /// </summary>
+    /// <param name="builder">The current <see cref="ToastBuilder" /></param>
+    /// <param name="listen">The object that will raise the property changed</param>
+    /// <returns></returns>
     public static ToastBuilder WithDismissListen(this ToastBuilder builder, INotifyPropertyChanged listen)
     {
         builder.DismissListen = listen;

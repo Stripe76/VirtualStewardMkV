@@ -19,7 +19,7 @@ public class VMTrackInfo : UIItem
     get => _isLoaded;
   }
 
-  public bool IsHighlighted
+  public new bool IsHighlighted
   {
     get => HasAILines;
   }

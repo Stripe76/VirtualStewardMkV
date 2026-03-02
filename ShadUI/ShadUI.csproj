@@ -36,4 +36,18 @@
         <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+      <DebugType>none</DebugType>
+      <DocumentationFile>obj\Release/netstandard2.1/porcodio</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugType>none</DebugType>
+      <DocumentationFile>obj\Release/netstandard2.1/porcodio</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>obj\x64/Debug/netstandard2.1/porcodio</DocumentationFile>
+    </PropertyGroup>
+
 </Project>

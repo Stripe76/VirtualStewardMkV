@@ -49,21 +49,6 @@ public partial class VMTimeline : UIItem
     CurrentFrame = 0;
   }
 
-  public void SetCurrentFrame( uint frame,bool smoothing,bool updateServer )
-  {
-    _currentFrame = frame;
-
-    OnPropertyChanged( nameof( CurrentFrame ) );
-    //OnPropertyChanged( nameof( CurrentTime ) );
-
-    if( !IsActive )
-      IsActive = true;
-
-    //if( updateServer )
-      //UpdateServer( );
-    //UpdatePlayerCarsPosition( smoothing && _followPlayer == null );
-  }
-
   private void SetPlayerLapsMarkers( VMPlayer player )
   {
     //using( new BindingListBatchUpdate<VMTimelineMarker>( Markers ) )
@@ -89,12 +74,12 @@ public partial class VMTimeline : UIItem
 
   private void Players_ActiveItemChanged( object? sender,VMPlayer? e )
   {
-    if( _players.ActiveItem != null )
-      SetPlayerLapsMarkers( _players.ActiveItem );
+    if( Players.ActiveItem != null )
+      SetPlayerLapsMarkers( Players.ActiveItem );
   }
   private void Players_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
   {
-    End = TotalLength = _players.MaxFrames;
+    End = TotalLength = Players.MaxFrames;
   }
 
   #region Helpers

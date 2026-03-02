@@ -123,7 +123,7 @@ public class VMRealtimeTimeline : VMRealtime
       uint nFrame = (uint)(_frameOffset + ((milliseconds * PlaySpeed / PlaySlowMotion) / _replayFrequency));
 
       _isUpdatingFrame = true;
-      _timeline.SetCurrentFrame( ValidateFrame( nFrame ),MovementSmoothing > 1 && PlaySpeed == 1 && PlaySlowMotion == 1,false );
+      _timeline.CurrentFrame = ValidateFrame(nFrame);
       _isUpdatingFrame = false;
     }
   }

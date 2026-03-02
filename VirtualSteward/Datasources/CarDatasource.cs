@@ -260,7 +260,7 @@ public class ReplayFileDatasource : CarDatasource
     return Math.Clamp( frame,0,_replayData.Length-1 );
   }
 
-  private static object? ResolvePath( object obj,string path )
+  private static object? ResolvePath( object? obj,string path )
   {
     if( obj == null )
       return null;
@@ -285,7 +285,7 @@ public class ReplayFileDatasource : CarDatasource
       {
         var indexer = match.Groups[3].Success ? int.Parse(match.Groups[3].Value) : (int?)null;
 
-        var field = obj.GetType().GetField(propName);
+        var field = obj?.GetType().GetField(propName);
         if( field != null )
         {
           obj = field.GetValue( obj );
@@ -297,7 +297,7 @@ public class ReplayFileDatasource : CarDatasource
         }
         else
         {
-          var prop = obj.GetType( ).GetProperty( propName );
+          var prop = obj?.GetType( ).GetProperty( propName );
           if( prop == null )
             return null;
 
@@ -318,12 +318,6 @@ public class ReplayFileDatasource : CarDatasource
   {
     var parts = path.Split('.');
 
-#if DEBUG
-    if( path == "Lights" )
-    {
-      int c = 0;
-    }
-#endif
     if( parts.Length == 2 )
     {
       var field = typeof( ACCarFrame ).GetField( parts[0] );
