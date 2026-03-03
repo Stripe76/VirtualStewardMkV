@@ -13,6 +13,7 @@ internal class IsWorking : IDisposable
     {
         None,
         ReplayFileLoading,
+        ReplayFileExporting,
         ReplaysListLoading,
         TracklinesLoading,
         TrackCheckpointsLoading,

@@ -1,17 +1,19 @@
 ﻿using System.IO;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Framework.UI.Values;
 
-public class FilenameValue : BaseValue<string>
+public partial class FilenameValue : BaseValue<string>
 {
   public enum DialogType
   {
-    None,
     Open,
     Save,
   };
 
-  public DialogType DialogMode = DialogType.None;
+  public DialogType DialogMode;
 
   public string FileName
   {
@@ -34,5 +36,49 @@ public class FilenameValue : BaseValue<string>
     DialogMode = dialogMode;
 
     ValueChanged = ( value ) => { OnPropertyChanged( nameof( FileName ) ); };
+  }
+
+  [RelayCommand] protected async Task Browse( )
+  {
+    if( Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
+      return;
+
+    var window = desktop.MainWindow;
+
+    if( DialogMode == DialogType.Open )
+    {
+      if( window is { StorageProvider.CanOpen: true } )
+      {
+        //var directory = window.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder));
+
+        var task = window.StorageProvider.OpenFilePickerAsync( new FilePickerOpenOptions( )
+        {
+          //FileTypeFilter = [fileTypes],
+          //SuggestedStartLocation = directory
+        } );
+        if( await task is { Count: > 0 } )
+        {
+          Value = task.Result[0].Name;
+        }
+      }
+    }
+    else
+    {
+      if( window is { StorageProvider.CanSave: true } )
+      {
+        //var directory = window.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder));
+
+        var task = window.StorageProvider.SaveFilePickerAsync( new FilePickerSaveOptions( )
+        {
+          //FileTypeFilter = [fileTypes],
+          //SuggestedStartLocation = directory
+        } );
+        if( await task is not null && task.Result is not null )
+        {
+          Value = task.Result.TryGetLocalPath( );
+        }
+      }
+    }
+    return;
   }
 }

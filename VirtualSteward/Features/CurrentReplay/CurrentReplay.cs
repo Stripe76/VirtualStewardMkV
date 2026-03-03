@@ -15,7 +15,7 @@ public class CurrentReplay( State state,Window window ) :  StateFeature( state )
 
   public override void OnReplayChanged( VMReplay replay )
   {
-    _state.Car = new VMCarInfo( _state.GetCarInfo( replay.CarID ) );
+    _state.Car = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0 );
     _state.Track = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,true ) );
 
     OnPropertyChanged( nameof( CarName ) );

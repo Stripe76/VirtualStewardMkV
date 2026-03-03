@@ -21,7 +21,7 @@ public partial class State : ObservableObject
     private readonly SortedList<string,CarInfo> _cars = [];
     private readonly SortedList<string,TrackInfo> _tracks = [];
     
-    [ObservableProperty] private VMReplay _replay = new();
+    [ObservableProperty] private VMReplay _replay = new( );
     [ObservableProperty] private VMCarInfo _car = new( "" );
     [ObservableProperty] private VMTrackInfo _track = new( "","" );
 

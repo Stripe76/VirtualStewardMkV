@@ -35,6 +35,8 @@ public class VMTracklineFile( string filePath ) : UIItem
     }
   }
 
+  public string Title => ToString( );
+
   public double LineThickness
   {
     get => _lineThickness;

@@ -6,8 +6,6 @@ namespace VirtualSteward.Features.ReplayLoading.ViewModels;
 
 public class VMReplay : UIBase
 {
-    private readonly bool _isLoaded = false;
-
     private string _fileName = "";
 
     public string FileFullPath = string.Empty;
@@ -19,15 +17,13 @@ public class VMReplay : UIBase
     public string TrackVariantID = string.Empty;
 
     public double ReplayFrequency = 33f;
-    public uint TrackObjectsNumber = 0;
 
-    public int TailDataRecords = 0;
-    public int TailDataVersion = 0;
+    public VMTrackObjects TrackObjects;
 
-    public bool IsLoaded
-    {
-        get => _isLoaded;
-    }
+    public readonly int TailDataRecords = 0;
+    public readonly int TailDataVersion = 0;
+
+    public bool IsLoaded { get; } = false;
 
     public string FileName
     {
@@ -37,12 +33,14 @@ public class VMReplay : UIBase
 
     public VMReplay( )
     {
-        _isLoaded = false;
+        IsLoaded = false;
+        TrackObjects = new VMTrackObjects( );
     }
-    public VMReplay( Replay replay )
+    public VMReplay( Replay replay,TrackObject[] trackObjects,uint trackObjectsNumber )
     {
-        _isLoaded = true;
-        _fileName = Path.GetFileNameWithoutExtension( replay.FileFullPath );
+        IsLoaded = true;
+        
+        FileName = Path.GetFileNameWithoutExtension( replay.FileFullPath );
 
         FileFullPath = replay.FileFullPath;
 
@@ -53,7 +51,8 @@ public class VMReplay : UIBase
         TrackVariantID = replay.TrackVariantID;
 
         ReplayFrequency = replay.ReplayFrequency;
-        TrackObjectsNumber = replay.TrackObjectsNumber;
+
+        TrackObjects = new VMTrackObjects( trackObjects,trackObjectsNumber );
 
         TailDataRecords = replay.TailDataRecords;
         TailDataVersion = replay.TailDataVersion;

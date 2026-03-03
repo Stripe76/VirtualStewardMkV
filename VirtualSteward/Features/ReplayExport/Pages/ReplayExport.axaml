@@ -1,0 +1,20 @@
+<UserControl x:Class="VirtualSteward.Features.ReplayExport.Pages.ReplayExport"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.ReplayExport"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             IsVisible="{Binding IsVisible}" Background="{DynamicResource BackgroundColor60}">
+    <Design.DataContext>
+        <vm:ReplayExport/>
+    </Design.DataContext>
+    <WrapPanel Margin="5">
+        <ContentControl Content="{Binding Exporters}"/>
+        <ContentControl Content="{Binding TimelineExport}"/>
+        <ContentControl Content="{Binding PlayersExport}"/>
+        <ContentControl Content="{Binding FilenameExport}"/>
+        <ContentControl Content="{Binding ExportCommand}"/>
+        <ContentControl Content="{Binding CancelCommand}"/>
+    </WrapPanel>
+</UserControl>

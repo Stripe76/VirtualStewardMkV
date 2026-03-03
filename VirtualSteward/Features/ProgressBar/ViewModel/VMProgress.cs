@@ -18,6 +18,8 @@ public class VMProgress : UIBase,IProgress<float>
         if( x >= 0 )
         {
             IsVisible = true;
+
+            Progress = x;
         }
         else
         {
@@ -25,6 +27,5 @@ public class VMProgress : UIBase,IProgress<float>
             
             OnPropertyChanged( "DismissToast" );
         }
-        Progress = x;
     }
 }

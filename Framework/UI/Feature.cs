@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Platform.Storage;
 
+using Framework.UI.Values;
 using Framework.UI.ViewModels;
 
 namespace Framework.UI;
@@ -81,6 +82,8 @@ public partial class Feature : UIItem
 
         templates.Add(new FuncDataTemplate<RepeatCommand>((_, _) => new Controls.RepeatCommand()));
         templates.Add(new FuncDataTemplate<FeatureCommand>((_, _) => new Controls.FeatureCommand()));
+
+        templates.Add( new FuncDataTemplate<FilenameValue>( ( _,_ ) => new Inputs.FilenameInput( ) ) );
     }
 
     public override string ToString()
@@ -97,7 +100,6 @@ public partial class Feature : UIItem
         {
             return window.StorageProvider.TryGetFileFromPathAsync(new Uri(path)).GetAwaiter().GetResult();
         }
-
         return null;
     }
 
@@ -125,23 +127,30 @@ public partial class Feature : UIItem
     }
 }
 
-public class FeatureCommand : UIItem
+public partial class FeatureCommand : UIItem
 {
-    public string Icon 
-    { 
+    [ObservableProperty] private bool _isIcon;
+    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _isCancel;
+    [ObservableProperty] private bool _isDefault;
+
+    public string Icon
+    {
         get;
         set
         {
             field = value;
-            
-            OnPropertyChanged(nameof(Icon));
+
+            IsIcon = true;
+
+            OnPropertyChanged( nameof( Icon ) );
         }
     } = "";
+
     public string Text { get; set; } = "";
     public string Tooltip { get; set; } = "";
 
     public ICommand? RoutedCommand { get; set; } = null;
-    //public CommandBinding? CommandBinding { get; set; } = null;
 }
 
 public class RepeatCommand : FeatureCommand

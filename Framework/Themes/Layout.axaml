@@ -1,6 +1,14 @@
 <Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style Selector="StackPanel.Toolbar">
-        <!--<Setter Property="Height" Value="20" />-->
         <Setter Property="Margin" Value="5" />
+    </Style>
+    <Style Selector="WrapPanel.Input">
+        <Setter Property="Margin" Value="5,5,0,0" />
+    </Style>
+    <Style Selector="Button.Input">
+        <Setter Property="Margin" Value="5,5,0,0" />
+    </Style>
+    <Style Selector="RepeatButton.Input">
+        <Setter Property="Margin" Value="5,5,0,0" />
     </Style>
 </Styles>

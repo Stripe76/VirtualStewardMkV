@@ -10,10 +10,11 @@ public class VMCarInfo : UIItem
 {
   private readonly VMCarSkinInfoList _skinInfoList = new ( );
 
-  private string _carID;
-
+  public string CarID { get; init; }
   public string Model { get; init; }
   public string Brand { get; init; }
+
+  public uint NumberOfWings { get; init; }
 
   public string SkinID 
   {
@@ -53,23 +54,26 @@ public class VMCarInfo : UIItem
 
   public VMCarInfo( string carID )
   {
-    _carID = carID;
+    CarID = carID;
     Model = carID;
     Brand = "";
 
+    NumberOfWings = 0;
+
     _skinInfoList = [];
   }
-  public VMCarInfo( CarInfo? info,string? skinsFolder = null )
+  public VMCarInfo( CarInfo? info,uint numberOfWings,string? skinsFolder = null )
   {
-    _carID = info?.CarID??"";
-    
+    CarID = info?.CarID??"";
     Model = info?.Model??"";
     Brand = info?.Brand??"";
 
-    if( skinsFolder != null )
+    NumberOfWings = numberOfWings;
+      
+    if( info != null && skinsFolder != null )
     {
       foreach( var skin in info.Skins )
-        _skinInfoList.Add( new VMCarSkinInfo( skin,Path.Combine( skinsFolder,_carID,"skins",skin.Name,"preview.jpg" ) ) );
+        _skinInfoList.Add( new VMCarSkinInfo( skin,Path.Combine( skinsFolder,CarID,"skins",skin.Name,"preview.jpg" ) ) );
       if( _skinInfoList.Count > 0 )
         _skinInfoList[0].IsSelected = true;
     }

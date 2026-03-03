@@ -69,7 +69,7 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Name="BaseBackground"
-                        Opacity="1">
+                        Opacity=".8">
                         <Border.Transitions>
                             <Transitions>
                                 <DoubleTransition Duration="0:0:0.20" Property="Opacity" />
@@ -166,7 +166,7 @@
         <Style Selector="^.Primary">
             <Setter Property="Height" Value="36" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
             <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundColor}" />
             <Style Selector="^ /template/ TextBlock">
@@ -184,7 +184,7 @@
         <Style Selector="^.Secondary">
             <Setter Property="Height" Value="36" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Background" Value="{DynamicResource SecondaryColor}" />
             <Setter Property="Foreground" Value="{DynamicResource SecondaryForegroundColor}" />
             <Style Selector="^ /template/ TextBlock">
@@ -202,7 +202,7 @@
         <Style Selector="^.Destructive">
             <Setter Property="Height" Value="36" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Background" Value="{DynamicResource DestructiveColor}" />
             <Setter Property="Foreground" Value="{DynamicResource DestructiveForegroundColor}" />
             <Style Selector="^ /template/ TextBlock">
@@ -220,7 +220,7 @@
         <Style Selector="^.Outline">
             <Setter Property="Height" Value="36" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Background" Value="{DynamicResource SelectionColor}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
@@ -240,18 +240,21 @@
         <Style Selector="^.Ghost">
             <Setter Property="Height" Value="36" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
             <Style Selector="^ /template/ TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
             </Style>
             <Style Selector="^ /template/ ContentPresenter">
-                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
             </Style>
             <Style Selector="^ /template/ Border#HoverBackground">
                 <Setter Property="Background" Value="{DynamicResource GhostColor}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
             </Style>
         </Style>
 
@@ -259,13 +262,16 @@
         <Style Selector="^.Icon">
             <Setter Property="Width" Value="36" />
             <Setter Property="Height" Value="36" />
-            <Setter Property="Background" Value="{DynamicResource GhostHoverColor50}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+            <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
             <Style Selector="^ /template/ ContentPresenter">
-                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+                <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
             </Style>
             <Style Selector="^ /template/ Border#HoverBackground">
                 <Setter Property="Background" Value="{DynamicResource GhostColor}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
             </Style>
         </Style>
 

@@ -1,0 +1,16 @@
+<UserControl x:Class="Framework.UI.Inputs.FilenameInput"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <WrapPanel Classes="Input">
+        <TextBlock Text="{Binding Title}"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Watermark="Filename" Text="{Binding FileName}" ToolTip.Tip="{Binding Value}" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="250"/>
+            <Button Command="{Binding BrowseCommand}" >
+                <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf26d;"/></Viewbox>
+            </Button>
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

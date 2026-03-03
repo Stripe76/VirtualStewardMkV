@@ -9,7 +9,7 @@ public class VMCarSkinInfo : UIItem
 {
     public string ID;
     public string Title {  get; set; }
-    public string ImageFile { get; set; }
+    public string ImageFile { get; set; } = "";
 
     public VMCarSkinInfo( string id )
     {

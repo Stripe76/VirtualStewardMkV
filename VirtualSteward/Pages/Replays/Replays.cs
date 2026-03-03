@@ -14,6 +14,7 @@ using VirtualSteward.Features.Tracklines;
 using VirtualSteward.Features.TrackMap;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.Realtime;
+using VirtualSteward.Features.ReplayExport;
 using VirtualSteward.Features.ResetReplay;
 using VirtualSteward.Features.Timelines;
 
@@ -32,18 +33,15 @@ public class Replays : StateFeature
     public UIBaseList Headers { get; } = [];
     public UIBaseList Footers { get; } = [];
 
-    public VMPlayerList Players
-    {
-        get => _state.Players;
-    }
-    
+    public VMPlayerList Players => _state.Players;
+
     public Replays(State state,DataTemplates templates,string title,Window window,FilesManager filesManager,MessageManager messageManager) : base(state,templates,title)
     {
         LeftToolbar = new Toolbar();
         RightToolbar = new Toolbar();
         
         TrackMap = new TrackMap( templates );
-        Timelines = new ReplayTimelines( state,templates,Players );
+        Timelines = new ReplayTimelines( state,templates,state.Players );
         
         _ = new CurrentReplay( state,window );
         _ = new ResetReplay( state ).AddCommands( RightToolbar );
@@ -53,6 +51,7 @@ public class Replays : StateFeature
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
         _ = new Realtime( state,templates,Timelines.ReplayTimeline ).AddPage( Headers );
         _ = new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
+        _ = new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddPage( Headers ).AddCommands( LeftToolbar );
     }
     
     public override Feature AddDataTemplates(DataTemplates templates)

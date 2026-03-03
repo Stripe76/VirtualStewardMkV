@@ -17,7 +17,7 @@ public partial class VMPlayerInfo : UIItem
     public VMCarInfo CarInfo { get; }
     public VMCarSkinInfo CarSkinInfo { get; set; }
 
-    public VMPlayerInfo( ReplayCar replayCar, VMCarInfo carInfo, VMCarSkinInfo skinInfo )
+    public VMPlayerInfo( ReplayCar replayCar,VMCarInfo carInfo,VMCarSkinInfo skinInfo )
     {
         _playerName = replayCar.PlayerName;
         _playerTeam = replayCar.PlayerTeam;
@@ -29,6 +29,6 @@ public partial class VMPlayerInfo : UIItem
 
     public override string ToString()
     {
-        return $"({_playerNation}) {CarInfo} - {CarSkinInfo}";
+        return $"({PlayerNation}) {CarInfo} - {CarSkinInfo}";
     }
 }

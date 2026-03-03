@@ -26,31 +26,22 @@ public partial class ReplayLoading : StateFeature
 	private readonly MessageManager _messageManager;
 	
 	private readonly VMProgress _progress = new();
+	private readonly FeatureCommand _openReplay; 
 
 	[ObservableProperty] private string _title = "Current file:";
-	[ObservableProperty] private FeatureCommandList _commands = [];
-
-	/*
-	public VMReplay CurrentReplay
-	{
-		get => _state.Replay;
-	}
-	*/
 
 	public ReplayLoading( State state,DataTemplates templates,FilesManager fileManager,MessageManager messageManager ) : base( state,templates )
 	{
 		_fileManager = fileManager;
 		_messageManager = messageManager;
-		
-		_commands.Add(
-			new FeatureCommand( )
-			{
-				Icon = "\xf1f9;",
-				Text = "Open replay file",
-				Tooltip = "Open replay file",
-				RoutedCommand = LoadReplayCommand
-			}
-		);
+
+		_openReplay = new FeatureCommand( )
+		{
+			Icon = "\xf1f9;",
+			Text = "Open replay file",
+			Tooltip = "Open replay file",
+			RoutedCommand = LoadReplayCommand
+		};
 	}
 
 	public override Feature AddDataTemplates( DataTemplates templates )
@@ -60,8 +51,8 @@ public partial class ReplayLoading : StateFeature
 	}
 	public override Feature AddCommands( UIItemList commands )
 	{
-		foreach( var command in Commands )
-			commands.Add( command );
+		commands.Add( _openReplay );
+		
 		return this;
 	}
 
@@ -71,7 +62,7 @@ public partial class ReplayLoading : StateFeature
 	}
 	
 	[RelayCommand( CanExecute = nameof(CanLoadReplay) )]
-	public async void LoadReplay( string? e )
+	private async Task LoadReplay( string? e )
 	{
 		IStorageFile? file = null;
 		if( e != null )
@@ -88,12 +79,11 @@ public partial class ReplayLoading : StateFeature
 		}
 		if( file != null )
 		{
-			//using (new WaitCursor())
-			{
-				_messageManager.ShowProgress("Loading replay file",_progress);
-				
-				LoadReplay( file,_state,_fileManager,_messageManager,_progress );
-			}
+			_openReplay.IsBusy = true;
+
+			await LoadReplay( file,_state,_fileManager,_messageManager,_progress );
+			
+			_openReplay.IsBusy = false;
 		}
 	}
 	private bool CanLoadReplay()
@@ -102,13 +92,15 @@ public partial class ReplayLoading : StateFeature
 		return true;
 	}
 
-	private static async void LoadReplay( IStorageFile file,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
+	private static async Task LoadReplay( IStorageFile file,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
 	{
 		try
 		{
 			using IsWorking loading = new( IsWorking.Tasks.ReplayFileLoading );
 
 			progress?.Report( 0 );
+			if( progress != null )
+				messageManager.ShowProgress( "Loading replay file",progress );
 
 			string? filename = file.TryGetLocalPath( );
 			if( filename != null )
@@ -117,16 +109,16 @@ public partial class ReplayLoading : StateFeature
 				
 				if( acReplay != null )
 				{
-					VMReplay replay = new( acReplay );
+					VMReplay replay = new( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
 					VMPlayerList players = state.Players;
-					//VMTrackObjects trackObjects = state.TrackObjects;
 
+					players.SupressNotification = true;
 					players.Clear( );
 
 					int id = 0;
 					foreach( var newCar in acReplay.Cars )
 					{
-						VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),filesManager.ACCarsFolder );
+						VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),newCar.NumberOfWings,filesManager.ACCarsFolder );
 						IImmutableSolidColorBrush carColor = VMMapLineStyle.LineColors[id % VMMapLineStyle.LineColors.Count];
 						
 						VMPlayer newPlayer = new ( 
@@ -146,13 +138,9 @@ public partial class ReplayLoading : StateFeature
 
 						id++;
 					}
-					/*
-					if( trackObjects != null )
-					{
-					  trackObjects.SetData(acReplay.TrackObjects, acReplay.TrackObjectsNumber);
-					}
-					*/
 					//state.Replay.FileName = replay.FileName;
+					players.SupressNotification = false;
+					
 					state.Replay = replay;
 				}
 				progress?.Report( -1 );
