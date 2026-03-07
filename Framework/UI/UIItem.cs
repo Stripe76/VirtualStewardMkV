@@ -4,7 +4,7 @@ using Framework.Bindables;
 
 namespace Framework.UI;
 
-public partial class UIItem : UIBase, IMultiListItem
+public partial class UIItem : UIBase,IMultiListItem
 {
     [ObservableProperty] private bool _isActive;
     [ObservableProperty] private bool _isSelected;

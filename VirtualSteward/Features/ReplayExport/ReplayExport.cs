@@ -77,7 +77,6 @@ public partial class ReplayExport : StateFeature
 
 		return this;
 	}
-
 	public override Feature AddCommands( UIItemList commands )
 	{
 		foreach( var command in _commands )
@@ -87,7 +86,11 @@ public partial class ReplayExport : StateFeature
 
 	public override void OnReplayChanged( VMReplay replay )
 	{
-		IsVisible = false;
+		IsActive = false;
+
+		FilenameExport.Value = replay.FileFullPath;
+
+		ShowReplayExportPageCommand.NotifyCanExecuteChanged( );
 	}
 
 	[RelayCommand] protected async void ExportReplay( )
@@ -124,13 +127,18 @@ public partial class ReplayExport : StateFeature
 			}
 		}
 	}
-	[RelayCommand] protected void ShowReplayExportPage( )
+	[RelayCommand(CanExecute = nameof(CanShowReplayExportPage))] protected void ShowReplayExportPage( )
 	{
-		IsVisible = !IsVisible;
+		IsActive = !IsActive;
 	}
 	[RelayCommand] protected void Close( )
 	{
-		IsVisible = false;
+		IsActive = false;
+	}
+
+	private bool CanShowReplayExportPage( )
+	{
+		return _state.Replay.IsLoaded;
 	}
 
 	private static async Task<string?> ExportReplay( string filename,

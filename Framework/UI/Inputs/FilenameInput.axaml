@@ -8,7 +8,7 @@
         <TextBlock Text="{Binding Title}"/>
         <StackPanel Orientation="Horizontal">
             <TextBox Watermark="Filename" Text="{Binding FileName}" ToolTip.Tip="{Binding Value}" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="250"/>
-            <Button Command="{Binding BrowseCommand}" >
+            <Button Margin="5,0,0,0"  Command="{Binding BrowseCommand}" >
                 <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf26d;"/></Viewbox>
             </Button>
         </StackPanel>

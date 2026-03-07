@@ -100,7 +100,7 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
   public bool MultiSelectedEnabled = false;
   public bool MultiActiveWithCtrlEnabled = false;
 
-  public bool SetLastSelectedAsActive = false;
+  public bool FirstAlwaysActive = false;
 
   public event EventHandler<T?>? ActiveItemChanged;
   public event EventHandler<T?>? SelectedItemChanged;
@@ -181,42 +181,42 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
   {
     if (sender is not null and T item)
     {
-      if (e.PropertyName == nameof(IMultiListItem.IsActive))
+      if( e.PropertyName == nameof( IMultiListItem.IsActive ) )
       {
-        if (item.IsActive)
+        if( item.IsActive )
         {
-          if (!MultiActiveEnabled /*&&
+          if( !MultiActiveEnabled /*&&
               (!MultiActiveWithCtrlEnabled /*|| (!Keyboard.IsKeyDown( Key.LeftCtrl ) && !Keyboard.IsKeyDown( Key.RightCtrl )))*/
-              )
+            )
           {
-            foreach (T activeItem in this)
+            foreach( T activeItem in this )
             {
-              if (activeItem != item && activeItem.IsActive)
+              if( activeItem != item && activeItem.IsActive )
                 activeItem.IsActive = false;
             }
           }
-          if (!_activeList.Contains(item))
-            _activeList.Add(item);
+          if( !_activeList.Contains( item ) )
+            _activeList.Add( item );
 
           _lastActiveItem = item;
-
-          OnPropertyChanged(nameof(ActiveItem));
-
-          ActiveItemChanged?.Invoke(this, ActiveItem);
         }
         else
         {
-          _activeList.Remove(item);
+          _activeList.Remove( item );
 
-          if (_activeList.Count > 0)
+          if( _activeList.Count > 0 )
             _lastActiveItem = _activeList[0];
           else
-            _lastActiveItem = null;
-
-          OnPropertyChanged(nameof(ActiveItem));
-
-          ActiveItemChanged?.Invoke(this, ActiveItem);
+          {
+            if( FirstAlwaysActive && Count > 0 )
+              _lastActiveItem = Items[0];
+            else
+              _lastActiveItem = null;
+          }
         }
+        OnPropertyChanged( nameof( ActiveItem ) );
+
+        ActiveItemChanged?.Invoke( this,ActiveItem );
       }
       else if (e.PropertyName == nameof(IMultiListItem.IsSelected))
       {
@@ -236,9 +236,6 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
           OnPropertyChanged(nameof(SelectedItem));
 
           SelectedItemChanged?.Invoke(this, SelectedItem);
-
-          if (SetLastSelectedAsActive)
-            item.IsActive = true;
         }
         else
         {

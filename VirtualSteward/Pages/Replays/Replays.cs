@@ -31,6 +31,7 @@ public class Replays : StateFeature
     public ReplayTimelines Timelines { get; }
 
     public UIBaseList Headers { get; } = [];
+    public UIItemList Panels { get; } = [];
     public UIBaseList Footers { get; } = [];
 
     public VMPlayerList Players => _state.Players;
@@ -49,9 +50,12 @@ public class Replays : StateFeature
         _ = new PlayersList( templates );
         _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
-        _ = new Realtime( state,templates,Timelines.ReplayTimeline ).AddPage( Headers );
         _ = new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
-        _ = new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddPage( Headers ).AddCommands( LeftToolbar );
+
+        Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
+        Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddCommands( LeftToolbar ) );
+
+        Panels.FirstAlwaysActive = true;
     }
     
     public override Feature AddDataTemplates(DataTemplates templates)
