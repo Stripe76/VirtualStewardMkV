@@ -21,8 +21,8 @@ public class PlayersCars : Feature
     public PlayersCars(DataTemplates templates,VMMap map,VMTimeline timeline,VMPlayerList players) : base(templates)
     {
         _map = map;
-        _timeline = timeline;
         _players = players;
+        _timeline = timeline;
         
         _map.PropertyChanged += Map_PropertyChanged;
         _timeline.PropertyChanged += Timeline_PropertyChanged;

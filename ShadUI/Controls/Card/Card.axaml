@@ -46,7 +46,7 @@
     </Design.PreviewWith>
 
     <ControlTheme TargetType="{x:Type shadui:Card}" x:Key="CardControlTheme">
-        <Setter Property="Padding" Value="24" />
+        <Setter Property="Padding" Value="22" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Background" Value="{DynamicResource CardBackgroundColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
@@ -55,16 +55,16 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Border
+                        Name="OuterBorder"
                         Height="{TemplateBinding Height}"
                         Margin="{TemplateBinding Margin}"
-                        Name="OuterBorder"
                         Width="{TemplateBinding Width}">
                         <Border
+                            Name="Container"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Name="Container">
+                            CornerRadius="{TemplateBinding CornerRadius}">
                             <Grid Margin="{TemplateBinding Padding}" RowDefinitions="Auto * Auto">
                                 <ContentPresenter
                                     Content="{TemplateBinding Header}"
@@ -76,7 +76,7 @@
                                     Grid.Row="1"
                                     HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                                     VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                                    <ContentPresenter Content="{TemplateBinding Content}" />
+                                    <ContentPresenter Content="{TemplateBinding Content}"/>
                                 </ScrollViewer>
                                 <ContentPresenter
                                     Content="{TemplateBinding Footer}"

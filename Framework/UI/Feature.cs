@@ -5,9 +5,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Platform.Storage;
-
 using Framework.UI.Values;
-using Framework.UI.ViewModels;
+
+using ActivePage = Framework.UI.ViewModels.ActivePage;
+using Configuration = Framework.UI.Configurations.Configuration;
+using SideBar = Framework.UI.ViewModels.SideBar;
+using Toolbar = Framework.UI.ViewModels.Toolbar;
 
 namespace Framework.UI;
 
@@ -76,6 +79,20 @@ public partial class Feature : UIItem
 
     public static void AddDefaultDataTemplates(DataTemplates templates)
     {
+        templates.Add(new FuncDataTemplate<Configuration>((_, _) => new Controls.Configuration()));
+
+        templates.Add( new FuncDataTemplate<BaseInt>( ( _,_ ) => new Inputs.TextboxInput( ) ) );
+        templates.Add( new FuncDataTemplate<BaseBool>( ( _,_ ) => new Inputs.CheckboxInput( ) ) );
+        templates.Add( new FuncDataTemplate<BaseSwitchBool>( ( _,_ ) => new Inputs.SwitchInput( ) ) );
+        templates.Add( new FuncDataTemplate<BaseThreeStateBool>( ( _,_ ) => new Inputs.CheckboxInput( ) ) );
+
+        templates.Add( new FuncDataTemplate<RangedInt>( ( _,_ ) => new Inputs.SliderInput( ) ) );
+        templates.Add( new FuncDataTemplate<RangedUInt>( ( _,_ ) => new Inputs.SliderInput( ) ) );
+        templates.Add( new FuncDataTemplate<RangedFloat>( ( _,_ ) => new Inputs.SliderInput( ) ) );
+
+        templates.Add(new FuncDataTemplate<MappedValueInt>((_, _) => new Inputs.MappedInput()));
+        templates.Add(new FuncDataTemplate<MappedValueUInt>((_, _) => new Inputs.MappedInput()));
+        
         templates.Add(new FuncDataTemplate<SideBar>((_, _) => new Controls.SideBar()));
         templates.Add(new FuncDataTemplate<Toolbar>((_, _) => new Controls.Toolbar()));
         templates.Add(new FuncDataTemplate<ActivePage>((_, _) => new Controls.ActivePage()));

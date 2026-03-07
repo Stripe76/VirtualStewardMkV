@@ -26,6 +26,15 @@ public partial class VMPlayerInfo : UIItem
         CarInfo = carInfo;
         CarSkinInfo = skinInfo;
     }
+    public VMPlayerInfo( string playerName,string playerNation,string playerTeam,string carID,string skinID )
+    {
+        _playerName = playerName;
+        _playerTeam = playerTeam;
+        _playerNation = playerNation;
+
+        CarInfo = new VMCarInfo( carID );
+        CarSkinInfo = new VMCarSkinInfo( skinID );
+    }
 
     public override string ToString()
     {

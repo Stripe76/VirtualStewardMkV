@@ -1,0 +1,18 @@
+<UserControl x:Class="Framework.UI.Controls.Configuration"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Framework.UI.Configurations"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:Configuration/>
+    </Design.DataContext>
+    <StackPanel Margin="5,5,0,0">
+        <ToggleButton Content="{Binding Header}" IsChecked="{Binding IsExpanded}"/>
+        <shadui:Card IsVisible="{Binding IsExpanded}">
+            <ItemsControl ItemsSource="{Binding Values}"/>
+        </shadui:Card>
+    </StackPanel>
+</UserControl>

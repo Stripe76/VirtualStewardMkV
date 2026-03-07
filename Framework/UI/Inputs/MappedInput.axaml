@@ -1,0 +1,20 @@
+<UserControl x:Class="Framework.UI.Inputs.MappedInput"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <WrapPanel>
+        <TextBlock x:Name="tb" Text="{Binding Title,StringFormat={}{0}:}" ToolTip.Tip="{Binding Description}" MinWidth="90" VerticalAlignment="Center"/>
+        <Grid x:Name="grid" MinWidth="150" VerticalAlignment="Center" ColumnDefinitions="*,55">
+            <Slider MinWidth="{Binding MinWidth}"
+                    Value="{Binding InputValue}"
+                    Minimum="0"
+                    Maximum="{Binding ValuesNumber}"
+                    IsSnapToTickEnabled="True"
+                    TickFrequency="1">
+            </Slider>
+            <TextBlock Grid.Column="1" Text="{Binding TextValue}" VerticalAlignment="Center"/>
+        </Grid>
+    </WrapPanel>
+</UserControl>

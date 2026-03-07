@@ -21,6 +21,8 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   private readonly int _playerID = 0;
 
   [ObservableProperty] private bool _isEditingMode;
+
+  public int PlayerID => _playerID;
   
   public CarDatasource Datasource { get; }
 
@@ -52,6 +54,16 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     LineStyle = lineStyle;
 
     InfoEditing = new VMPlayerInfoEditing( this );
+  }
+  public VMPlayer( int playerID,string playerName,string playerNation,string playerTeam,string carID,string skinID,CarDatasource? datasource = null )
+  {
+    _playerID = playerID;
+    
+    PlayerInfo = new VMPlayerInfo( playerName,playerNation,playerTeam,carID,skinID );
+
+    //_lineColor = LineColors[((PlayerID < 0) ? 0 : PlayerID) % LineColors.Count];
+    
+    Datasource = datasource ?? new EmptyDatasource( );
   }
 
   private VMPlayerLapList CreateLapsList()

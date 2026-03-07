@@ -112,7 +112,7 @@ public partial class ReplayLoading : StateFeature
 					VMReplay replay = new( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
 					VMPlayerList players = state.Players;
 
-					players.SupressNotification = true;
+					//players.SupressNotification = true;
 					players.Clear( );
 
 					int id = 0;

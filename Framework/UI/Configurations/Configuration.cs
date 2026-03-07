@@ -1,22 +1,27 @@
-﻿using Framework.UI.Values;
-using Framework.IniFiles;
+﻿using Framework.IniFiles;
+using Framework.UI.Values;
 
 namespace Framework.UI.Configurations;
 
-public class Configuration
+public class Configuration : UIBase
 {
   private readonly string _name;
+  private readonly object? _header;
 
   private List<object>? _values = null;
 
+  public object? Header => _header;
   public List<object> Values
   {
     get => _values ??= PopulateValues( );
   }
 
-  public Configuration( string name )
+  public Configuration( string name,object? header = null )
   {
     _name = name;
+    _header = header;
+
+    IsExpanded = true;
   }
 
   private List<object> PopulateValues( )

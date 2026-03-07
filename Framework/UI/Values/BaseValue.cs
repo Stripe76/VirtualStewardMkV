@@ -31,6 +31,7 @@ public class BaseValue<T>( T? value,string name,string title ) : UIBase
   public string Description { get; set; } = title;
 
   public bool Separator { get; set; } = false;
+  public double MinWidth { get; } = 200;
 
   public Action<T?>? ValueChanged = null;
 }
@@ -39,7 +40,7 @@ public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged
 {
   public override string? TextValue
   {
-    get => $"{string.Format( "{0:" + Format + "}",Value )} {Unit}";
+    get => $"{string.Format( "{0:" + Format + "}",(FormatValue!=null)?(FormatValue(Value)):(Value) )} {Unit}";
   }
 
   public T Minimum { get; protected set; }
@@ -47,6 +48,7 @@ public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged
 
   public string Unit { get; set; } = string.Empty;
   public string Format { get; set; } = "0";
+  public Func<T,string>? FormatValue { get; set; }
 
   public BaseUnmanagedValue( string name,string title ) : base( default,name,title )
   {
@@ -71,4 +73,14 @@ public class BaseInt( string name,string title ) : BaseUnmanagedValue<int>( int.
 
 public class BaseBool( string name,string title ) : BaseUnmanagedValue<bool>( false,true,name,title )
 {
+}
+
+public class BaseSwitchBool( string name,string titleOn,string titleOff ) : BaseUnmanagedValue<bool>( false,true,name,titleOn )
+{
+  public string TitleOff => titleOff;
+}
+
+public class BaseThreeStateBool( string name,string title ) : BaseValue<bool?>( null,name,title )
+{
+  public bool IsThreeState => true;
 }

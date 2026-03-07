@@ -25,10 +25,10 @@
         </Border>
     </Design.PreviewWith>
 
-    <sys:Double x:Key="ToolTipContentMaxWidth">320</sys:Double>
+    <sys:Double x:Key="ToolTipContentMaxWidth">420</sys:Double>
 
     <ControlTheme TargetType="ToolTip" x:Key="{x:Type ToolTip}">
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
         <Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Padding" Value="12,6" />
@@ -49,11 +49,11 @@
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Padding="{TemplateBinding Padding}">
                     <ContentPresenter
+                        Name="PART_ContentPresenter"
                         Content="{TemplateBinding Content}"
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         MaxWidth="{TemplateBinding MaxWidth}"
-                        Name="PART_ContentPresenter"
-                        TextBlock.TextWrapping="Wrap" />
+                        TextBlock.TextWrapping="Wrap"/>
                 </Border>
             </ControlTemplate>
         </Setter>

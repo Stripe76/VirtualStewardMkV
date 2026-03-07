@@ -8,19 +8,20 @@
             Spacing="24"
             Width="250">
             <ToggleSwitch OffContent="Off" OnContent="On" />
-            <ToggleSwitch
-                OffContent="Off"
-                OnContent="On"
-                shadui:ToggleSwitchAssist.RightAlignedContent="True" />
+            <ToggleSwitch shadui:ToggleSwitchAssist.RightAlignedContent="True" >
+                <ToggleSwitch.OnContent>
+                    <TextBlock Text="Disable wrong way"/>
+                </ToggleSwitch.OnContent>
+                <ToggleSwitch.OffContent>
+                    <TextBlock Text="Disable wrong way"/>
+                </ToggleSwitch.OffContent>
+            </ToggleSwitch>
             <ToggleSwitch IsEnabled="False" />
         </StackPanel>
     </Design.PreviewWith>
 
     <ControlTheme TargetType="ToggleSwitch" x:Key="ToggleSwitchTheme">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}" />
-        <Setter Property="RenderTransform">
-            <ScaleTransform ScaleX="1.1" ScaleY="1.1" />
-        </Setter>
         <Setter Property="OnContent" Value="" />
         <Setter Property="OffContent" Value="" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -136,7 +137,7 @@
                                             </Border.Transitions>
                                         </Border>
                                         <Border
-                                            Background="{DynamicResource PrimaryForegroundColor}"
+                                            Background="{DynamicResource BackgroundColor}"
                                             Name="KnobOn"
                                             Opacity="0">
                                             <Border.Transitions>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia;
@@ -16,7 +17,7 @@ public partial class VMMapImage : UIBase
     public double Scale
     {
         get => _Scale.ScaleX;
-        set => _Scale.ScaleX = _Scale.ScaleY = value / 50.0f;
+        set => _Scale.ScaleX = _Scale.ScaleY = Math.Max( value,5.0 ) / 50.0f;
     }
     public double Rotation
     {
@@ -38,7 +39,6 @@ public partial class VMMapImage : UIBase
 
         Transforms.Children.Add(_Scale);    
         Transforms.Children.Add(_Rotation);
-        
     }
 
     public void BindIsVisible( UIBase visibleBinding )

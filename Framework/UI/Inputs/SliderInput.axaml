@@ -1,0 +1,14 @@
+<UserControl x:Class="Framework.UI.Inputs.SliderInput"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <WrapPanel>
+        <TextBlock Text="{Binding Title,StringFormat={}{0}:}" ToolTip.Tip="{Binding Description}" MinWidth="90" VerticalAlignment="Center"/>
+        <Grid VerticalAlignment="Center" ColumnDefinitions="*,Auto">
+            <Slider MinWidth="{Binding MinWidth}" Value="{Binding Value}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"/>
+            <TextBlock Grid.Column="1" MinWidth="50" Text="{Binding TextValue}" VerticalAlignment="Center"/>
+        </Grid>
+    </WrapPanel>
+</UserControl>

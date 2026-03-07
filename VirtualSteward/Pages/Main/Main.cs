@@ -38,6 +38,7 @@ public partial class Main : Feature
         _ = new Features.ProgressBar.ProgressBar(templates);
 
         Pages.Add( new Replays.Replays( _state,templates,"Replays",window,_fileManager,_messageManager ),false,true );
+        Pages.Add( new Server.Server( _state,templates,"Server",_fileManager,_messageManager ) );
 
         SideBar = new SideBar( Pages );
 
