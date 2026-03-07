@@ -47,6 +47,8 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     Datasource = new ReplayFileDatasource( replayCar,replayTail );
 
     CarImage = carImage;
+    CarImage.BindIsVisible( this );
+    
     LineStyle = lineStyle;
 
     InfoEditing = new VMPlayerInfoEditing( this );

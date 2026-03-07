@@ -10,6 +10,17 @@
         <Setter Property="Padding" Value="4" />
         <Setter Property="HasShadow" Value="False" />
     </Style>
+    <Style Selector="Image.PlayerInfo">
+        <Setter Property="Width" Value="13"/>
+        <Setter Property="Height" Value="13"/>
+        <Setter Property="Margin" Value="2,2,4,2"/>
+        <Setter Property="Source" Value="../../../Assets/AD.png"/>
+    </Style>
+    <Style Selector="Ellipse.PlayerInfo">
+        <Setter Property="Width" Value="13"/>
+        <Setter Property="Height" Value="13"/>
+        <Setter Property="Margin" Value="2,2,4,2"/>
+    </Style>
     <Style Selector="Grid.PlayerInfo">
         <Setter Property="MinWidth" Value="250"/>
     </Style>
@@ -22,11 +33,6 @@
         <Setter Property="IsVisible" Value="False"/>
         <Setter Property="Padding" Value="4,0,4,0"/>
         <Setter Property="MinHeight" Value="0"/>
-    </Style>
-    <Style Selector="Ellipse.PlayerInfo">
-        <Setter Property="Width" Value="12"/>
-        <Setter Property="Height" Value="12"/>
-        <Setter Property="Margin" Value="4"/>
     </Style>
     <Style Selector="shadui|Card.PlayerInfo /template/ ContentPresenter">
         <Setter Property="Margin" Value="0" />

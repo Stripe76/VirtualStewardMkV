@@ -67,5 +67,7 @@
       <None Update="Cars\MX5 Cup.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Remove="Assets\AD.png" />
+      <AvaloniaResource Include="Assets\AD.png" />
     </ItemGroup>
 </Project>

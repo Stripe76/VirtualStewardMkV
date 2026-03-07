@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Framework.UI;
@@ -38,6 +38,18 @@ public partial class VMMapImage : UIBase
 
         Transforms.Children.Add(_Scale);    
         Transforms.Children.Add(_Rotation);
+        
+    }
+
+    public void BindIsVisible( UIBase visibleBinding )
+    {
+        visibleBinding.PropertyChanged += VisibleBinding_PropertyChanged;
+    }
+
+    private void VisibleBinding_PropertyChanged( object? sender,PropertyChangedEventArgs e )
+    {
+        if( e.PropertyName is nameof( UIBase.IsVisible ) && sender is not null and UIBase binding )
+            IsVisible = binding.IsVisible;
     }
 }
 

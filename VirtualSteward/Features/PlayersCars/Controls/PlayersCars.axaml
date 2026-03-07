@@ -16,7 +16,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas RenderTransform="{Binding CarImage.Transforms}">
-                        <Image Source="{Binding CarImage.Image}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
+                        <Image Source="{Binding CarImage.Image}" IsVisible="{Binding IsVisible}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
                     </Canvas>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

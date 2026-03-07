@@ -1,9 +1,7 @@
 using Avalonia.Controls.Templates;
-using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
 
 using VirtualSteward.Features.PlayersList.ViewModels;
-using VirtualSteward.Features.TrackMap.ViewModels;
 
 namespace VirtualSteward.Features.PlayersList;
 

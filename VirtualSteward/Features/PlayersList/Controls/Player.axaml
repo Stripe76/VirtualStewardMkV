@@ -15,7 +15,8 @@
             <shadui:CardDescription>
                 <Panel>
                     <Grid Classes="PlayerInfo" ColumnDefinitions="Auto * Auto" IsVisible="{Binding !IsEditingMode}">
-                        <Ellipse Grid.Column="0" Classes="PlayerInfo" Fill="{Binding LineStyle.Color}"/>
+                        <Ellipse Grid.Column="0" Classes="PlayerInfo" IsVisible="{Binding IsVisible}" Fill="{Binding LineStyle.Color}" PointerPressed="Visible_PointerPressed"/>
+                        <Image Grid.Column="0" Classes="PlayerInfo" IsVisible="{Binding !IsVisible}" PointerPressed="Visible_PointerPressed"/>
                         <TextBlock Grid.Column="1" Text="{Binding PlayerInfo.PlayerName}" ToolTip.Tip="{Binding PlayerInfo}" />
                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                             <ToggleButton Classes="PlayerInfo" IsChecked="{Binding IsExpanded}">

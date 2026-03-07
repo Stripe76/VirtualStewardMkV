@@ -14,7 +14,7 @@
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><Panel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Image}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
+                    <Image Source="{Binding Image}" IsVisible="{Binding IsVisible}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.Styles>
