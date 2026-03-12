@@ -57,4 +57,11 @@
       <ProjectReference Include="..\ShadUI\ShadUI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="UI\Controls\TreePathView.xaml" />
+      <AvaloniaXaml Include="UI\Controls\TreePathView.xaml" />
+      <None Remove="UI\Controls\TreePathViewNode.xaml" />
+      <AvaloniaXaml Include="UI\Controls\TreePathViewNode.xaml" />
+    </ItemGroup>
+
 </Project>

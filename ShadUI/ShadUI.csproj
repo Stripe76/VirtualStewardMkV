@@ -24,10 +24,6 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.3.10" />
         <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.10" />
-        <PackageReference Include="MinVer" Version="7.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.10" />
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.10" />
     </ItemGroup>

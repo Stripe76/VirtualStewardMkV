@@ -17,6 +17,7 @@ public class ObservableCollectionEx<T> : ObservableCollection<T>
       if( !_supressNotification && _notificationSupressed )
       {
         this.OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Reset ) );
+        
         _notificationSupressed = false;
       }
     }
@@ -24,7 +25,7 @@ public class ObservableCollectionEx<T> : ObservableCollection<T>
 
   public void Refresh( )
   {
-    //CollectionViewSource.GetDefaultView( this ).Refresh( );
+    OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Reset ) );
   }
 
   protected override void OnCollectionChanged( NotifyCollectionChangedEventArgs e )
@@ -32,6 +33,7 @@ public class ObservableCollectionEx<T> : ObservableCollection<T>
     if( SupressNotification )
     {
       _notificationSupressed = true;
+      
       return;
     }
     base.OnCollectionChanged( e );

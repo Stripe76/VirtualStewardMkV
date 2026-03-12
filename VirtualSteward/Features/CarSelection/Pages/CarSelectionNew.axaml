@@ -1,0 +1,27 @@
+<UserControl x:Class="VirtualSteward.Features.CarSelection.Pages.CarSelectionNew"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection"
+             xmlns:ci="clr-namespace:VirtualSteward.Features.CarSelection.ViewModels"
+             xmlns:uc="clr-namespace:VirtualSteward.Features.CarSelection.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:CarSelection/>
+    </Design.DataContext>
+    
+    <Grid ColumnDefinitions="280 *">
+        <StackPanel>
+            <ContentControl Content="{Binding SelectedCars.ActiveItem}">
+                <ContentControl.DataTemplates>
+                    <DataTemplate DataType="ci:VMCarInfo">
+                        <uc:CarInfoDisplay/>
+                    </DataTemplate>
+                </ContentControl.DataTemplates>
+            </ContentControl>
+            <ItemsControl ItemsSource="{Binding SelectedCars.SelectedItems}"/>
+        </StackPanel>
+        <ContentControl Grid.Column="1" Content="{Binding SelectCarsTree}"/>
+    </Grid>
+</UserControl>

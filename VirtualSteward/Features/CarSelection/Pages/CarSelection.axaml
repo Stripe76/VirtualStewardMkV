@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:uc="clr-namespace:VirtualSteward.Features.CarSelection.Controls"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="VirtualSteward.Features.CarSelection.Pages.CarSelection">
+  <Design.DataContext>
+    <vm:CarSelection/>
+  </Design.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="270"/>
+      <ColumnDefinition Width="5"/>
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+
+    <Grid Grid.Row="0" Grid.ColumnSpan="3">
+      <Label Grid.Column="0" Content="{Binding Title}"/>
+      <TextBlock Text="🗙" PointerReleased="Close_MouseUp" HorizontalAlignment="Right"/>
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <StackPanel Grid.Row="0" Margin="5,0,5,0">
+        <Grid Grid.Row="1" IsVisible="{Binding ShowCarsLists}">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <Grid Grid.Row="0" Height="35">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Cars list:" VerticalAlignment="Center"></Label>
+            <ComboBox Grid.Column="1" ItemsSource="{Binding CarsLists}" SelectedItem="{Binding SelectedCarsList}"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+              <!--<Button Content="&#x2795;" Command="cmd:CarSelection.Command_CreateNewList" Style="{StaticResource SmallButtons}"/>-->
+            </StackPanel>
+          </Grid>
+
+          <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Name:" Margin="10,5,5,5"/>
+            <TextBox Grid.Column="1" Text="{Binding SelectedCarsList.ListName}"/>
+          </Grid>
+        </Grid>
+
+        <Image Height="140" Source="{Binding SelectedCars.ActiveItem.SelectedSkin.ImageBitmap}"/>
+        <TextBlock Text="{Binding SelectedCars.ActiveItem.SelectedSkin.ImageFile}"/>
+        <ComboBox SelectedItem="{Binding SelectedCars.ActiveItem.SelectedSkin}" ItemsSource="{Binding SelectedCars.ActiveItem.CarSkinsList.Items}" Margin="5"/>
+      </StackPanel>
+
+      <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="5">
+        <ItemsControl ItemsSource="{Binding SelectedCars.SelectedItems}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <uc:CarsListItem/>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+    <GridSplitter Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Width="5" HorizontalAlignment="Stretch" Background="{StaticResource HeaderBackground}"/>
+
+    <Grid Grid.Row="1" Grid.Column="2" Margin="5,0,0,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" Text="Available cars:" />
+
+      <Grid x:Name="gCarsSelector" Grid.Row="1" Margin="5,0,5,0">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding Progress}"/>
+        <ContentControl Grid.Row="1" Content="{Binding SelectedCars}"/>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

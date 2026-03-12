@@ -1,0 +1,33 @@
+<UserControl x:Class="VirtualSteward.Features.CarSelection.Controls.CarsSelector"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection.Controls"
+             xmlns:uc="clr-namespace:Framework.UI.Controls;assembly=Framework" 
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:CarsSelector/>
+    </Design.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="15,0,20,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Search:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" x:Name="tbSearchFilter" TextChanged="SearchFilter_TextChanged" Height="20" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Click="ResetSearch_Click" Content="&#x2716;" Width="20" Height="20" Margin="5,5,5,5" FontSize="10" FontWeight="Bold"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <uc:TreePathView DataContext="{Binding Cars}"/>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

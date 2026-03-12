@@ -101,6 +101,7 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
   public bool MultiActiveWithCtrlEnabled = false;
 
   public bool FirstAlwaysActive = false;
+  public bool LastSelectedAsActive = false;
 
   public event EventHandler<T?>? ActiveItemChanged;
   public event EventHandler<T?>? SelectedItemChanged;
@@ -148,19 +149,14 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
     base.Remove( item );
     
     _activeList.Remove( item );
+    _visibleList.Remove( item );
     _selectedList.Remove( item );
   }
   public new  void RemoveAt( int index )
   {
     T item = this[index];
 
-    item.IsActive = false;
-    item.IsSelected = false;
-
     Remove( item );
-    
-    _activeList.Remove( item );
-    _selectedList.Remove( item );
   }
 
   public void AddRange( IEnumerable<T> list )
@@ -232,6 +228,9 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
           }
           if (!_selectedList.Contains(item))
             _selectedList.Add(item);
+
+          if( LastSelectedAsActive )
+            item.IsActive = true;
 
           OnPropertyChanged(nameof(SelectedItem));
 

@@ -1,11 +1,16 @@
 using System;
 using Avalonia.Controls.Templates;
 using CommunityToolkit.Mvvm.Input;
+
+using Framework.Settings;
 using Framework.UI;
+
+using VirtualSteward.ViewModels;
 using VirtualSteward.ACNetwork.Shared;
 using VirtualSteward.ACNetwork.Weather;
 using VirtualSteward.Classes;
-using VirtualSteward.ViewModels;
+using VirtualSteward.Features.CarSelection;
+using VirtualSteward.Features.CarSelection.ViewModels;
 
 using VirtualSteward.Features.Server.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
@@ -32,6 +37,8 @@ public partial class Server : StateFeature
     public CMServerPorts ServerPorts { get; }
     public CMServerOptions ServerOptions { get; }
     public CMServerWeather ServerWeather { get; }
+    
+    public CarSelection CarSelection { get; }
 
     public Server( State state,DataTemplates templates,string title,FilesManager filesManager,MessageManager messageManager ) : base( state,templates,title )
     {
@@ -46,6 +53,7 @@ public partial class Server : StateFeature
                 ValueChanged = WeatherTypeValueChanged
             }
         };
+        CarSelection = new CarSelection( templates,"",filesManager,new VMCarInfoList( true ) { LastSelectedAsActive = true } );
 
         ServerStart = new FeatureCommand( )
         {
@@ -61,6 +69,11 @@ public partial class Server : StateFeature
         templates.Add( new FuncDataTemplate<WeatherTypeValue>( ( _,_ ) => new Framework.UI.Inputs.ComboboxInput( ) ) );
 
         return this;
+    }
+
+    public override void OnLoaded( Settings settings )
+    {
+        CarSelection.OnLoaded( settings );
     }
 
     [RelayCommand( CanExecute = nameof( CansStartServer ) )]

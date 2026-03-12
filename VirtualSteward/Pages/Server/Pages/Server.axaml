@@ -11,7 +11,7 @@
     <Grid ColumnDefinitions="* 5 *">
         <Grid RowDefinitions="Auto *">
             <ContentControl Content="{Binding ServerStart}"/>
-            <ScrollViewer Grid.Row="1" >
+            <ScrollViewer Grid.Row="1">
                 <WrapPanel Orientation="Horizontal">
                     <ContentControl Content="{Binding ServerOptions}"/>
                     <ContentControl Content="{Binding ServerWeather}"/>
@@ -19,6 +19,7 @@
                 </WrapPanel>
             </ScrollViewer>
         </Grid>
-        <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" Background="Red"/>
+        <GridSplitter Grid.Row="0" Grid.Column="1" Width="5"/>
+        <ContentControl Grid.Column="2" Content="{Binding CarSelection}"/>
     </Grid>
 </UserControl>

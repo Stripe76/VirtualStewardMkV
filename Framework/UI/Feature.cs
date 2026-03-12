@@ -5,12 +5,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Templates;
 using Avalonia.Platform.Storage;
-using Framework.UI.Values;
 
+using Framework.UI.Values;
+using Framework.UI.ViewModels;
 using ActivePage = Framework.UI.ViewModels.ActivePage;
 using Configuration = Framework.UI.Configurations.Configuration;
 using SideBar = Framework.UI.ViewModels.SideBar;
 using Toolbar = Framework.UI.ViewModels.Toolbar;
+using TreeNode = Framework.UI.ViewModels.TreeNode;
+using TreeLeaf = Framework.UI.ViewModels.TreeLeaf;
 
 namespace Framework.UI;
 
@@ -80,6 +83,10 @@ public partial class Feature : UIItem
     public static void AddDefaultDataTemplates(DataTemplates templates)
     {
         templates.Add(new FuncDataTemplate<Configuration>((_, _) => new Controls.Configuration()));
+
+        templates.Add( new FuncDataTemplate<TreeLeafCheckbox>( ( _,_ ) => new Controls.TreePathViewLeafCheckbox( ) ) );
+        templates.Add( new FuncDataTemplate<TreeLeaf>( ( _,_ ) => new Controls.TreePathViewLeaf( ) ) );
+        templates.Add( new FuncDataTemplate<TreeNode>( ( _,_ ) => new Controls.TreePathViewNode( ) ) );
 
         templates.Add( new FuncDataTemplate<BaseInt>( ( _,_ ) => new Inputs.TextboxInput( ) ) );
         templates.Add( new FuncDataTemplate<BaseBool>( ( _,_ ) => new Inputs.CheckboxInput( ) ) );

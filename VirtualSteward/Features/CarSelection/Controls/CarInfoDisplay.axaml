@@ -1,0 +1,25 @@
+<UserControl x:Class="VirtualSteward.Features.CarSelection.Controls.CarInfoDisplay"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection.ViewModels"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" Width="270" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMCarInfo/>
+    </Design.DataContext>
+    <StackPanel>
+        <Border CornerRadius="{DynamicResource 3XlCornerRadius}" ClipToBounds="True">
+            <Panel>
+                <Image Source="{Binding SelectedSkin.ImageBitmap}"/>
+                <TextBlock Text="{Binding SelectedSkin.Title}" TextWrapping="Wrap" Margin="16,4,4,4"/>
+            </Panel>
+        </Border>
+        <Slider Minimum="1"
+                Maximum="{Binding CarSkinsList.Count}"
+                Value="{Binding SelectedSkinIndex}"
+                TickFrequency="1"
+                IsSnapToTickEnabled="True"/>
+    </StackPanel>
+</UserControl>

@@ -10,6 +10,8 @@ public class VMCarInfo : UIItem
 {
   private readonly VMCarSkinInfoList _skinInfoList = new ( );
 
+  public string Title => Model;
+
   public string CarID { get; init; }
   public string Model { get; init; }
   public string Brand { get; init; }
@@ -30,13 +32,30 @@ public class VMCarInfo : UIItem
   public VMCarSkinInfo? SelectedSkin
   {
     get => CarSkinsList.SelectedItem;
-
     set
     {
       CarSkinsList.SelectedItem = value; 
       
       OnPropertyChanged( nameof( SkinID ) );
       OnPropertyChanged( nameof( SelectedSkin ) );
+    }
+  }
+
+  public int SelectedSkinIndex
+  {
+    get
+    {
+      for( int i = 0; i < _skinInfoList.Count; i++ )
+        if( _skinInfoList[i] == SelectedSkin )
+          return i+1;
+      return 0;
+    }
+    set
+    {
+      value--;
+      if( value >= 0 && value < _skinInfoList.Count )
+        SelectedSkin = _skinInfoList[value];
+      OnPropertyChanged( nameof( SelectedSkinIndex ) );
     }
   }
 

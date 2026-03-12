@@ -55,6 +55,11 @@ public partial class Main : Feature
 
     public void OnWindowLoaded( )
     {
+        foreach( var page in Pages )
+        {
+            if( page is Feature )
+                ((Feature)page).OnLoaded( _settings );
+        }
         //replayLoading.LoadReplay( "/mnt/data/Users/Sim Racing/Documents/Assetto Corsa/replay/AC_240224-220234_R_ks_mazda_mx5_cup_mugello_.acreplay" );
         //CreateFolder( Path.Combine( _folders.DocumentsFolder,"Cache" ) );
 
