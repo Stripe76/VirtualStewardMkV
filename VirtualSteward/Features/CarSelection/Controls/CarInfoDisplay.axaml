@@ -12,7 +12,7 @@
     <StackPanel>
         <Border CornerRadius="{DynamicResource 3XlCornerRadius}" ClipToBounds="True">
             <Panel>
-                <Image Source="{Binding SelectedSkin.ImageBitmap}"/>
+                <Image Source="{Binding SelectedSkin.PreviewImageBitmap}"/>
                 <TextBlock Text="{Binding SelectedSkin.Title}" TextWrapping="Wrap" Margin="16,4,4,4"/>
             </Panel>
         </Border>

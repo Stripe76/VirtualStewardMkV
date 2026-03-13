@@ -14,6 +14,7 @@
                   Classes.Ghost="{Binding !IsDefault}"
                   Classes.Icon="{Binding IsIcon}"
                   Command="{Binding RoutedCommand}"
+                  CommandParameter="{Binding CommandParameter}"
                   IsEnabled="{Binding !IsBusy}"
                   shadui:ButtonAssist.ShowProgress="{Binding IsBusy}">
         <Panel>

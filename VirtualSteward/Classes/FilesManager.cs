@@ -12,9 +12,13 @@ public class FilesManager
 {
   private string _acFolder;
   private string _vsFolder;
+
   private string _docsFolder;
+  private string _replaysFolder;
 
   private Settings _carsSettings;
+
+  public string ReplaysFolder => _replaysFolder;
 
   public string VSCarsFolder => Path.Combine(_vsFolder, "Cars");
 
@@ -24,6 +28,7 @@ public class FilesManager
   public FilesManager(Settings settings, Settings carsSettings)
   {
     _carsSettings = carsSettings;
+    _replaysFolder = "/mnt/backup/Replays/";
 
     _acFolder = settings.LoadString("Folders", "ACFolder") ??
     #if DEBUG

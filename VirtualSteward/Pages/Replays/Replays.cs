@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
@@ -22,6 +23,9 @@ namespace VirtualSteward.Pages.Replays;
 
 public class Replays : StateFeature
 {
+    private readonly ResetReplay _replayReset;
+    private readonly ReplayLoading _replayLoading;
+
     public string Icon { get; } = "\xf1ec";
 
     public Toolbar LeftToolbar { get; }
@@ -35,7 +39,7 @@ public class Replays : StateFeature
     public UIBaseList Footers { get; } = [];
 
     public VMPlayerList Players => _state.Players;
-
+    
     public Replays(State state,DataTemplates templates,string title,Window window,FilesManager filesManager,MessageManager messageManager) : base(state,templates,title)
     {
         LeftToolbar = new Toolbar();
@@ -45,17 +49,32 @@ public class Replays : StateFeature
         Timelines = new ReplayTimelines( state,templates,state.Players );
         
         _ = new CurrentReplay( state,window );
-        _ = new ResetReplay( state ).AddCommands( RightToolbar );
+        _replayReset = (ResetReplay)new ResetReplay( state ).AddCommands( RightToolbar );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
         _ = new PlayersList( templates );
         _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
-        _ = new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
+
+        _replayLoading = (ReplayLoading)new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
         Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
         Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddCommands( LeftToolbar ) );
 
         Panels.FirstAlwaysActive = true;
+    }
+
+    public void ResetReplay( )
+    {
+        _replayReset.ReplayReset(  );
+    }
+    public async Task LoadReplay( string filename,bool reset = true,bool makeActive = true )
+    {
+        if( reset ) ResetReplay( );
+        //if( makeActive ) IsActive = true;
+
+        await _replayLoading.LoadReplay( filename );
+
+        if( makeActive ) IsActive = true;
     }
     
     public override Feature AddDataTemplates(DataTemplates templates)

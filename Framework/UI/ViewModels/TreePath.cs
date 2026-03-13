@@ -5,7 +5,7 @@ using Framework.Bindables;
 
 namespace Framework.UI.ViewModels;
 
-public class TreePath<T> where T : IMultiListItem
+public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : TreeNode,new()
 {
   private readonly List<string> _paths;
   private readonly ObservableCollectionEx<T> _items;
@@ -17,6 +17,8 @@ public class TreePath<T> where T : IMultiListItem
   public bool ShowRadiobutton { get; set; } = false;
   
   public bool ExpandAll { get; set; }
+
+  public MultiList<TLastNode> LastNodes { get; } = [];
 
   public List<TreeNode> Nodes => _rootNode.Children.Values.ToList( );
 
@@ -40,7 +42,7 @@ public class TreePath<T> where T : IMultiListItem
           //continue;
 
         var currentNode = root;
-        var properties = (path+"/^").Split( '/' );
+        var properties = (path+" ^/^").Split( '/' );
 
         foreach( var prop in properties )
         {
@@ -53,7 +55,7 @@ public class TreePath<T> where T : IMultiListItem
           {
             nodeTitle = id++.ToString( );
 
-            TreeLeaf leafNode;
+            TreeLeaf? leafNode;
             if( ShowCheckbox )
             {
               leafNode = new TreeLeafCheckbox( obj )
@@ -70,9 +72,16 @@ public class TreePath<T> where T : IMultiListItem
                 IsExpanded = ExpandAll,
               };
             }
-            currentNode?.Children.Add( nodeTitle,leafNode );
+            //if( leafNode != null )
+              currentNode?.Children.Add( nodeTitle,leafNode );
             
             continue;
+          }
+          else if( prop.EndsWith( " ^" ) )
+          {
+            var propValue = obj.GetType( )?.GetProperty( prop[0..^2] )?.GetValue( obj )?.ToString( );
+            if( propValue != null )
+              nodeTitle = propValue;
           }
           else
           {
@@ -84,11 +93,23 @@ public class TreePath<T> where T : IMultiListItem
           currentNode?.Children.TryGetValue( nodeTitle,out childNode );
           if( childNode == null )
           {
-            childNode = new TreeNode( obj )
+            if( prop.EndsWith( " ^" ) )
             {
-              Title = nodeTitle,
-              IsExpanded = ExpandAll,
-            };
+              childNode = new TLastNode( )
+              {
+                Title = nodeTitle,
+                IsExpanded = ExpandAll,
+              };
+              LastNodes.Add( (TLastNode)childNode );
+            }
+            else
+            {
+              childNode = new TreeNode( )
+              {
+                Title = nodeTitle,
+                IsExpanded = ExpandAll,
+              };
+            }
             currentNode?.Children.Add( nodeTitle,childNode );
           }
           currentNode = childNode;
@@ -130,6 +151,11 @@ public class TreePath<T> where T : IMultiListItem
   }
 }
 
+public class TreePath<T>( ObservableCollectionEx<T> items,List<string> paths ) : TreePath<T,TreeNode>( items,paths ) where T : IMultiListItem
+{
+  
+}
+
 public class TreeNode : UIItem
 {
   private string _title = "";
@@ -144,27 +170,14 @@ public class TreeNode : UIItem
     get => Objects.Count > 0;
   }
 
-  public TreeNode( IMultiListItem? item = null,string title = "" )
+  public TreeNode( )
   {
-    if( item != null )
-      //item.PropertyChanged += Item_OnSelectedChanged;
-      item.PropertyChanged += Item_PropertyChanged;
   }
 
   public List<IMultiListItem> Objects { get; set; } = [];
   public SortedList<string,TreeNode> Children { get; set; } = [];
 
   public IList<TreeNode> ChildrenItems => Children.Values;
-
-  private void Item_PropertyChanged( object? sender,PropertyChangedEventArgs e )
-  {
-    if( sender != null && e.PropertyName == nameof( IMultiListItem.IsSelected ) )
-    {
-      IsSelected = ((IMultiListItem)sender).IsSelected;
-
-      OnPropertyChanged( nameof( IsSelected ) );
-    }
-  }
 }
 
 public class TreeLeaf( object item ) : TreeNode

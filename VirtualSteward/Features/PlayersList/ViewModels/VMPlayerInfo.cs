@@ -33,7 +33,7 @@ public partial class VMPlayerInfo : UIItem
         _playerNation = playerNation;
 
         CarInfo = new VMCarInfo( carID );
-        CarSkinInfo = new VMCarSkinInfo( skinID );
+        CarSkinInfo = new VMCarSkinInfo( carID,skinID,"" );
     }
 
     public override string ToString()

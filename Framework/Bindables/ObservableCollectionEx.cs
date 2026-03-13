@@ -23,6 +23,14 @@ public class ObservableCollectionEx<T> : ObservableCollection<T>
     }
   }
 
+  public void Add( IList<T> toAdd )
+  {
+    foreach( var item in toAdd )
+    {
+      Add( item );
+    }
+  }
+
   public void Refresh( )
   {
     OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Reset ) );

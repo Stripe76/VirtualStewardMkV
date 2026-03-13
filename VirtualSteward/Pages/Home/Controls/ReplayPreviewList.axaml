@@ -1,0 +1,17 @@
+<UserControl x:Class="VirtualSteward.Pages.Home.Controls.ReplayPreviewList"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Grid RowDefinitions="Auto *" Height="232">
+        <TextBlock Classes="h2" Text="{Binding Title}" Margin="8"/>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding}" VerticalAlignment="Top">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

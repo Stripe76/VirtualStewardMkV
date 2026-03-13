@@ -1,15 +1,13 @@
-using ACLibrary.Tracklines;
-using Avalonia.Controls;
-using Avalonia.Controls.Templates;
-using CommunityToolkit.Mvvm.Input;
-using Framework.Settings;
 using ShadUI;
+using CommunityToolkit.Mvvm.Input;
+using Avalonia.Controls.Templates;
+
+using Framework.Settings;
 
 using Framework.UI;
 using Framework.UI.ViewModels;
 
 using VirtualSteward.Classes;
-using VirtualSteward.Features;
 
 namespace VirtualSteward.Pages.Main;
 
@@ -37,10 +35,14 @@ public partial class Main : Feature
 
         _ = new Features.ProgressBar.ProgressBar(templates);
 
-        Pages.Add( new Replays.Replays( _state,templates,"Replays",window,_fileManager,_messageManager ),false,true );
-        Pages.Add( new Server.Server( _state,templates,"Server",_fileManager,_messageManager ) );
+        Replays.Replays replays = new Replays.Replays( _state,templates,"Replay",window,_fileManager,_messageManager );
+        Server.Server server = new Server.Server( _state,templates,"Server",_fileManager,_messageManager ); 
 
-        SideBar = new SideBar( Pages );
+        Pages.Add( new Home.Home( _state,templates,"Home",_fileManager,_messageManager,replays,server ),false,true );
+        Pages.Add( replays );
+        Pages.Add( server );
+
+        SideBar = new SideBar( Pages ) { IsExpanded = true };
 
         AddDataTemplates(templates);
         AddDefaultDataTemplates(templates);

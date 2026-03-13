@@ -1,0 +1,48 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+    <Style Selector="Border.ReplayPreview">
+        <Setter Property="Width" Value="280"/>
+        <Setter Property="Height" Value="180"/>
+        <Setter Property="Margin" Value="8,8,0,0"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource 3XlCornerRadius}"/>
+    </Style>
+    <Style Selector="Image">
+        <Setter Property="Height" Value="90"/>
+        <Setter Property="Opacity" Value=".2"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Duration="0:0:0.20" Property="Opacity" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="StackPanel.ReplayPreviewCommands">
+        <Setter Property="Orientation" Value="Horizontal"/>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Margin" Value="0,0,8,8"/>
+    </Style>
+    <Style Selector="StackPanel">
+        <Setter Property="Opacity" Value="0"/>
+    </Style>
+    
+    <Style Selector="Border:pointerover Image">
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+    <Style Selector="Border:pointerover StackPanel">
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+    <Style Selector="Border:pointerover TextBlock.Title">
+        <Setter Property="Opacity" Value="0"/>
+    </Style>
+    
+    <Style Selector="TextBlock.Selected">
+        <Setter Property="Background" Value="{DynamicResource InfoColor60}"/>
+    </Style>
+</Styles>

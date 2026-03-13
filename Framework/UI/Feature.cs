@@ -71,7 +71,7 @@ public partial class Feature : UIItem
     {
 
     }
-    public virtual void OnLoaded( Settings.Settings settings )
+    public virtual async Task OnLoaded( Settings.Settings settings )
     {
 
     }
@@ -171,10 +171,11 @@ public partial class FeatureCommand : UIItem
         }
     } = "";
 
-    public string Text { get; set; } = "";
-    public string Tooltip { get; set; } = "";
+    public string Text { get; init; } = "";
+    public string Tooltip { get; init; } = "";
 
-    public ICommand? RoutedCommand { get; set; } = null;
+    public ICommand? RoutedCommand { get; init; } = null;
+    public object? CommandParameter { get; init; } = null;
 }
 
 public class RepeatCommand : FeatureCommand

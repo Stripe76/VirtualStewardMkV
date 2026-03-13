@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using ACLibrary.Tracks;
-
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Framework.UI;
 using Framework.Bindables;
 
@@ -10,6 +12,7 @@ namespace VirtualSteward.ViewModels;
 
 public class VMTrackInfo : UIItem
 {
+  private Bitmap? _imageBitmap = null; 
   private string? _cspSettingsFile = null;
 
   private bool _isLoaded = false;
@@ -33,6 +36,16 @@ public class VMTrackInfo : UIItem
 
   public string MapImageFile { get; internal set; }
   public string PreviewImageFile { get; internal set; }
+
+  public Bitmap? PreviewImageBitmap
+  {
+    get
+    {
+      if( File.Exists( PreviewImageFile ) )
+        return _imageBitmap ??= new Bitmap( PreviewImageFile );
+      return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/AD.png" ) ) );
+    }
+  }
 
   public string Track
   {

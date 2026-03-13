@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.ViewModels;
 
 namespace VirtualSteward.Features.ResetReplay;
 
@@ -37,9 +38,9 @@ public partial class ResetReplay( State state ) : StateFeature( state )
     _state.Replay = new VMReplay( );
     _state.Players.Clear( );
     //_state.MergedPlayers.Clear( );
-    
-    //_state.TracklineFiles.Clear( );
-    //_state.TracklineLimits.Clear( );
+
+    //_state.Track = new VMTrackInfo( "","" );
+    //_state
 
     //LapsMergeMode = false;
     ReplayResetCommand.NotifyCanExecuteChanged( );

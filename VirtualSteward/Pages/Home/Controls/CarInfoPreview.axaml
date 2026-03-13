@@ -1,0 +1,17 @@
+<UserControl x:Class="VirtualSteward.Pages.Home.Controls.CarInfoPreview"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMCarInfo/>
+    </Design.DataContext>
+    <Border CornerRadius="{DynamicResource 3XlCornerRadius}" ClipToBounds="True">
+        <Panel Width="180" Height="120">
+            <Image Source="{Binding SelectedSkin.PreviewImageBitmap}" Stretch="UniformToFill"/>
+            <TextBlock Text="{Binding SelectedSkin.Title}" TextWrapping="Wrap" Margin="16,4,4,4"/>
+        </Panel>
+    </Border>
+</UserControl>

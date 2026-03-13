@@ -1,0 +1,27 @@
+<UserControl x:Class="VirtualSteward.Pages.Home.Pages.Home"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Pages.Home"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:Home/>
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto Auto Auto *">
+        <ContentControl Grid.Row="0" Content="{Binding LatestReplays}"/>
+        <ContentControl Grid.Row="1" Content="{Binding RecentReplays}"/>
+
+        <TextBlock Grid.Row="2" Classes="h2" Text="All replays" Margin="8,4,4,4"/>
+        <Grid Grid.Row="3" ColumnDefinitions="200 *">
+            <ScrollViewer Content="{Binding ReplaysTree}" />
+            <ScrollViewer Grid.Column="1">
+                <ItemsControl ItemsSource="{Binding ReplaysTree.LastNodes.SelectedItem.ChildrenItems}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -103,7 +103,7 @@ public class VMCarInfo : UIItem
     foreach( var skinInfo in _skinInfoList )
       if( skinInfo.ID.Equals( skinID ) )
         return skinInfo;
-    return new VMCarSkinInfo( skinID );
+    return new VMCarSkinInfo( "","","" );
   }
 
   public override string ToString( )
@@ -115,4 +115,3 @@ public class VMCarInfo : UIItem
 public class VMCarInfoList( bool multiSelect ) : MultiList<VMCarInfo>( multiSelect,false,false )
 {
 }
-

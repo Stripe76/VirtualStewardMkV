@@ -62,28 +62,30 @@ public partial class ReplayLoading : StateFeature
 	}
 	
 	[RelayCommand( CanExecute = nameof(CanLoadReplay) )]
-	private async Task LoadReplay( string? e )
+	public async Task LoadReplay( string? e )
 	{
-		IStorageFile? file = null;
-		if( e != null )
-		{
-			file = OpenFile( e );
-		}
-		else
+		string? filename = e; 
+		if( e == null )
 		{
 			var task = PickFilesAsync( "/mnt/data/Users/Sim Racing/Documents/Assetto Corsa/replay/",ACReplayFiles );
 			if( task is not null && await task is { Count: > 0 } )
 			{
-				file = task.Result[0];
+				IStorageFile file = task.Result[0];
+				filename = file.TryGetLocalPath( );
+				
 			}
 		}
-		if( file != null )
+		if( filename != null )
 		{
 			_openReplay.IsBusy = true;
 
-			await LoadReplay( file,_state,_fileManager,_messageManager,_progress );
+			await LoadReplay( filename,_state,_fileManager,_messageManager,_progress );
 			
 			_openReplay.IsBusy = false;
+		}
+		else
+		{
+			// TODO: error
 		}
 	}
 	private bool CanLoadReplay()
@@ -92,7 +94,7 @@ public partial class ReplayLoading : StateFeature
 		return true;
 	}
 
-	private static async Task LoadReplay( IStorageFile file,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
+	private static async Task LoadReplay( string filename,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
 	{
 		try
 		{
@@ -102,50 +104,46 @@ public partial class ReplayLoading : StateFeature
 			if( progress != null )
 				messageManager.ShowProgress( "Loading replay file",progress );
 
-			string? filename = file.TryGetLocalPath( );
-			if( filename != null )
+			Replay? acReplay = await Task.Run( () => Replay.LoadReplay( filename,progress ) );
+			
+			if( acReplay != null )
 			{
-				Replay? acReplay = await Task.Run( () => Replay.LoadReplay( filename,progress ) );
-				
-				if( acReplay != null )
+				VMReplay replay = new( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
+				VMPlayerList players = state.Players;
+
+				//players.SupressNotification = true;
+				players.Clear( );
+
+				int id = 0;
+				foreach( var newCar in acReplay.Cars )
 				{
-					VMReplay replay = new( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
-					VMPlayerList players = state.Players;
-
-					//players.SupressNotification = true;
-					players.Clear( );
-
-					int id = 0;
-					foreach( var newCar in acReplay.Cars )
-					{
-						VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),newCar.NumberOfWings,filesManager.ACCarsFolder );
-						IImmutableSolidColorBrush carColor = VMMapLineStyle.LineColors[id % VMMapLineStyle.LineColors.Count];
-						
-						VMPlayer newPlayer = new ( 
-							id,
-							newCar,
-							acReplay.TailData[id],
-							carInfo,
-							carInfo.GetSkin( newCar.CarSkinID ),
-							new VMMapLineStyle( 2,carColor ),
-							new VMMapImage( filesManager.GetCarImage( newCar.CarID,newCar.CarSkinID,carColor ) )
-							)
-						{
-							//PlayerName = newCar.PlayerName
-							//ShowDetails = true
-						};
-						players.Add( newPlayer );
-
-						id++;
-					}
-					//state.Replay.FileName = replay.FileName;
-					players.SupressNotification = false;
+					VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),newCar.NumberOfWings,filesManager.ACCarsFolder );
+					IImmutableSolidColorBrush carColor = VMMapLineStyle.LineColors[id % VMMapLineStyle.LineColors.Count];
 					
-					state.Replay = replay;
+					VMPlayer newPlayer = new ( 
+						id,
+						newCar,
+						acReplay.TailData[id],
+						carInfo,
+						carInfo.GetSkin( newCar.CarSkinID ),
+						new VMMapLineStyle( 2,carColor ),
+						new VMMapImage( filesManager.GetCarImage( newCar.CarID,newCar.CarSkinID,carColor ) )
+						)
+					{
+						//PlayerName = newCar.PlayerName
+						//ShowDetails = true
+					};
+					players.Add( newPlayer );
+
+					id++;
 				}
-				progress?.Report( -1 );
-				messageManager.ShowSuccess("Replay loaded");
+				//state.Replay.FileName = replay.FileName;
+				players.SupressNotification = false;
+				
+				state.Replay = replay;
 			}
+			progress?.Report( -1 );
+			messageManager.ShowSuccess("Replay loaded");
 		}
 		catch( TaskAlreadyRunning )
 		{

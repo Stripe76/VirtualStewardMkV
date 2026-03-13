@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using ACLibrary.Cars;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Framework.UI;
 using Framework.Bindables;
 
@@ -11,26 +14,29 @@ public class VMCarSkinInfo : UIItem
     
     public string ID;
     public string Title {  get; set; }
-    public string ImageFile { get; set; } = "";
 
-    public Bitmap? ImageBitmap
+    public Bitmap? PreviewImageBitmap
     {
         get
         {
-            return _imageBitmap ??= new Bitmap( ImageFile );
+            if( File.Exists( PreviewImageFile ) )
+                return _imageBitmap ??= new Bitmap( PreviewImageFile );
+            return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/AD.png" ) ) );
         }
     }
+    public string PreviewImageFile { get; internal set; }
 
-    public VMCarSkinInfo( string id )
+    public VMCarSkinInfo( string carID,string skinID,string carsFolder )
     {
-        ID = id;
-        Title = id;
+        ID = skinID;
+        Title = skinID;
+        PreviewImageFile = Path.Combine( carsFolder,carID,"skins",skinID,"preview.jpg" );
     }
     public VMCarSkinInfo( CarSkinInfo info,string imageFile )
     { 
         ID = info.Name;
         Title = info.Title;
-        ImageFile = imageFile;
+        PreviewImageFile = imageFile;
     }
 
     public override string ToString( )

@@ -52,19 +52,19 @@ public class CarSelection : Feature
   public override Feature AddDataTemplates( DataTemplates templates )
   {
     templates.Add( new FuncDataTemplate<CarSelection>( ( _,_ ) => new Pages.CarSelectionNew( ) ) );
-    templates.Add( new FuncDataTemplate<VMCarInfo>( ( _,_ ) => new Controls.CarsListItem( ) ) );
+    //templates.Add( new FuncDataTemplate<VMCarInfo>( ( _,_ ) => new Controls.Car( ) ) );
     templates.Add( new FuncDataTemplate<TreePath<VMCarInfo>>( ( _,_ ) => new Framework.UI.Controls.TreePathView( ) ) );
     //templates.Add( new FuncDataTemplate<VMCarInfoList>( ( _,_ ) => new TreePathView( ) ) );
 
     return this;
   }
 
-  public override void OnLoaded( Settings settings )
+  public override async Task OnLoaded( Settings settings )
   {
     //if( _carsListsFolder != null && LoadCarsLists( _carsListsFolder,CarsLists,_logger ) )
       //SelectedCarsList = CarsLists[0];
 
-    _ = LoadCarsInfosListAsync( _filesManager.ACCarsFolder,SelectedCars,Progress,null );
+    await LoadCarsInfosListAsync( _filesManager.ACCarsFolder,SelectedCars,Progress,null );
   }
 
   /*

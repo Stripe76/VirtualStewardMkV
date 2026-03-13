@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Avalonia.Controls.Templates;
 using CommunityToolkit.Mvvm.Input;
 
@@ -71,13 +72,13 @@ public partial class Server : StateFeature
         return this;
     }
 
-    public override void OnLoaded( Settings settings )
+    public override async Task OnLoaded( Settings settings )
     {
-        CarSelection.OnLoaded( settings );
+        await CarSelection.OnLoaded( settings );
     }
 
     [RelayCommand( CanExecute = nameof( CansStartServer ) )]
-    protected void StartServer( )
+    public void StartServer( )
     {
         if( _serverManager == null || !_serverManager.IsRunning )
         {
