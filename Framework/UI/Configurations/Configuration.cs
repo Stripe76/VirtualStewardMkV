@@ -5,21 +5,18 @@ namespace Framework.UI.Configurations;
 
 public class Configuration : UIBase
 {
-  private readonly string _name;
-  private readonly object? _header;
-
   private List<object>? _values = null;
 
-  public object? Header => _header;
-  public List<object> Values
-  {
-    get => _values ??= PopulateValues( );
-  }
+  public string Name { get; }
+  public double Width { get; init; } = 340.0f;
+  public object? Header { get; }
+  
+  public List<object> Values => _values ??= PopulateValues( );
 
   public Configuration( string name,object? header = null )
   {
-    _name = name;
-    _header = header;
+    Name = name;
+    Header = header;
 
     IsExpanded = true;
   }
@@ -41,7 +38,7 @@ public class Configuration : UIBase
 
   public void Serialize( IniFile iniFile )
   {
-    string section = _name;
+    string section = Name;
     foreach( var value in Values )
     {
       if( value is BaseValue<int> saveInt )
@@ -56,7 +53,7 @@ public class Configuration : UIBase
   }
   public void Deserialize( IniFile iniFile )
   {
-    string section = _name;
+    string section = Name;
     foreach( var value in Values )
     {
       if( value is BaseValue<int> loadInt )

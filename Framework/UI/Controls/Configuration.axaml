@@ -9,8 +9,10 @@
     <Design.DataContext>
         <vm:Configuration/>
     </Design.DataContext>
-    <StackPanel Margin="5,5,0,0">
-        <ToggleButton Content="{Binding Header}" IsChecked="{Binding IsExpanded}"/>
+    <StackPanel Margin="5,5,0,0" Width="{Binding Width}">
+        <Border PointerReleased="InputElement_OnPointerReleased" Background="{DynamicResource BackgroundColor}">
+            <TextBlock Classes="h2 Muted" Text="{Binding Header}"/>
+        </Border>
         <shadui:Card IsVisible="{Binding IsExpanded}">
             <ItemsControl ItemsSource="{Binding Values}"/>
         </shadui:Card>

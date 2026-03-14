@@ -14,6 +14,7 @@
         <Style Selector="^.h2">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="8,4,4,4" />
         </Style>
 
         <Style Selector="^.h3">
