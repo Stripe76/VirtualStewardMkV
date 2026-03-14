@@ -22,8 +22,7 @@
     <Color x:Key="PrimaryColor75">#BFE5E5E5</Color>
     <Color x:Key="PrimaryColor50">#80E5E5E5</Color>
     <Color x:Key="PrimaryColor10">#19E5E5E5</Color>
-    <!--<Color x:Key="PrimaryForegroundColor">#18181B</Color>-->
-    <Color x:Key="PrimaryForegroundColor">#E5E5E5</Color>
+    <Color x:Key="PrimaryForegroundColor">#18181B</Color>
     <Color x:Key="SecondaryColor">#2C2C30</Color>
     <Color x:Key="SecondaryColor75">#BF2C2C30</Color>
     <Color x:Key="SecondaryColor50">#802C2C30</Color>

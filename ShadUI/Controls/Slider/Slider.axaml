@@ -109,7 +109,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Border
-                    Background="{DynamicResource PrimaryForegroundColor}"
+                    Background="{DynamicResource PrimaryColor75}"
                     BorderBrush="{DynamicResource BorderColor}"
                     BorderThickness="1"
                     CornerRadius="{DynamicResource FullCornerRadius}" />

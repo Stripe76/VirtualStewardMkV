@@ -70,11 +70,10 @@ public class Replays : StateFeature
     public async Task LoadReplay( string filename,bool reset = true,bool makeActive = true )
     {
         if( reset ) ResetReplay( );
+        if( makeActive ) IsActive = true;
         //if( makeActive ) IsActive = true;
 
         await _replayLoading.LoadReplay( filename );
-
-        if( makeActive ) IsActive = true;
     }
     
     public override Feature AddDataTemplates(DataTemplates templates)

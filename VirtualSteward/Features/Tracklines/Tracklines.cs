@@ -10,6 +10,7 @@ using Framework.UI.Inputs;
 using ACLibrary.Tracklines;
 using Avalonia;
 using VirtualSteward.Classes;
+using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Tracklines.Values;
 using VirtualSteward.Features.Tracklines.ViewModels;
 using VirtualSteward.Features.TrackMap.ViewModels;
@@ -71,9 +72,13 @@ public class Tracklines : StateFeature
     return this;
   }
 
+  public override void OnReplayChanged( VMReplay replay )
+  {
+    _tracklineLimits.Clear(  );
+  }
   public override void OnTrackChanged( VMTrackInfo trackInfo )
   {
-    LoadTracklinesFiles( trackInfo,null );
+     LoadTracklinesFiles( trackInfo,null );
   }
 
   private void OnSelectedTracklineFileChanged(VMTracklineFile? file)
@@ -102,13 +107,14 @@ public class Tracklines : StateFeature
     }
   }
 
-  private async void LoadTracklinesFiles( VMTrackInfo trackInfo,IProgress<float>? progress )
+  private async Task LoadTracklinesFiles( VMTrackInfo trackInfo,IProgress<float>? progress )
   {
     _tracklineFiles.Clear( );
 
     progress?.Report( 0 );
     {
       var files = await Task.Run( () => Trackline.GetTracklinesFiles( _filesManager.ACTracksFolder,trackInfo.TrackID,trackInfo.VariantID ) );
+      //var files = Trackline.GetTracklinesFiles( _filesManager.ACTracksFolder,trackInfo.TrackID,trackInfo.VariantID );
       
       foreach( var file in files )
       {

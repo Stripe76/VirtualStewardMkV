@@ -10,7 +10,7 @@
         <vm:Configuration/>
     </Design.DataContext>
     <StackPanel Margin="5,5,0,0" Width="{Binding Width}">
-        <Border PointerReleased="InputElement_OnPointerReleased" Background="{DynamicResource BackgroundColor}">
+        <Border PointerReleased="InputElement_OnPointerReleased" Background="{DynamicResource WindowBackgroundColor}">
             <TextBlock Classes="h2 Muted" Text="{Binding Header}"/>
         </Border>
         <shadui:Card IsVisible="{Binding IsExpanded}">

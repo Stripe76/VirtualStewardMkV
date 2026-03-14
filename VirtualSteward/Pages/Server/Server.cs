@@ -47,11 +47,11 @@ public partial class Server : StateFeature
     {
         _messageManager = messageManager;
 
-        ServerPorts = new CMServerPorts( _settings ) { Width = 390 } ;
-        ServerOptions = new CMServerOptions( _settings ) { Width = 390 } ;
+        ServerPorts = new CMServerPorts( _settings ) { Width = 395 } ;
+        ServerOptions = new CMServerOptions( _settings ) { Width = 395 } ;
         ServerWeather = new CMServerWeather( _settings )
         {
-            Width = 390,
+            Width = 395,
             WeatherType =
             {
                 ValueChanged = WeatherTypeValueChanged

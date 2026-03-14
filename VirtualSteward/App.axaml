@@ -14,8 +14,10 @@
              <FontFamily x:Key="ShadUIIcon">avares://Framework/Assets/Fonts#shadui</FontFamily>
 
              <ResourceDictionary.ThemeDictionaries>
-                 <ResourceInclude Source="/Themes/Light.axaml" x:Key="Light" />
-                 <ResourceInclude Source="/Themes/Dark.axaml" x:Key="Dark" />
+                 <!--<ResourceInclude Source="/Themes/Light.axaml" x:Key="Light" />-->
+                 <!--<ResourceInclude Source="/Themes/Dark.axaml" x:Key="Dark" />-->
+                 <ResourceInclude Source="avares://ShadUI/Themes/Light.axaml" x:Key="Light"/>
+                 <ResourceInclude Source="avares://ShadUI/Themes/Dark.axaml" x:Key="Dark"/>
              </ResourceDictionary.ThemeDictionaries>
          </ResourceDictionary>
      </Application.Resources>

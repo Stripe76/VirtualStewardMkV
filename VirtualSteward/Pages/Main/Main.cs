@@ -95,9 +95,15 @@ public partial class Main : Feature
     {
         CurrentTheme = CurrentTheme switch
         {
+#if DEBUG
+            ThemeMode.Dark => ThemeMode.Light,
+            ThemeMode.Light => ThemeMode.Dark,
+            ThemeMode.System => ThemeMode.Light,
+#else
             ThemeMode.System => ThemeMode.Light,
             ThemeMode.Light => ThemeMode.Dark,
             _ => ThemeMode.System
+#endif
         };
         _themeWatcher.SwitchTheme(CurrentTheme);
     }

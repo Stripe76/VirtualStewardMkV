@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Pages.Home"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Design.DataContext>
         <vm:Home/>
@@ -13,14 +14,16 @@
         <ContentControl Grid.Row="1" Content="{Binding RecentReplays}"/>
 
         <TextBlock Grid.Row="2" Classes="h2" Text="All replays" Margin="8,4,4,4"/>
-        <Grid Grid.Row="3" ColumnDefinitions="200 *">
+        <Grid Grid.Row="3" ColumnDefinitions="300 *">
             <ScrollViewer Content="{Binding ReplaysTree}" />
             <ScrollViewer Grid.Column="1">
-                <ItemsControl ItemsSource="{Binding ReplaysTree.LastNodes.SelectedItem.ChildrenItems}" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <Panel>
+                    <ItemsControl ItemsSource="{Binding ReplaysTree.LastNodes.SelectedItem.ChildrenItems}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Panel>
             </ScrollViewer>
         </Grid>
     </Grid>

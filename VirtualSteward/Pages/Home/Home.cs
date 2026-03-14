@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACLibrary.Replays;
 using Avalonia.Controls.Templates;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Framework.UI;
@@ -23,6 +24,8 @@ public partial class Home : StateFeature
     private readonly Replays.Replays _replays;
     private readonly Server.Server _server;
     private readonly VMReplayPreviewList _allReplays = [];
+
+    [ObservableProperty] private bool _isLoading = false;
 
     public string Icon { get; } = "\xf225";
 
@@ -214,9 +217,10 @@ public partial class Home : StateFeature
     }
     [RelayCommand] private async Task StartServer( string filename )
     {
+        _server.IsActive = true;
+
         await _replays.LoadReplay( filename,false,false );
 
         _server.StartServer( );
-        _server.IsActive = true;
     }
 }

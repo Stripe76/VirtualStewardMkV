@@ -29,7 +29,7 @@
                         </Transitions>
                     </Panel.Transitions>
                     <Border
-                        Background="{TemplateBinding Background}"
+                        Background="Transparent"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"

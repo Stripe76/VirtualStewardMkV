@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Framework.Bindables;
 using Framework.UI;
 
@@ -29,7 +30,20 @@ public class VMReplayPreview : UIItem
     }
 }
 
-public class VMReplayPreviewList( string title = "" ) : ObservableCollectionEx<VMReplayPreview>
+public partial class VMReplayPreviewList( string title = "" ) : ObservableCollectionEx<VMReplayPreview>
 {
+    private bool _isExpanded = true;
+
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            _isExpanded = value;
+
+            OnPropertyChanged( new PropertyChangedEventArgs( nameof( IsExpanded ) ) );
+        }
+    }
+
     public string Title { get; } = title;
 }
