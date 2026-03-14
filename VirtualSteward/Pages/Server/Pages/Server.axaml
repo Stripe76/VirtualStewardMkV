@@ -4,13 +4,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Pages.Server"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450">
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Design.DataContext>
         <vm:Server/>
     </Design.DataContext>
-    <Grid ColumnDefinitions="* 5 *">
+    <Grid ColumnDefinitions="* 6 *">
         <Grid RowDefinitions="Auto *">
-            <ContentControl Content="{Binding ServerStart}"/>
+            <StackPanel Orientation="Horizontal">
+                <ContentControl Content="{Binding ServerStart}"/>
+                <ContentControl Content="{Binding ServerStatus}"/>
+            </StackPanel>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                 <WrapPanel Orientation="Horizontal">
                     <ContentControl Content="{Binding ServerOptions}"/>
@@ -19,7 +22,7 @@
                 </WrapPanel>
             </ScrollViewer>
         </Grid>
-        <GridSplitter Grid.Row="0" Grid.Column="1" Width="5"/>
+        <GridSplitter Grid.Row="0" Grid.Column="1" Width="6"/>
         <ContentControl Grid.Column="2" Content="{Binding CarSelection}"/>
     </Grid>
 </UserControl>
