@@ -58,17 +58,12 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel Name="RootPanel">
-                    <Panel.Transitions>
-                        <Transitions>
-                            <TransformOperationsTransition Duration="0:0:0.10" Property="RenderTransform" />
-                        </Transitions>
-                    </Panel.Transitions>
                     <Border
+                        Name="BaseBackground"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
-                        Name="BaseBackground"
                         Opacity=".8">
                         <Border.Transitions>
                             <Transitions>
@@ -97,7 +92,7 @@
                         Padding="{TemplateBinding Padding}"
                         TextElement.Foreground="{TemplateBinding Foreground}">
                         <StackPanel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Orientation="Horizontal">
-                            <Viewbox Height="16" Width="{TemplateBinding shadui:ButtonAssist.ShowProgress, Converter={x:Static shadui:BooleanConverters.ToZeroOrDouble}, ConverterParameter='24'}">
+                            <Viewbox Height="16" Width="{TemplateBinding shadui:ButtonAssist.ShowProgress, Converter={x:Static shadui:BooleanConverters.ToZeroOrDouble}, ConverterParameter='28'}">
                                 <Viewbox.Transitions>
                                     <Transitions>
                                         <DoubleTransition Duration="0:0:0.10" Property="Width" />
@@ -112,7 +107,7 @@
                                                           Converter={x:Static shadui:BooleanConverters.ToInverseOpacity}}"
                                 Width="{TemplateBinding shadui:ButtonAssist.ShowProgress,
                                                         Converter={x:Static shadui:BooleanConverters.ToDoubleOrZero},
-                                                        ConverterParameter='24'}">
+                                                        ConverterParameter='28'}">
                                 <Viewbox.Transitions>
                                     <Transitions>
                                         <DoubleTransition Duration="0:0:0.15" Property="Opacity" />
@@ -125,8 +120,8 @@
                                 Content="{TemplateBinding Content}"
                                 FontSize="{TemplateBinding FontSize}"
                                 FontWeight="SemiBold"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 RecognizesAccessKey="True"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </StackPanel>
                     </Border>

@@ -19,6 +19,7 @@ using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Server.Classes;
 using VirtualSteward.Features.Server.Configurations;
 using VirtualSteward.Features.Server.Values;
+using VirtualSteward.Pages.Server.ViewModels;
 
 namespace VirtualSteward.Pages.Server;
 
@@ -34,6 +35,7 @@ public partial class Server : StateFeature
     public string Icon { get; } = "\xf202";
 
     public FeatureCommand ServerStart { get; }
+    public VMServerStatus ServerStatus { get; }
 
     public CMServerPorts ServerPorts { get; }
     public CMServerOptions ServerOptions { get; }
@@ -62,12 +64,15 @@ public partial class Server : StateFeature
             Text = "Start server",
             RoutedCommand = StartServerCommand
         };
+        ServerStatus = new VMServerStatus( );
     }
 
     public override Feature AddDataTemplates( DataTemplates templates )
     {
         templates.Add( new FuncDataTemplate<Server>( ( _,_ ) => new Pages.Server( ) ) );
         templates.Add( new FuncDataTemplate<WeatherTypeValue>( ( _,_ ) => new Framework.UI.Inputs.ComboboxInput( ) ) );
+
+        templates.Add( new FuncDataTemplate<VMServerStatus>( ( _,_ ) => new Controls.ServerStatus( ) ) );
 
         return this;
     }
@@ -77,7 +82,7 @@ public partial class Server : StateFeature
         await CarSelection.OnLoaded( settings );
     }
 
-    [RelayCommand( CanExecute = nameof( CansStartServer ) )]
+    [RelayCommand( CanExecute = nameof( CanStartServer ) )]
     public void StartServer( )
     {
         if( _serverManager == null || !_serverManager.IsRunning )
@@ -89,8 +94,13 @@ public partial class Server : StateFeature
             {
                 try
                 {
+                    ServerStatus.IsStarting = true;
+                    
                     _serverManager = StartServer( _settings,replay,_state.Players,_state.Track,_serverDebug );
                     _serverManager.Play( 0,10000 );
+
+                    ServerStatus.IsStarting = false;
+                    ServerStatus.SetServerManager( _serverManager );
                 }
                 catch( Exception ex )
                 {
@@ -108,8 +118,7 @@ public partial class Server : StateFeature
             _serverManager = null;
         }
     }
-
-    protected bool CansStartServer( )
+    protected bool CanStartServer( )
     {
         return _state.Replay.IsLoaded;
     }
