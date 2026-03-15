@@ -11,8 +11,8 @@ public class Settings : BindableBase
   {
     _iniFile = new( file );
   }
-
-  public void SaveFile( string? filename )
+  
+  public void SaveFile( string? filename = null )
   { 
     if ( filename != null )
       _iniFile.SaveAs( filename );
@@ -24,9 +24,9 @@ public class Settings : BindableBase
   {
     return _iniFile.GetIntValue( name,section,@default );
   }
-  public bool LoadBool( string section,string name )
+  public bool LoadBool( string section,string name,bool @default = false )
   {
-    return _iniFile.GetBoolValue( name,section );
+    return _iniFile.GetBoolValue( name,section,@default );
   }
   public float LoadFloat( string section,string name,float @default = 0 )
   {

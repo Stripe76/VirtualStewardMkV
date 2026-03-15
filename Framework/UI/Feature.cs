@@ -8,25 +8,31 @@ using Avalonia.Platform.Storage;
 
 using Framework.UI.Values;
 using Framework.UI.ViewModels;
-using ActivePage = Framework.UI.ViewModels.ActivePage;
-using Configuration = Framework.UI.Configurations.Configuration;
-using SideBar = Framework.UI.ViewModels.SideBar;
-using Toolbar = Framework.UI.ViewModels.Toolbar;
-using TreeNode = Framework.UI.ViewModels.TreeNode;
-using TreeLeaf = Framework.UI.ViewModels.TreeLeaf;
+using Framework.UI.Configurations;
 
 namespace Framework.UI;
 
-public partial class Feature : UIItem
+public class Feature : UIItem
 {
-    [ObservableProperty] private string _headerTitle;
+    private readonly FeatureList _loadingList = [];
+    private readonly ConfigurationList _configurations = [];
+    
+    public  string HeaderTitle { get; init; }
 
     public Feature(DataTemplates? templates = null, string headerTitle = "")
     {
         HeaderTitle = headerTitle;
 
-        if (templates != null)
-            AddDataTemplates(templates);
+        if (templates != null) AddDataTemplates(templates);
+    }
+
+    public void AddConfiguration( Configuration configuration )
+    {
+        _configurations.Add( configuration );
+    }
+    public void AddLoadingPage( Feature feature )
+    {
+        _loadingList.Add( feature );
     }
 
     public virtual Feature AddDataTemplates(DataTemplates templates)
@@ -69,15 +75,22 @@ public partial class Feature : UIItem
 
     public virtual void OnLoading( Settings.Settings settings )
     {
-
+        foreach( var configuration in _configurations )
+            configuration.Deserialize( settings );
+        foreach( var feature in _loadingList )
+            feature.OnLoading( settings );
     }
     public virtual async Task OnLoaded( Settings.Settings settings )
     {
-
+        foreach( var feature in _loadingList )
+            await feature.OnLoaded( settings );
     }
     public virtual void OnClosing( Settings.Settings settings )
     {
-
+        foreach( var feature in _loadingList )
+            feature.OnClosing( settings );
+        foreach( var configuration in _configurations )
+            configuration.Serialize( settings );
     }
 
     public static void AddDefaultDataTemplates(DataTemplates templates)
@@ -176,6 +189,11 @@ public partial class FeatureCommand : UIItem
 
     public ICommand? RoutedCommand { get; init; } = null;
     public object? CommandParameter { get; init; } = null;
+}
+
+public class FeatureList : List<Feature>
+{
+
 }
 
 public class RepeatCommand : FeatureCommand

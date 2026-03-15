@@ -36,34 +36,39 @@ public class Configuration : UIBase
     return values;
   }
 
-  public void Serialize( IniFile iniFile )
+  public void Serialize( Settings.Settings settings )
   {
     string section = Name;
     foreach( var value in Values )
     {
       if( value is BaseValue<int> saveInt )
-        iniFile.WriteValue( saveInt.Name,section,saveInt.Value );
+        settings.Save( section,saveInt.Name,saveInt.Value );
       else if( value is BaseValue<int> saveUInt )
-        iniFile.WriteValue( saveUInt.Name,section,saveUInt.Value );
+        settings.Save( section,saveUInt.Name,saveUInt.Value );
       else if( value is BaseValue<float> saveFloat )
-        iniFile.WriteValue( saveFloat.Name,section,saveFloat.Value );
+        settings.Save( section,saveFloat.Name,saveFloat.Value );
       else if( value is BaseValue<bool> saveBool )
-        iniFile.WriteValue( saveBool.Name,section,saveBool.Value );
+        settings.Save( section,saveBool.Name,saveBool.Value );
     }
   }
-  public void Deserialize( IniFile iniFile )
+  public void Deserialize( Settings.Settings settings )
   {
     string section = Name;
     foreach( var value in Values )
     {
       if( value is BaseValue<int> loadInt )
-        loadInt.Value = iniFile.GetIntValue( loadInt.Name,section,loadInt.Value );
+        loadInt.Value = settings.LoadInt( section,loadInt.Name,loadInt.Value );
       else if( value is BaseValue<int> loadUInt )
-        loadUInt.Value = iniFile.GetIntValue( loadUInt.Name,section,loadUInt.Value );
+        loadUInt.Value = settings.LoadInt( section,loadUInt.Name,loadUInt.Value );
       else if( value is BaseValue<float> loadFloat )
-        loadFloat.Value = iniFile.GetFloatValue( loadFloat.Name,section,loadFloat.Value );
+        loadFloat.Value = settings.LoadFloat( section,loadFloat.Name,loadFloat.Value );
       else if( value is BaseValue<bool> loadBool )
-        loadBool.Value = iniFile.GetBoolValue( loadBool.Name,section,loadBool.Value );
+        loadBool.Value = settings.LoadBool( section,loadBool.Name,loadBool.Value );
     }
   }
+}
+
+public class ConfigurationList : List<Configuration>
+{
+  
 }

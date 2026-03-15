@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Framework.UI.Values;
 
-public class BaseValue<T>( T? value,string name,string title ) : UIBase
+public class BaseValue<T>( T? value,string name,string? title = null ) : UIBase
 {
   private T? _value = value;
 
@@ -27,8 +27,8 @@ public class BaseValue<T>( T? value,string name,string title ) : UIBase
   }
 
   public string Name { get; } = name;
-  public string Title { get; } = title;
-  public string Description { get; set; } = title;
+  public string Title { get; } = title ?? name;
+  public string Description { get; set; } = title ?? name;
 
   public bool Separator { get; set; } = false;
   public double MinWidth { get; } = 200;
@@ -50,13 +50,13 @@ public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged
   public string Format { get; set; } = "0";
   public Func<T,string>? FormatValue { get; set; }
 
-  public BaseUnmanagedValue( string name,string title ) : base( default,name,title )
+  public BaseUnmanagedValue( string name,string? title = null ) : base( default,name,title )
   {
-    Description = title;
+    Description = title ?? name;
   }
-  public BaseUnmanagedValue( T minValue,T maxValue,string name,string title ) : base( default,name,title )
+  public BaseUnmanagedValue( T minValue,T maxValue,string name,string? title = null ) : base( default,name,title )
   {
-    Description = title;
+    Description = title ?? name;
 
     Minimum = minValue;
     Maximum = maxValue;
@@ -66,12 +66,11 @@ public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged
   }
 }
 
-
-public class BaseInt( string name,string title ) : BaseUnmanagedValue<int>( int.MinValue,int.MaxValue,name,title )
+public class BaseInt( string name,string? title = null ) : BaseUnmanagedValue<int>( int.MinValue,int.MaxValue,name,title )
 {
 }
 
-public class BaseBool( string name,string title ) : BaseUnmanagedValue<bool>( false,true,name,title )
+public class BaseBool( string name,string? title = null ) : BaseUnmanagedValue<bool>( false,true,name,title )
 {
 }
 
@@ -80,7 +79,7 @@ public class BaseSwitchBool( string name,string titleOn,string titleOff ) : Base
   public string TitleOff => titleOff;
 }
 
-public class BaseThreeStateBool( string name,string title ) : BaseValue<bool?>( null,name,title )
+public class BaseThreeStateBool( string name,string? title = null ) : BaseValue<bool?>( null,name,title )
 {
   public bool IsThreeState => true;
 }

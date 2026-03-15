@@ -79,7 +79,7 @@ public class StateFeature : Feature
 {
     protected readonly State _state;
 
-    public StateFeature( State state, string headerTitle = "" ) : base(null,headerTitle)
+    public StateFeature( State state,string headerTitle = "" ) : base(null,headerTitle)
     {
         _state = state;
         _state.PropertyChanged += State_PropertyChanged;

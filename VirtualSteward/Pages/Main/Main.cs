@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ShadUI;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Controls.Templates;
@@ -19,7 +20,7 @@ public partial class Main : Feature
     private readonly MessageManager _messageManager;
 
     public SideBar SideBar { get; }
-    public ActivePage Pages { get; } = new ( );
+    public ActivePage Pages { get; } = [];
 
     public ToastManager ToastManager { get; } = new ();
    
@@ -28,7 +29,7 @@ public partial class Main : Feature
     {
         _settings = settings;
         _fileManager = new FilesManager( _settings,carsSettings );
-        _state = new State(_fileManager);
+        _state = new State( _fileManager );
         
         _themeWatcher = themeWatcher;
         _messageManager = new MessageManager(ToastManager);
@@ -44,8 +45,10 @@ public partial class Main : Feature
 
         SideBar = new SideBar( Pages ) { IsExpanded = true };
 
-        AddDataTemplates(templates);
-        AddDefaultDataTemplates(templates);
+        AddDataTemplates( templates );
+        AddDefaultDataTemplates( templates );
+
+        OnWindowLoading( );
     }
 
     public override Feature AddDataTemplates(DataTemplates templates)
@@ -55,30 +58,31 @@ public partial class Main : Feature
         return this;
     }
 
-    public void OnWindowLoaded( )
+    public void OnWindowLoading( )
     {
         foreach( var page in Pages )
         {
-            if( page is Feature )
-                ((Feature)page).OnLoaded( _settings );
+            if( page is Feature feature )
+                feature.OnLoading( _settings );
         }
-        //replayLoading.LoadReplay( "/mnt/data/Users/Sim Racing/Documents/Assetto Corsa/replay/AC_240224-220234_R_ks_mazda_mx5_cup_mugello_.acreplay" );
-        //CreateFolder( Path.Combine( _folders.DocumentsFolder,"Cache" ) );
-
-
-        /*
-        bool showDialog = false;
-        foreach( var feature in _settingsFeatures )
+        _settings.SaveFile( );
+    }
+    public async Task OnWindowLoaded( )
+    {
+        foreach( var page in Pages )
         {
-            if( feature.CheckSettings( ) )
-                showDialog = true;
+            if( page is Feature feature )
+                await feature.OnLoaded( _settings );
         }
-        if( showDialog )
-            SettingsDialog.Command_ShowSettings.Execute( null,Application.Current.MainWindow );
-    */
     }
     public void OnWindowClosing( )
     {
+        foreach( var page in Pages )
+        {
+            if( page is Feature feature )
+                feature.OnClosing( _settings );
+        }
+        _settings.SaveFile( );
     }
 
     #region Theme

@@ -10,11 +10,13 @@ using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
 using Framework.Settings;
 using Framework.UI.ViewModels;
+
 using VirtualSteward.Classes;
 using VirtualSteward.ViewModels;
 using VirtualSteward.Pages.Home.ViewModels;
 using VirtualSteward.Features.CarSelection.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.Pages.Home.Configurations;
 
 namespace VirtualSteward.Pages.Home;
 
@@ -29,25 +31,32 @@ public partial class Home : StateFeature
 
     public string Icon { get; } = "\xf225";
 
+    public CMHomeSettings HomeSettings;
+
     public VMReplayPreviewList LatestReplays { get; } = new( "Latests" );
     public VMReplayPreviewList RecentReplays { get; } = new( "Recents" );
 
     public TreePath<VMReplayPreview,VMReplayGroupTreeNode> ReplaysTree { get; }
 
-    public Home( State state,DataTemplates templates,string title,FilesManager filesManager,MessageManager messageManager,Replays.Replays replays,Server.Server server ) :
-        base( state,templates,title )
+    public Home( State state,
+                 DataTemplates templates,
+                 string title,
+                 FilesManager filesManager,
+                 MessageManager messageManager,
+                 Replays.Replays replays,
+                 Server.Server server ) : base( state,templates,title )
     {
         _server = server;
         _replays = replays;
         _filesManager = filesManager;
 
         ReplaysTree = new TreePath<VMReplayPreview,VMReplayGroupTreeNode>( _allReplays,[
-            "{ All replays}",
             "{By date}/MonthGrouping",
             "{By track}/TrackName",
             "{By car}/CarName",
             "{By player}/PlayerName",
         ] );
+        AddConfiguration( HomeSettings = new CMHomeSettings( this ) );
     }
 
     public override Feature AddDataTemplates( DataTemplates templates )
@@ -72,6 +81,8 @@ public partial class Home : StateFeature
 
     public override void OnLoading( Settings settings )
     {
+        base.OnLoading( settings );
+        
         LoadRecentReplays( _state,settings );
     }
     public override async Task OnLoaded( Settings settings )
@@ -79,25 +90,30 @@ public partial class Home : StateFeature
         await LoadReplays( _filesManager );
 
         //_ = Task.Run( ( ) => LoadReplays( _filesManager ) );
+        await base.OnLoaded( settings );
     }
     public override void OnClosing( Settings settings )
     {
         int c = 1;
         foreach( var replay in RecentReplays )
         {
-            if( replay.FileFullPath != null && replay.FileFullPath != string.Empty )
-                settings.Save( "Recent",c++.ToString( ),replay.FileFullPath );
+            if( replay.FileFullPath != string.Empty )
+                settings.Save( "RECENT_REPLAYS",c++.ToString( ),replay.FileFullPath );
         }
+        HomeSettings.LatestCollapsed.Value = !LatestReplays.IsExpanded;
+        HomeSettings.RecentCollapsed.Value = !RecentReplays.IsExpanded;
+
+        base.OnClosing( settings );
     }
 
-    public void AddRecentReplay( State state,string file )
+    private void AddRecentReplay( State state,string? file )
     {
-        if( file != null && file.Length > 0 )
+        if( file is { Length: > 0 } )
         {
             bool found = false;
             foreach( var info in RecentReplays )
             {
-                if( info != null && info.FileFullPath != null && info.FileFullPath.Equals( file ) )
+                if( info.FileFullPath.Equals( file ) )
                 {
                     found = true;
 
@@ -112,8 +128,8 @@ public partial class Home : StateFeature
                 ReplayInfo? replay = ReplayInfo.LoadReplayInfo( file );
                 if( replay != null )
                 {
-                    var trackInfo = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),_filesManager.ACTracksFolder );
-                    var carInfo = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0,_filesManager.ACCarsFolder );
+                    var trackInfo = new VMTrackInfo( state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),_filesManager.ACTracksFolder );
+                    var carInfo = new VMCarInfo( state.GetCarInfo( replay.CarID ),0,_filesManager.ACCarsFolder );
                     var carSKinInfo = new VMCarSkinInfo( replay.CarID,replay.CarSkinID,_filesManager.ACCarsFolder );
 
                     RecentReplays.Insert( 0,new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
@@ -123,18 +139,18 @@ public partial class Home : StateFeature
             }
         }
     }
-    public void LoadRecentReplays( State state,Settings settings )
+    private void LoadRecentReplays( State state,Settings settings )
     {
         for( int c = 1; c <= 6; c++ )
         {
-            string file = settings.LoadString( "Recent",c.ToString( ) );
-            if( file != null && file != string.Empty )
+            string? file = settings.LoadString( "RECENT_REPLAYS",c.ToString( ) );
+            if( !string.IsNullOrEmpty( file ) )
             {
                 ReplayInfo? replay = ReplayInfo.LoadReplayInfo( file );
                 if( replay != null )
                 {
-                    var trackInfo = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),_filesManager.ACTracksFolder );
-                    var carInfo = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0,_filesManager.ACCarsFolder );
+                    var trackInfo = new VMTrackInfo( state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),_filesManager.ACTracksFolder );
+                    var carInfo = new VMCarInfo( state.GetCarInfo( replay.CarID ),0,_filesManager.ACCarsFolder );
                     var carSKinInfo = new VMCarSkinInfo( replay.CarID,replay.CarSkinID,_filesManager.ACCarsFolder );
 
                     RecentReplays.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
@@ -184,7 +200,7 @@ public partial class Home : StateFeature
         }
     }
 
-    protected FeatureCommandList GetCommands( string filename )
+    private FeatureCommandList GetCommands( string filename )
     {
         return
         [

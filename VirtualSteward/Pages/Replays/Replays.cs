@@ -40,7 +40,12 @@ public class Replays : StateFeature
 
     public VMPlayerList Players => _state.Players;
     
-    public Replays(State state,DataTemplates templates,string title,Window window,FilesManager filesManager,MessageManager messageManager) : base(state,templates,title)
+    public Replays( State state,
+                    DataTemplates templates,
+                    string title,
+                    Window window,
+                    FilesManager filesManager,
+                    MessageManager messageManager ) : base( state,templates,title )
     {
         LeftToolbar = new Toolbar();
         RightToolbar = new Toolbar();
@@ -49,13 +54,13 @@ public class Replays : StateFeature
         Timelines = new ReplayTimelines( state,templates,state.Players );
         
         _ = new CurrentReplay( state,window );
-        _replayReset = (ResetReplay)new ResetReplay( state ).AddCommands( RightToolbar );
+        _replayReset = (ResetReplay) new ResetReplay( state ).AddCommands( RightToolbar );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
         _ = new PlayersList( templates );
         _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersLines( templates,TrackMap.Map,state.Players );
 
-        _replayLoading = (ReplayLoading)new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
+        _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
         Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
         Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddCommands( LeftToolbar ) );
