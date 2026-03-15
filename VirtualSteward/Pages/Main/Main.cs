@@ -82,7 +82,7 @@ public partial class Main : Feature
             if( page is Feature feature )
                 feature.OnClosing( _settings );
         }
-        _settings.SaveFile( );
+        _settings.SaveFile( _fileManager.GetSettingsFilename(  ) );
     }
 
     #region Theme

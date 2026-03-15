@@ -12,6 +12,7 @@ public class FilesManager
 {
   private string _acFolder;
   private string _vsFolder;
+  private string _vsSettingsFolder;
 
   private string _docsFolder;
   private string _replaysFolder;
@@ -37,7 +38,19 @@ public class FilesManager
                 "";
     #endif
     _vsFolder = AppDomain.CurrentDomain.BaseDirectory;
+    _vsSettingsFolder = Path.Combine( _vsFolder,"Settings" );
+    
     _docsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Virtual Steward");
+  }
+
+  public string GetSettingsFilename(  )
+  {
+    return CreateFolder( Path.Combine( _vsSettingsFolder ),"VirtualSteward.ini" );
+  }
+
+  public Settings GetServerSettings( string replayFilename )
+  {
+    return new Settings( CreateFolder( Path.Combine( _vsSettingsFolder,"Servers" ),replayFilename + ".vsreplaysettings" ) );
   }
 
   public Bitmap GetCarImage(string carID, string skinID, IImmutableSolidColorBrush carColor, bool bFallBack = true)
@@ -127,4 +140,14 @@ public class FilesManager
     }
     return bodyBitmap;
   }
+  
+  #region Helpers
+  private static string CreateFolder( string folder,string? file = null )
+  {
+    if( !Directory.Exists( folder ) )
+      Directory.CreateDirectory( folder );
+    return file != null ? Path.Combine( folder,file ) : folder;
+  }
+  #endregion
+
 }

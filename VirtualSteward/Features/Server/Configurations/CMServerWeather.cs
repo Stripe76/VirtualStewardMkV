@@ -72,7 +72,7 @@ public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERV
         Value = 0f,
     };
 
-    public RangedFloat RainWater = new( 0,1,nameof( RainWetness ),"Rain water" )
+    public RangedFloat RainWater = new( 0,1,nameof( RainWater ),"Rain water" )
     {
         Format = "0.0",
         ValueChanged = ( value ) => { settings.Weather.WeatherData.RainWater = value; },

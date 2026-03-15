@@ -25,12 +25,12 @@ namespace VirtualSteward.Pages.Server;
 
 public partial class Server : StateFeature
 {
+    private readonly FilesManager _fileManager;
     private readonly MessageManager _messageManager;
-
     private readonly ACServerSettings _settings = new ACServerSettings( );
     private readonly VMServerDebug _serverDebug = new VMServerDebug( );
 
-    private ServerManager? _serverManager = null;
+    private ServerManager? _serverManager;
 
     public string Icon { get; } = "\xf202";
 
@@ -45,6 +45,7 @@ public partial class Server : StateFeature
 
     public Server( State state,DataTemplates templates,string title,FilesManager filesManager,MessageManager messageManager ) : base( state,templates,title )
     {
+        _fileManager = filesManager;
         _messageManager = messageManager;
 
         ServerPorts = new CMServerPorts( _settings ) { Width = 395 } ;
@@ -68,6 +69,11 @@ public partial class Server : StateFeature
         ServerStatus = new VMServerStatus( );
     }
 
+    public override async Task OnLoaded( Settings settings )
+    {
+        await CarSelection.OnLoaded( settings );
+    }
+
     public override Feature AddDataTemplates( DataTemplates templates )
     {
         templates.Add( new FuncDataTemplate<Server>( ( _,_ ) => new Pages.Server( ) ) );
@@ -78,9 +84,11 @@ public partial class Server : StateFeature
         return this;
     }
 
-    public override async Task OnLoaded( Settings settings )
+    public override void OnReplayChanged( VMReplay replay )
     {
-        await CarSelection.OnLoaded( settings );
+        _serverManager?.StopServer( );
+
+        LoadServerConfigurations(  );
     }
 
     [RelayCommand( CanExecute = nameof( CanStartServer ) )]
@@ -102,6 +110,8 @@ public partial class Server : StateFeature
 
                     ServerStatus.IsStarting = false;
                     ServerStatus.SetServerManager( _serverManager );
+
+                    SaveServerConfigurations( );
                 }
                 catch( Exception ex )
                 {
@@ -152,6 +162,28 @@ public partial class Server : StateFeature
         serverManager.StartServer( null,replay.ReplayFrequency,0 );
 
         return serverManager;
+    }
+
+    private void LoadServerConfigurations( )
+    {
+        if( _state.Replay.IsLoaded )
+        {
+            Settings settings = _fileManager.GetServerSettings( _state.Replay.FileName );
+
+            ServerOptions.Deserialize( settings );
+            ServerWeather.Deserialize( settings );
+            ServerPorts.Deserialize( settings );
+        }
+    }
+    private void SaveServerConfigurations( )
+    {
+        Settings settings = _fileManager.GetServerSettings( _state.Replay.FileName );
+        
+        ServerOptions.Serialize( settings );
+        ServerWeather.Serialize( settings );
+        ServerPorts.Serialize( settings );
+        
+        settings.SaveFile(  );
     }
 
     private void WeatherTypeValueChanged( WeatherFxType value )

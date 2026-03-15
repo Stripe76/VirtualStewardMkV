@@ -33,12 +33,8 @@ public partial class MainWindow : ShadUI.Window
     }
     private void Window_Closing( object? sender,WindowClosingEventArgs e )
     {
-        //CreateFolder( Path.Combine( Folders.VirtualStewardFolder,"Settings" ) );
-
         if( DataContext is not null and Main application )
             application.OnWindowClosing( );
-    
-        //_settings.SaveFile( );
     }
     #endregion
 
