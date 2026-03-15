@@ -170,7 +170,7 @@ public class VMTrackline : UIItem
   #endregion
 }
 
-public class VMTracklineList( bool multiSelect = false ) : MultiList<VMTrackline>( multiSelect,false,false )
+public class VMTracklineList( bool multiSelect = false ) : MultiList<VMTrackline>( multiSelect,false )
 {
 }
 

@@ -181,7 +181,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   }
 }
 
-public class VMPlayerList( bool multiSelect = false,bool multiActiveWithCtrl = false ) : MultiList<VMPlayer>( multiSelect,false,multiActiveWithCtrl )
+public class VMPlayerList( bool multiSelect = false,bool multiActive = false ) : MultiList<VMPlayer>( multiSelect,multiActive )
 {
   public uint MaxFrames
   {

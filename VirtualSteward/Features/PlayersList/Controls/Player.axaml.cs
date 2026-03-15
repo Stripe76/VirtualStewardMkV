@@ -12,14 +12,19 @@ public partial class Player : UserControl
         InitializeComponent();
     }
     
-    private void HandleClick(object sender, PointerPressedEventArgs e)
+    private void Player_PointerPressed(object sender, PointerPressedEventArgs e)
     {
         // Event handling logic goes here
         if (DataContext is not null and VMPlayer player)
         {
             var point = e.GetCurrentPoint(sender as Control);
-            if (point.Properties.IsLeftButtonPressed)
-                player.IsActive = !player.IsActive;
+            if( point.Properties.IsLeftButtonPressed )
+            {
+                if( (e.KeyModifiers & KeyModifiers.Control) != 0 )
+                    player.IsMultiActive = !player.IsActive;
+                else
+                    player.IsActive = !player.IsActive;
+            }
             else if (point.Properties.IsRightButtonPressed)
                 player.IsSelected = !player.IsSelected;
             e.Handled = true;

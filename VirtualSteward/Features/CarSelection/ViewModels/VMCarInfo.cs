@@ -112,6 +112,6 @@ public class VMCarInfo : UIItem
   }
 }
 
-public class VMCarInfoList( bool multiSelect ) : MultiList<VMCarInfo>( multiSelect,false,false )
+public class VMCarInfoList( bool multiSelect ) : MultiList<VMCarInfo>( multiSelect,false )
 {
 }

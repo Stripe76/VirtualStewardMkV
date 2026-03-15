@@ -38,7 +38,7 @@ public class VMPlayerLap( uint lapNumber,uint startFrame,uint endFrame,VMMapLine
     }
 }
 
-public class VMPlayerLapList( bool multiSelect = false ) : MultiList<VMPlayerLap>( multiSelect,false,false )
+public class VMPlayerLapList( bool multiSelect = false ) : MultiList<VMPlayerLap>( multiSelect,false )
 {
 
 }

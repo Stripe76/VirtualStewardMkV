@@ -11,6 +11,7 @@ public interface IMultiListItem : INotifyPropertyChanged
 {
   bool IsEnabled { get; set;  }
   bool IsActive { get; set;  }
+  bool IsMultiActive { get; set;  }
   bool IsVisible { get; set;  }
   bool IsSelected { get; set;  }
   bool IsHighlighted { get; set;  }
@@ -19,7 +20,6 @@ public interface IMultiListItem : INotifyPropertyChanged
 
 public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiListItem
 {
-  //private BindingList<T> _itemsList;
   private ObservableCollection<T> _activeList = [];
   private ObservableCollection<T> _visibleList = [];
   private ObservableCollection<T> _selectedList = [];
@@ -98,7 +98,6 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
 
   public bool MultiActiveEnabled = false;
   public bool MultiSelectedEnabled = false;
-  public bool MultiActiveWithCtrlEnabled = false;
 
   public bool FirstAlwaysActive = false;
   public bool LastSelectedAsActive = false;
@@ -106,11 +105,10 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
   public event EventHandler<T?>? ActiveItemChanged;
   public event EventHandler<T?>? SelectedItemChanged;
 
-  public MultiList( bool multiSelect = false,bool multiActive = false,bool multiActiveWithCtrl = false )
+  public MultiList( bool multiSelect = false,bool multiActive = false )
   {
     MultiActiveEnabled = multiActive;
     MultiSelectedEnabled = multiSelect;
-    MultiActiveWithCtrlEnabled = multiActiveWithCtrl;
     
     CollectionChanged += OnCollectionChanged; 
   }
@@ -181,9 +179,7 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
       {
         if( item.IsActive )
         {
-          if( !MultiActiveEnabled /*&&
-              (!MultiActiveWithCtrlEnabled /*|| (!Keyboard.IsKeyDown( Key.LeftCtrl ) && !Keyboard.IsKeyDown( Key.RightCtrl )))*/
-            )
+          if( !MultiActiveEnabled || !item.IsMultiActive )
           {
             foreach( T activeItem in this )
             {

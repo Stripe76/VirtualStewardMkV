@@ -26,7 +26,7 @@ public partial class State : ObservableObject
     [ObservableProperty] private VMCarInfo _car = new( "" );
     [ObservableProperty] private VMTrackInfo _track = new( "","" );
 
-    public VMPlayerList Players { get; } = new(true,true);
+    public VMPlayerList Players { get; } = new( true,true );
 
     public State( FilesManager filesManager)
     {
