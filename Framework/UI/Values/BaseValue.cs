@@ -7,6 +7,8 @@ public class BaseValue<T>( T? value,string name,string? title = null ) : UIBase
 {
   private T? _value = value;
 
+  private string? _warning,_error;
+
   public T? Value 
   {
     get => _value;
@@ -31,7 +33,18 @@ public class BaseValue<T>( T? value,string name,string? title = null ) : UIBase
   public string Description { get; set; } = title ?? name;
 
   public bool Separator { get; set; } = false;
-  public double MinWidth { get; } = 200;
+  public double MinWidth { get; init; } = 200;
+
+  public string? Error
+  {
+    get => _error;
+    set => SetProperty( ref _error,value );
+  }
+  public string? Warning
+  {
+    get => _warning;
+    set => SetProperty( ref _warning,value );
+  }
 
   public Action<T?>? ValueChanged = null;
 }

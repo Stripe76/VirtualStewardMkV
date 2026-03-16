@@ -7,8 +7,9 @@
     <WrapPanel>
         <TextBlock Text="{Binding Title}" MinWidth="100"/>
         <Grid ColumnDefinitions="* Auto">
-            <TextBox Text="{Binding Value}" MinWidth="80"/>
+            <TextBox Text="{Binding Value}" MinWidth="{Binding MinWidth}"/>
             <TextBlock Grid.Column="1" Text="{Binding Unit}"/>
         </Grid>
+        <TextBlock Text="{Binding Error}" IsVisible="{Binding Error,Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
     </WrapPanel>
 </UserControl>

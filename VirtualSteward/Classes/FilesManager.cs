@@ -10,37 +10,34 @@ namespace VirtualSteward.Classes;
 
 public class FilesManager
 {
-  private string _acFolder;
   private string _vsFolder;
+  private string _vsDocsFolder;
   private string _vsSettingsFolder;
-
-  private string _docsFolder;
-  private string _replaysFolder;
 
   private Settings _carsSettings;
 
-  public string ReplaysFolder => _replaysFolder;
+  public string ACFolder { get; set; }
+  public string ReplaysFolder { get; set; }
 
-  public string VSCarsFolder => Path.Combine(_vsFolder, "Cars");
+  public string VSCarsFolder => Path.Combine( _vsFolder,"Cars" );
 
-  public string ACCarsFolder => Path.Combine(_acFolder,"content","cars"); 
-  public string ACTracksFolder => Path.Combine(_acFolder,"content","tracks"); 
+  public string ACCarsFolder => Path.Combine( ACFolder,"content","cars" );
+  public string ACTracksFolder => Path.Combine( ACFolder,"content","tracks" ); 
 
   public FilesManager(Settings settings, Settings carsSettings)
   {
     _carsSettings = carsSettings;
-    _replaysFolder = "/mnt/backup/Replays/";
 
-    _acFolder = settings.LoadString("Folders", "ACFolder") ??
-    #if DEBUG
-                "/mnt/data/Steam_Linux/steamapps/common/assettocorsa/";
-    #else
-                "";
-    #endif
     _vsFolder = AppDomain.CurrentDomain.BaseDirectory;
     _vsSettingsFolder = Path.Combine( _vsFolder,"Settings" );
-    
-    _docsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Virtual Steward");
+    _vsDocsFolder = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),"Virtual Steward" );
+
+    #if DEBUG
+    ACFolder = settings.LoadString( "SETTINGS","ACFolder",@"/mnt/data/Steam_Linux/steamapps/common/assettocorsa/" ) ?? "";
+    #else
+    ACFolder = settings.LoadString( "SETTINGS","ACFolder",@"C:\Program Files (x86)\Steam\steamapps\common\assettocorsa\" ) ?? "";
+    #endif
+    ReplaysFolder = settings.LoadString( "SETTINGS","ReplaysFolder",Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),"Assetto Corsa","replay" ) ) ?? "";
   }
 
   public string GetSettingsFilename(  )

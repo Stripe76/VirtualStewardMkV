@@ -7,10 +7,16 @@
     <WrapPanel Classes="Input">
         <TextBlock Text="{Binding Title}"/>
         <StackPanel Orientation="Horizontal">
-            <TextBox Watermark="Filename" Text="{Binding FileName}" ToolTip.Tip="{Binding Value}" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="250"/>
+            <TextBox Watermark="Filename" Text="{Binding FileName}" ToolTip.Tip="{Binding Value}" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="{Binding MinWidth}"/>
             <Button Margin="5,0,0,0"  Command="{Binding BrowseCommand}" >
                 <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf26d;"/></Viewbox>
             </Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" IsVisible="{Binding Error,Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Classes="Caption Error" Text="•" Margin="8"/><TextBlock Classes="Caption Error" Margin="8" Text="{Binding Error}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" IsVisible="{Binding Warning,Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Classes="Caption Warning" Text="•" Margin="8"/><TextBlock Classes="Caption Warning" Margin="8" Text="{Binding Warning}"/>
         </StackPanel>
     </WrapPanel>
 </UserControl>

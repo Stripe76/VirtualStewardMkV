@@ -12,10 +12,13 @@ using Framework.UI.Configurations;
 
 namespace Framework.UI;
 
-public class Feature : UIItem
+public partial class Feature : UIItem
 {
     private readonly FeatureList _loadingList = [];
     private readonly ConfigurationList _configurations = [];
+
+    [ObservableProperty] private bool _error = false;
+    [ObservableProperty] private bool _warning = false;
     
     public  string HeaderTitle { get; init; }
 
@@ -120,6 +123,7 @@ public class Feature : UIItem
         templates.Add(new FuncDataTemplate<RepeatCommand>((_, _) => new Controls.RepeatCommand()));
         templates.Add(new FuncDataTemplate<FeatureCommand>((_, _) => new Controls.FeatureCommand()));
 
+        templates.Add( new FuncDataTemplate<FolderValue>( ( _,_ ) => new Inputs.FilenameInput( ) ) );
         templates.Add( new FuncDataTemplate<FilenameValue>( ( _,_ ) => new Inputs.FilenameInput( ) ) );
     }
 

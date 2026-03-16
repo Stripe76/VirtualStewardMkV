@@ -89,10 +89,10 @@
                                 </Panel.IsVisible>
                             </Panel>
                             <ContentPresenter
-                                Content="{TemplateBinding Content}"
-                                Grid.Column="2"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 Name="PART_ContentPresenter"
+                                Grid.Column="2"
+                                Content="{TemplateBinding Content}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 RecognizesAccessKey="True"
                                 TextBlock.FontSize="{TemplateBinding FontSize}"
                                 TextBlock.FontWeight="{TemplateBinding FontWeight}"
@@ -140,6 +140,13 @@
         </Style>
         <Style Selector="^:pressed /template/ Panel#RootPanel">
             <Setter Property="RenderTransform" Value="scale(0.95, 0.95)" />
+        </Style>
+
+        <Style Selector="^.Error">
+            <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+        </Style>
+        <Style Selector="^.Warning">
+            <Setter Property="Foreground" Value="{DynamicResource WarningColor}" />
         </Style>
 
         <!--  NoPressedAnimation  -->

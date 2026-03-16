@@ -36,9 +36,9 @@ public class Settings : BindableBase
   {
     return _iniFile.GetDoubleValue( name,section,@default );
   }
-  public string? LoadString( string section,string name )
+  public string? LoadString( string section,string name,string? @default = null )
   {
-    return _iniFile.GetValue( name,section );
+    return _iniFile.GetValue( name,section,@default );
   }
 
   public void Save( string section,string name,int value )

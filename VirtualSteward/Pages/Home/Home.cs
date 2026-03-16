@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ACLibrary.Replays;
@@ -169,24 +170,27 @@ public partial class Home : StateFeature
 
             progress?.Report( 0 );
 
-            var replays = await Task.Run( ( ) => ReplayInfo.GetReplaysInfos( filesManager.ReplaysFolder,progress ) );
-
-            List<VMReplayPreview> sorted = [];
-            foreach( var replay in replays )
+            if( Directory.Exists( filesManager.ReplaysFolder ) )
             {
-                var trackInfo = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),filesManager.ACTracksFolder );
-                var carInfo = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0,filesManager.ACCarsFolder );
-                var carSKinInfo = new VMCarSkinInfo( replay.CarID,replay.CarSkinID,filesManager.ACCarsFolder );
+                var replays = await Task.Run( ( ) => ReplayInfo.GetReplaysInfos( filesManager.ReplaysFolder,progress ) );
 
-                sorted.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
+                List<VMReplayPreview> sorted = [];
+                foreach( var replay in replays )
+                {
+                    var trackInfo = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),filesManager.ACTracksFolder );
+                    var carInfo = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0,filesManager.ACCarsFolder );
+                    var carSKinInfo = new VMCarSkinInfo( replay.CarID,replay.CarSkinID,filesManager.ACCarsFolder );
+
+                    sorted.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
+                }
+                _allReplays.SupressNotification = true;
+                _allReplays.Add( sorted.OrderBy( x => x.TrackName ).ToList( ) );
+                _allReplays.SupressNotification = false;
+
+                LatestReplays.SupressNotification = true;
+                LatestReplays.Add( _allReplays.OrderByDescending( ( x ) => x.ReplayInfo.ReplayDate ).Take( 6 ).ToList( ) );
+                LatestReplays.SupressNotification = false;
             }
-            _allReplays.SupressNotification = true;
-            _allReplays.Add( sorted.OrderBy( x => x.TrackName ).ToList( ) );
-            _allReplays.SupressNotification = false;
-
-            LatestReplays.SupressNotification = true;
-            LatestReplays.Add( _allReplays.OrderByDescending( ( x ) => x.ReplayInfo.ReplayDate ).Take( 6 ).ToList( ) );
-            LatestReplays.SupressNotification = false;
         }
         catch( TaskAlreadyRunning tx )
         {

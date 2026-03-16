@@ -12,12 +12,12 @@
         <StyleInclude Source="../Styles/ReplayPreview.axaml"/>
     </UserControl.Styles>
 
-    <Border Classes="ReplayPreview" ClipToBounds="True" PointerReleased="InputElement_OnPointerReleased">
+    <Border Classes="ReplayPreview" ClipToBounds="True" PointerPressed="InputElement_OnPointerPressed">
         <Panel>
             <Image VerticalAlignment="Top" Source="{Binding ReplayInfo.TrackInfo.PreviewImageBitmap}" Stretch="UniformToFill"/>
             <Image VerticalAlignment="Bottom" Source="{Binding ReplayInfo.CarSkinInfo.PreviewImageBitmap}" Stretch="UniformToFill"/>
 
-            <TextBlock Classes="Title" VerticalAlignment="Top" Text="{Binding ReplayInfo.TrackInfo.TrackName}" TextWrapping="Wrap" Margin="16,4,4,4"/>
+            <TextBlock VerticalAlignment="Top" Text="{Binding ReplayInfo.TrackInfo.TrackName}" TextWrapping="Wrap" Margin="16,4,4,4"/>
             <!--<TextBlock Classes="Title" VerticalAlignment="Top" HorizontalAlignment="Right" Text="{Binding ReplayInfo.ReplayDate,StringFormat={}{0:t}}" TextWrapping="Wrap" Margin="4,4,16,4"/>-->
             <TextBlock Classes="Title" VerticalAlignment="Bottom" Text="{Binding ReplayInfo.CarInfo.Title}" TextWrapping="Wrap" Margin="16,4,4,4"/>
             

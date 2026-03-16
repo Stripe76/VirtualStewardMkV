@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <WrapPanel>
         <TextBlock x:Name="tb" Text="{Binding Title,StringFormat={}{0}:}" ToolTip.Tip="{Binding Description}" MinWidth="90" VerticalAlignment="Center"/>
-        <Grid x:Name="grid" MinWidth="150" VerticalAlignment="Center" ColumnDefinitions="*,55">
+        <Grid x:Name="grid" MinWidth="{Binding MinWidth}" VerticalAlignment="Center" ColumnDefinitions="*,55">
             <Slider MinWidth="{Binding MinWidth}"
                     Value="{Binding InputValue}"
                     Minimum="0"

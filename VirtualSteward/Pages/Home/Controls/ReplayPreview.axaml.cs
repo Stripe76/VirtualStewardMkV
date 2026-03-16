@@ -11,9 +11,9 @@ public partial class ReplayPreview : UserControl
         InitializeComponent( );
     }
 
-    private void InputElement_OnPointerReleased( object? sender,PointerReleasedEventArgs e )
+    private void InputElement_OnPointerPressed( object? sender,PointerPressedEventArgs e )
     {
-        if( e.InitialPressMouseButton == MouseButton.Left )
+        if( e.Properties.IsLeftButtonPressed )
         {
             if( DataContext is not null and VMReplayPreview replayPreview && replayPreview.Commands.Count > 0 )
                 replayPreview.Commands[0].RoutedCommand?.Execute( replayPreview.Commands[0].CommandParameter );

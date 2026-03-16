@@ -56,7 +56,10 @@
         </Style>
 
         <Style Selector="^.Error">
-            <Setter Property="Foreground" Value="{DynamicResource DestructiveColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+        </Style>
+        <Style Selector="^.Warning">
+            <Setter Property="Foreground" Value="{DynamicResource WarningColor}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

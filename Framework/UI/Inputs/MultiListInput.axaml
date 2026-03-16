@@ -6,6 +6,6 @@
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="25">
     <WrapPanel Classes="Input">
         <TextBlock Text="{Binding Title}"/>
-        <ComboBox MinWidth="150" ItemsSource="{Binding Items}" DisplayMemberBinding="{Binding Title}" SelectedItem="{Binding Value}"/>
+        <ComboBox MinWidth="{Binding MinWidth}" ItemsSource="{Binding Items}" DisplayMemberBinding="{Binding Title}" SelectedItem="{Binding Value}"/>
     </WrapPanel>
 </UserControl>

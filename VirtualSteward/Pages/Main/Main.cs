@@ -37,11 +37,15 @@ public partial class Main : Feature
         _ = new Features.ProgressBar.ProgressBar(templates);
 
         Replays.Replays replays = new Replays.Replays( _state,templates,"Replay",window,_fileManager,_messageManager );
-        Server.Server server = new Server.Server( _state,templates,"Server",_fileManager,_messageManager ); 
+        Server.Server server = new Server.Server( _state,templates,"Server",_fileManager,_messageManager );
+        Options.Options options = new Options.Options( _state,templates,"Settings",_fileManager );
 
         Pages.Add( new Home.Home( _state,templates,"Home",_fileManager,_messageManager,replays,server ),false,true );
+        Pages.Add( new Separator(  ) );
         Pages.Add( replays );
         Pages.Add( server );
+        Pages.Add( new Separator(  ) );
+        Pages.Add( options,false,options.CheckSettings(  ) );
 
         SideBar = new SideBar( Pages ) { IsExpanded = true };
 
@@ -65,7 +69,8 @@ public partial class Main : Feature
             if( page is Feature feature )
                 feature.OnLoading( _settings );
         }
-        _settings.SaveFile( );
+        //_settings.SaveFile( );
+        SideBar.IsExpanded = _settings.LoadBool( "SETTINGS","SiderExpanded",true );
     }
     public async Task OnWindowLoaded( )
     {
@@ -77,6 +82,8 @@ public partial class Main : Feature
     }
     public void OnWindowClosing( )
     {
+        _settings.Save( "SETTINGS","SiderExpanded",SideBar.IsExpanded );
+        
         foreach( var page in Pages )
         {
             if( page is Feature feature )

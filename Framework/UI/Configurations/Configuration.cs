@@ -49,6 +49,8 @@ public class Configuration : UIBase
         settings.Save( section,saveFloat.Name,saveFloat.Value );
       else if( value is BaseValue<bool> saveBool )
         settings.Save( section,saveBool.Name,saveBool.Value );
+      else if( value is BaseValue<string> saveString )
+        settings.Save( section,saveString.Name,saveString.Value ?? "" );
     }
   }
   public void Deserialize( Settings.Settings settings )
@@ -64,6 +66,8 @@ public class Configuration : UIBase
         loadFloat.Value = settings.LoadFloat( section,loadFloat.Name,loadFloat.Value );
       else if( value is BaseValue<bool> loadBool )
         loadBool.Value = settings.LoadBool( section,loadBool.Name,loadBool.Value );
+      else if( value is BaseValue<string> loadString )
+        loadString.Value = settings.LoadString( section,loadString.Name,loadString.Value );
     }
   }
 }

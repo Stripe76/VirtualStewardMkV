@@ -6,7 +6,7 @@
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Grid>
-        <ToggleSwitch IsChecked="{Binding Value}" shadui:ToggleSwitchAssist.RightAlignedContent="True" ToolTip.Tip="{Binding Description}">
+        <ToggleSwitch IsChecked="{Binding Value}" shadui:ToggleSwitchAssist.RightAlignedContent="True" ToolTip.Tip="{Binding Description}" MinWidth="{Binding MinWidth}">
             <ToggleSwitch.OnContent>
                 <TextBlock Text="{Binding Title}"/>
             </ToggleSwitch.OnContent>
