@@ -6,8 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              PointerPressed="Track_MouseDown" PointerReleased="Track_MouseUp" PointerMoved="Track_MouseMove" PointerWheelChanged="Track_MouseWheel" SizeChanged="MapDisplay_SizeChanged">
     <Grid Background="{DynamicResource BackgroundColor}">
-        <ItemsControl ItemsSource="{Binding Layers}"/>
-        <ItemsControl ItemsSource="{Binding NewLayers}">
+        <ItemsControl ItemsSource="{Binding Layers}">
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><Grid/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
         </ItemsControl>
         <TextBlock Text="{Binding DebugString}" VerticalAlignment="Bottom"/>

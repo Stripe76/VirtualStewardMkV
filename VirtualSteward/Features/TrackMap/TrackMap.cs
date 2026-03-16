@@ -10,15 +10,14 @@ namespace VirtualSteward.Features.TrackMap;
 public class TrackMap : Feature
 {
   public VMMap Map { get; } = new VMMap( true );
-  public VMMapLayerList Layers { get; } = [];
   
   public TrackMap( DataTemplates templates ) : base(templates)
   {
   }
 
-  public void AddLayer(VMMapLayerNew layer)
+  public void AddLayer(VMMapLayer layer)
   {
-    Map.NewLayers.Add(layer);
+    Map.Layers.Add(layer);
   }
 
   public override Feature AddDataTemplates( DataTemplates templates )

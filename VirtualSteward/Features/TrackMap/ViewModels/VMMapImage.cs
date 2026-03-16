@@ -28,11 +28,6 @@ public partial class VMMapImage : UIBase
 
     public IImage Image { get; }
 
-    public void UpdateImage(double zoom, Point offset, Rect clipping)
-    {
-        
-    }
-
     public VMMapImage( IImage image )
     {
         Image = image;

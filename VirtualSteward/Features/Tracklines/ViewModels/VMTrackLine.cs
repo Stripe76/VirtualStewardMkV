@@ -19,9 +19,6 @@ public class VMTrackline : UIItem
 
   private readonly VMTracklineDataList _lineData = [];
 
-  private double _lineThickness = 1.0f;
-  private IImmutableSolidColorBrush _lineColor = Brushes.DarkGray;
-
   public double TotalLength
   {
     get => _totalLength;
@@ -29,25 +26,6 @@ public class VMTrackline : UIItem
   public double AverageFrameLength
   {
     get => _averageFrameLength;
-  }
-
-  public double LineThickness
-  {
-    get => _lineThickness;
-    set
-    {
-      if( SetProperty( ref _lineThickness,value ) && IsSelected && MapLine != null )
-        MapLine.LineThickness = value;
-    }
-  }
-  public IImmutableSolidColorBrush LineColor
-  {
-    get => _lineColor;
-    set
-    {
-      if( SetProperty( ref _lineColor,value ) && IsSelected && MapLine != null )
-        MapLine.LineColor = value;
-    }
   }
 
   public string FileName { get; set; }
@@ -71,8 +49,6 @@ public class VMTrackline : UIItem
   {
     get => _lineData;
   }
-
-  public VMMapLine? MapLine = null;
 
   public VMTracklineData this[int index]
   {

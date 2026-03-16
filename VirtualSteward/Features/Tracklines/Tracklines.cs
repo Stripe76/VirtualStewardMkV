@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Avalonia;
+using Avalonia.Media;
 using Avalonia.Controls.Templates;
 
 using Framework.UI;
 using Framework.UI.Inputs;
 
 using ACLibrary.Tracklines;
-using Avalonia;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Tracklines.Values;
@@ -20,33 +21,16 @@ namespace VirtualSteward.Features.Tracklines;
 
 public class Tracklines : StateFeature
 {
-  private readonly VMMap? _map;
+  private readonly VMMap _map;
   private readonly FilesManager _filesManager;
 
   private readonly VMTracklineFileList _tracklineFiles = [];
-  private readonly VMTracklineList _tracklineLimits = new VMTracklineList(true);
-
-  private readonly VMMapLayer? _limitsLayer = null,_tracklinesLayer = null;
-
+  private readonly VMMapLineNewList _trackLimitsLines  = [];
+  
+  public VMMapLineStyle LineStyle { get; }
   public TracklineFileValue TracklineFile { get; }
-  
-  /*
-  public ObservableCollection<VMMapLayerSelector> AdditionalLayers
-  {
-    get => _additionalLayers;
-  }
-  */
-  
-  public VMTracklineList TracklineLimits
-  {
-    get => _tracklineLimits;
-  }
-  public VMTracklineFileList TracklineFiles
-  {
-    get => _tracklineFiles;
-  }
-
-  public Tracklines( State state,DataTemplates templates,VMMap? map,FilesManager filesManager) : base( state,templates )
+ 
+  public Tracklines( State state,DataTemplates templates,VMMap map,FilesManager filesManager) : base( state,templates )
   {
     _map = map;
     _filesManager = filesManager;
@@ -54,8 +38,9 @@ public class Tracklines : StateFeature
     TracklineFile = new TracklineFileValue( _tracklineFiles );
     TracklineFile.ValueChanged += OnSelectedTracklineFileChanged;
 
-    _map?.AddLayer( _limitsLayer = new VMLayerTrackline( _tracklineLimits.SelectedItems ),true );
-    _map?.AddLayer( _tracklinesLayer = new VMLayerTracklineFile( _tracklineFiles.SelectedItems ) { IsVisible = false },true );
+    map.AddLayer( new VMMapLinesLayer( _trackLimitsLines ) );
+
+    LineStyle = new VMMapLineStyle( 1,Brushes.Gray );
   }
 
   public override Feature AddDataTemplates( DataTemplates templates )
@@ -67,89 +52,83 @@ public class Tracklines : StateFeature
 
   public override Feature AddFooter(UIBaseList pages, string? headerTitle = null)
   {
-    pages.Add(TracklineFile);
+    pages.Add( TracklineFile );
 
     return this;
   }
 
   public override void OnReplayChanged( VMReplay replay )
   {
-    _tracklineLimits.Clear(  );
+    _trackLimitsLines.Clear(  );
   }
   public override void OnTrackChanged( VMTrackInfo trackInfo )
   {
-     LoadTracklinesFiles( trackInfo,null );
+     LoadTracklinesFiles( trackInfo );
   }
 
-  private void OnSelectedTracklineFileChanged(VMTracklineFile? file)
+  private void LoadTracklinesFiles( VMTrackInfo trackInfo )
   {
-    _tracklineLimits.Clear( );
+    _tracklineFiles.Clear( );
 
-    if (file != null)
+    var files = Trackline.GetTracklinesFiles( _filesManager.ACTracksFolder,trackInfo.TrackID,trackInfo.VariantID );
+    
+    foreach( var file in files )
     {
-      (VMTrackline? leftSide, VMTrackline? rightSide) = CreateTrackLimits(file);
-      if (leftSide != null)
-        _tracklineLimits.Add(leftSide, true);
-      if (rightSide != null)
-      {
-        _tracklineLimits.Add(rightSide, true);
+      _tracklineFiles.Add( new VMTracklineFile( file ) );
+    }
+    var fastLane = _tracklineFiles.FindFile( "fast_lane.ai" );
+    if( fastLane != null )
+    {
+      fastLane.IsSelected = true;
+    }
+    else if( _tracklineFiles.Count > 0 )
+    {
+      _tracklineFiles[0].IsSelected = true;
+    }
+    //_state.TracklinesLoaded = true;
+  }
 
-        if (_map != null)
+  private async void OnSelectedTracklineFileChanged(VMTracklineFile? file)
+  {
+    _trackLimitsLines.Clear( );
+
+    if( file != null )
+    {
+      file.Lines ??= await LoadTracklineAsync( file.FileFullPath,true,null );
+
+      if( file.Lines != null )
+      {
+        (VMTrackline? leftSide,VMTrackline? rightSide) = CreateTrackLimits( file );
+        if( leftSide != null )
         {
-          if (((double)_map.Display.Height) / rightSide.Height * 0.9f <
-              ((double)_map.Display.Width) / rightSide.Width * 0.9f)
+          _trackLimitsLines.Add( new VMMapLineNew( leftSide.GetLinePoints( 0,0 ),LineStyle ) );
+        }
+        if( rightSide != null )
+        {
+          _trackLimitsLines.Add( new VMMapLineNew( rightSide.GetLinePoints( 0,0 ),LineStyle ) );
+
+          if( ((double)_map.Display.Height) / rightSide.Height * 0.9f < ((double)_map.Display.Width) / rightSide.Width * 0.9f )
             _map.Zoom = ((double)_map.Display.Height) / rightSide.Height * 0.9f;
           else
             _map.Zoom = ((double)_map.Display.Width) / rightSide.Width * 0.9f;
-          _map.CenterOn = new Point((rightSide.Left + rightSide.Right) / 2.0f, (rightSide.Top + rightSide.Bottom) / 2.0f);
+          _map.CenterOn = new Point( (rightSide.Left + rightSide.Right) / 2.0f,(rightSide.Top + rightSide.Bottom) / 2.0f );
+
+          _map.UpdateLayers( );
         }
       }
     }
   }
 
-  private async Task LoadTracklinesFiles( VMTrackInfo trackInfo,IProgress<float>? progress )
-  {
-    _tracklineFiles.Clear( );
-
-    progress?.Report( 0 );
-    {
-      var files = await Task.Run( () => Trackline.GetTracklinesFiles( _filesManager.ACTracksFolder,trackInfo.TrackID,trackInfo.VariantID ) );
-      //var files = Trackline.GetTracklinesFiles( _filesManager.ACTracksFolder,trackInfo.TrackID,trackInfo.VariantID );
-      
-      foreach( var file in files )
-      {
-        VMTracklineFile newTrackline = new ( file );
-        //if( newTrackline.FileName.Equals( "fast_lane.ai" ) )
-        //_ = newTrackline.Lines;
-        _tracklineFiles.Add( newTrackline );
-      }
-    }
-    progress?.Report( -1 );
-
-    foreach( var file in _tracklineFiles )
-    {
-      if( file.FileName.Equals( "fast_lane.ai" ) )
-      {
-        file.IsSelected = true;
-        file.LineColor = VMTracklineFile.LineColors[8];
-      }
-      else if( file.FileName.StartsWith( "pit_lane" ) )
-      {
-        file.LineColor = VMTracklineFile.LineColors[1];
-      }
-    }
-    //_state.TracklinesLoaded = true;
-  }
-
-  public static async Task LoadTracklineAsync( string filename,IList<VMTrackline>? trackLines,bool selectedLines,IProgress<float> progress )
+  private static async Task<VMTracklineList?> LoadTracklineAsync( string filename,bool selectedLines,IProgress<float>? progress )
   {
     try
     {
       using IsWorking loading = new( IsWorking.Tasks.TracklinesLoading );
 
-      progress.Report( 0 );
+      progress?.Report( 0 );
       List<Trackline> toAdds = [];
       List<Trackline> lines = await Task.Run( ( ) => Trackline.LoadTracklines( filename,progress ) );
+      //List<Trackline> lines = Trackline.LoadTracklines( filename,progress );
 
       foreach( Trackline trackline in lines )
       {
@@ -183,18 +162,18 @@ public class Tracklines : StateFeature
         }
         toAdds.Add( trackline );
       }
-      if( trackLines != null )
+      var trackLines = new VMTracklineList( );
+      foreach( Trackline trackline in toAdds )
       {
-        foreach( Trackline trackline in toAdds )
-        {
-          VMTrackline newTrackline = new ( trackline.Filename,trackline );
+        VMTrackline newTrackline = new ( trackline.Filename,trackline );
 
-          trackLines.Add( newTrackline );
+        trackLines.Add( newTrackline );
 
-          newTrackline.IsSelected = selectedLines;
-        }
+        newTrackline.IsSelected = selectedLines;
       }
-      progress.Report( -1 );
+      progress?.Report( -1 );
+
+      return trackLines;
     }
     catch( TaskAlreadyRunning  )
     {
@@ -204,8 +183,9 @@ public class Tracklines : StateFeature
     {
       //logger?.Error( "Error in LoadTracklineAsync: {Message}",ex.Message );
 
-      progress.Report( -2 );
+      progress?.Report( -2 );
     }
+    return null;
   }
 
   public static (VMTrackline? left, VMTrackline? right) CreateTrackLimits( VMTrackline trackline )

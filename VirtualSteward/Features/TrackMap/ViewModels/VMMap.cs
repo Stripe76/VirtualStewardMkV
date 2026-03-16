@@ -19,8 +19,6 @@ public class VMMap( bool defaultMapMove ) : UIBase
   private EditingTool? _editingTool = null;
 
   private bool _enableDefaultMapMove = defaultMapMove;
-
-  private readonly VMMapLayerList _layers = [];
   #endregion
 
   #region Properties
@@ -31,8 +29,6 @@ public class VMMap( bool defaultMapMove ) : UIBase
     {
       if( SetProperty( ref _zoom,value ) )
       {
-        foreach( VMMapLayer layer in _layers )
-          layer.Zoom = _zoom;
         UpdateLayers();
       }
       OnPropertyChanged( nameof( DebugString ) );
@@ -47,8 +43,6 @@ public class VMMap( bool defaultMapMove ) : UIBase
 
       if( SetProperty( ref _offset,value ) )
       {
-        foreach( VMMapLayer layer in _layers )
-          layer.Offset = _offset;
         UpdateLayers();
       }
     }
@@ -65,8 +59,6 @@ public class VMMap( bool defaultMapMove ) : UIBase
 
       if( SetProperty( ref _clipping,value ) )
       {
-        foreach( VMMapLayer layer in _layers )
-          layer.Clipping = _clipping;
         UpdateLayers();
       }
     }
@@ -99,12 +91,7 @@ public class VMMap( bool defaultMapMove ) : UIBase
     get => _enableDefaultMapMove;
   }
 
-  public VMMapLayerList Layers
-  {
-    get => _layers;
-  }
-
-  public VMMapLayerNewList NewLayers { get; } = []; 
+  public VMMapLayerList Layers { get; } = []; 
     
   public Point CurrentMousePosition
   {
@@ -132,21 +119,14 @@ public class VMMap( bool defaultMapMove ) : UIBase
   public void AddLayer( VMMapLayer layer,bool first = false )
   {
     if( first )
-      _layers.Insert( 0,layer );
+      Layers.Insert( 0,layer );
     else
-      _layers.Add( layer );
-  }
-  public void AddLayerNew( VMMapLayerNew layer,bool first = false )
-  {
-    if( first )
-      NewLayers.Insert( 0,layer );
-    else
-      NewLayers.Add( layer );
+      Layers.Add( layer );
   }
 
   public void UpdateLayers()
   {
-    foreach (var layer in NewLayers)
+    foreach (var layer in Layers)
     {
       layer.UpdateLayer(_zoom,_offset,_clipping);
     }

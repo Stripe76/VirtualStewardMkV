@@ -5,7 +5,7 @@ using Framework.UI;
 
 namespace VirtualSteward.Features.TrackMap.ViewModels;
 
-public partial class VMMapLayerNew : UIBase
+public partial class VMMapLayer : UIBase
 {
     [ObservableProperty] private double _zoom = 1.0f;
     [ObservableProperty] private Point _offset = new ( );
@@ -17,7 +17,7 @@ public partial class VMMapLayerNew : UIBase
     }
 }
 
-public class VMMapLayerNewList : ObservableCollectionEx<VMMapLayerNew>
+public class VMMapLayerList : ObservableCollectionEx<VMMapLayer>
 {
     
 }

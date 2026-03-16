@@ -27,7 +27,7 @@ public class PlayersCars : Feature
         _map.PropertyChanged += Map_PropertyChanged;
         _timeline.PropertyChanged += Timeline_PropertyChanged;
 
-        map.AddLayerNew(new VMPlayersCarsLayer(_players));
+        map.AddLayer( new VMPlayersCarsLayer( _players ) );
     }
 
     public override Feature AddDataTemplates(DataTemplates templates)

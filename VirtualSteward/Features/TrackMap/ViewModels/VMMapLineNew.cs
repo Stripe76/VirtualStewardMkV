@@ -31,12 +31,11 @@ public class VMMapLineNew( PointCollection line,VMMapLineStyle style ) : UIBase
                     StrokeThickness = Style.Thickness,
                 });
         }
-
         return this;
     }
 }
 
-public class VMMapLineNewList : ObservableCollection<VMMapLineNew>
+public class VMMapLineNewList : ObservableCollectionEx<VMMapLineNew>
 {
     
 }

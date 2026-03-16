@@ -18,51 +18,13 @@ public class VMTracklineFile( string filePath ) : UIItem
 {
   private VMTracklineList? _lines = null;
 
-  private double _lineThickness = 1.0f;
-  private IImmutableSolidColorBrush _lineColor = Brushes.Black;
-
-  public VMTracklineList Lines
+  public VMTracklineList? Lines
   {
-    get
-    {
-      if( _lines == null )
-      {
-        _lines = new VMTracklineList( true );
-
-        Task.Run( ( ) => Tracklines.LoadTracklineAsync( FileFullPath,_lines,true,new Progress<float>( )  ) ).Wait( );
-      }
-      return _lines;
-    }
+    get => _lines;
+    set => SetProperty( ref _lines,value );
   }
 
   public string Title => ToString( );
-
-  public double LineThickness
-  {
-    get => _lineThickness;
-    set
-    {
-      if( SetProperty( ref _lineThickness,value ) && IsSelected && _lines != null )
-      {
-        foreach( var line in _lines )
-          if( line.MapLine != null )
-            line.MapLine.LineThickness = _lineThickness;
-      }
-    }
-  }
-  public IImmutableSolidColorBrush LineColor
-  {
-    get => _lineColor;
-    set
-    {
-      if( SetProperty( ref _lineColor,value ) && IsSelected && _lines != null )
-      {
-        foreach( var lap in _lines  )
-          if( lap.MapLine != null )
-            lap.MapLine.LineColor = _lineColor;
-      }
-    }
-  }
 
   public string FileName { get; set; } = System.IO.Path.GetFileName( filePath );
   public string FileFullPath { get; set; } = filePath;
