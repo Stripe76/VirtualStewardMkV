@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Framework.UI.Values"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:FilenameValue/>
+    </Design.DataContext>
+    
     <WrapPanel Classes="Input">
         <TextBlock Text="{Binding Title}"/>
         <StackPanel Orientation="Horizontal">
@@ -11,6 +16,7 @@
             <Button Margin="5,0,0,0"  Command="{Binding BrowseCommand}" >
                 <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf26d;"/></Viewbox>
             </Button>
+            <CheckBox Foreground="{DynamicResource DestructiveColor}" Content="Overwrite" IsVisible="{Binding ShowOverwrite}" IsChecked="{Binding CanOverwrite}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" IsVisible="{Binding Error,Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
             <TextBlock Classes="Caption Error" Text="•" Margin="8"/><TextBlock Classes="Caption Error" Margin="8" Text="{Binding Error}"/>

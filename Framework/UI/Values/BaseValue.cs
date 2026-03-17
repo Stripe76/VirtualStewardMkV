@@ -18,7 +18,7 @@ public class BaseValue<T>( T? value,string name,string? title = null ) : UIBase
       {
         OnPropertyChanged( nameof( TextValue ) );
 
-        ValueChanged?.Invoke( _value );
+        OnValueChanged( );
       }
     }
   }
@@ -47,6 +47,11 @@ public class BaseValue<T>( T? value,string name,string? title = null ) : UIBase
   }
 
   public Action<T?>? ValueChanged = null;
+
+  protected virtual void OnValueChanged( )
+  {
+    ValueChanged?.Invoke( _value );
+  }
 }
 
 public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged

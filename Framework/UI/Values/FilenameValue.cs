@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Framework.UI.Values;
@@ -29,13 +30,40 @@ public partial class FilenameValue : BaseValue<string>
     set => Value = Path.Combine( FileFolder,FileName + value );
   }
 
+  private bool _showOverwrite;
+  
+  public bool ShowOverwrite
+  {
+    get => _checkOverwrite && File.Exists( Value );
+  }
+
+  [ObservableProperty] private bool _canOverwrite;
+  [ObservableProperty] private bool _checkOverwrite;
+
   public List<FilePickerFileType> FilesFilter = []; 
 
   public FilenameValue( string name,string title,DialogType dialogMode = DialogType.Open ) : base( "",name,title )
   {
     DialogMode = dialogMode;
+  }
 
-    ValueChanged = ( value ) => { OnPropertyChanged( nameof( FileName ) ); };
+  protected override void OnValueChanged( )
+  {
+    CanOverwrite = false;
+
+    OnPropertyChanged( nameof( FileName ) );
+
+    if( CheckOverwrite )
+    {
+      CanOverwrite = !File.Exists( Value );
+
+      OnPropertyChanged( nameof( ShowOverwrite ) );
+    }
+    else
+    {
+      CanOverwrite = true;
+    }
+    base.OnValueChanged( );
   }
 
   [RelayCommand] protected async Task Browse( )
@@ -54,7 +82,7 @@ public partial class FilenameValue : BaseValue<string>
         var task = window.StorageProvider.OpenFilePickerAsync( new FilePickerOpenOptions( )
         {
           FileTypeFilter = FilesFilter,
-          //SuggestedStartLocation = 
+          //SuggestedStartLocation =
         } );
         if( await task is { Count: > 0 } )
         {
@@ -70,12 +98,15 @@ public partial class FilenameValue : BaseValue<string>
 
         var task = window.StorageProvider.SaveFilePickerAsync( new FilePickerSaveOptions( )
         {
+          //ShowOverwritePrompt = !CheckOverwrite,
           FileTypeChoices = FilesFilter,
           //SuggestedStartLocation = directory
         } );
         if( await task is not null && task.Result is not null )
         {
           Value = task.Result.TryGetLocalPath( );
+
+          CanOverwrite = true;
         }
       }
     }

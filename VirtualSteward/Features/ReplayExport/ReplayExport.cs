@@ -56,15 +56,16 @@ public partial class ReplayExport : StateFeature
 		);
 		PlayersExport = new PlayersExportValue( players );
 		TimelineExport = new TimelineExportValue( timelines );
-		FilenameExport = new FilenameValue( "","",FilenameValue.DialogType.Save );
+		FilenameExport = new FilenameValue( "","",FilenameValue.DialogType.Save ) { CheckOverwrite = true };
 
 		Exporters = new ExporterValue( [new ACReplayExport( ),new CSVFileExport( fileTemplates )] )
 		{
 			ValueChanged = OnExporters_ValueChanged
 		};
 		if( Exporters.Value != null )
+		{
 			FilenameExport.FilesFilter = Exporters.Value.FilesFilter;
-
+		}
 		ExportCommand = new FeatureCommand( )
 		{
 			IsDefault = true,
@@ -123,6 +124,12 @@ public partial class ReplayExport : StateFeature
 
 					if( filename != null )
 					{
+						if( !FilenameExport.CanOverwrite )
+						{
+							_messageManager.ShowError( "File already exists",$"Cannot overwrite \"{FilenameExport.FileName}{FilenameExport.FileExtension}\" file" );
+							
+							return;
+						}
 						ExportCommand.IsBusy = true;
 
 						_messageManager.ShowProgress( "Exporting replay file",_progress );
@@ -140,18 +147,23 @@ public partial class ReplayExport : StateFeature
 			}
 		}
 	}
+	private bool CanExportReplay( )
+	{
+		return FilenameExport is { Value: not null,CanOverwrite: true };
+	}
+	
 	[RelayCommand(CanExecute = nameof(CanShowReplayExportPage))] protected void ShowReplayExportPage( )
 	{
 		IsActive = !IsActive;
 	}
-	[RelayCommand] protected void Close( )
-	{
-		IsActive = false;
-	}
-
 	private bool CanShowReplayExportPage( )
 	{
 		return _state.Replay.IsLoaded;
+	}
+
+	[RelayCommand] protected void Close( )
+	{
+		IsActive = false;
 	}
 
 	private static async Task<string?> ExportReplay( string filename,

@@ -21,27 +21,27 @@ public class CSVFileExport( FileTemplateList templates ) : BaseExport( "CSVFile"
 
   public override void ExportReplay( string filename,VMReplay replay,IList<VMPlayer> players,uint startFrame,uint endFrame,IProgress<float>? progress = null )
   {
-    if( _fileTemplates.Value != null )
-    {
-      FileFieldList? fields = _fileTemplates.Value.Fields;
-      if( fields != null )
-      {
-        int count = players.Count;
-        for( int i = 0; i < count; i++ )
-        {
-          VMPlayer player = players[i];
-          string fileName = filename;
-          if( count > 1 )
-            fileName = fileName.Replace( ".csv",$" - {SanitazeFileName( player.PlayerInfo.PlayerName )}.csv" );
+    if( _fileTemplates.Value == null )
+      throw new Exception( "Not data template file selected" );
 
-          using( TextWriter writer = new StreamWriter( File.Open( fileName,FileMode.Create,FileAccess.Write,FileShare.None ) ) )
-          {
-            WriteCSVHeader( writer,fields,',' );
-            WriteCSVData( writer,1.0f / replay.ReplayFrequency,player,player.Datasource,fields,',' );
-          }
-          progress?.Report( (i+1)/(float)count );
-        }
+    FileFieldList? fields = _fileTemplates.Value.Fields;
+    if( fields is not { Count: > 0 } )
+      throw new Exception( "Data template file is empty" );
+    
+    int count = players.Count;
+    for( int i = 0; i < count; i++ )
+    {
+      VMPlayer player = players[i];
+      string fileName = filename;
+      if( count > 1 )
+        fileName = fileName.Replace( ".csv",$" - {SanitazeFileName( player.PlayerInfo.PlayerName )}.csv" );
+
+      using( TextWriter writer = new StreamWriter( File.Open( fileName,FileMode.Create,FileAccess.Write,FileShare.None ) ) )
+      {
+        WriteCSVHeader( writer,fields,',' );
+        WriteCSVData( writer,1.0f / replay.ReplayFrequency,player,player.Datasource,fields,',' );
       }
+      progress?.Report( (i + 1) / (float)count );
     }
   }
 
