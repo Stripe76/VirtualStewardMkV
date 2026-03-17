@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using ACLibrary.Replays;
-
+using Avalonia.Platform.Storage;
 using VirtualSteward.Datasources;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
@@ -11,6 +11,9 @@ namespace VirtualSteward.Features.ReplayExport.Exports.ACReplay;
 
 public class ACReplayExport( ) : BaseExport( "ACReplay","As AC replay file" )
 {
+  public override string FilesExtension { get; } = ".acreplay";
+  public override List<FilePickerFileType> FilesFilter { get; } = [new FilePickerFileType( "AC replay files" ) { Patterns = ["*.acreplay"] },new FilePickerFileType( "All files" ) { Patterns = ["*.*"] }];
+
   public override void ExportReplay( string filename,VMReplay replay,IList<VMPlayer> players,uint startFrame,uint endFrame,IProgress<float>? progress = null )
   {
     Replay acReplay = new( CreateTrackObjects( replay.TrackObjects ),CreatePlayersCars( players,startFrame,endFrame ) )

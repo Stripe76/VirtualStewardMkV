@@ -11,6 +11,7 @@
     </Design.DataContext>
     <WrapPanel Margin="5">
         <ContentControl Content="{Binding Exporters}"/>
+        <ContentControl Content="{Binding Exporters.Value.Parameter}"/>
         <ContentControl Content="{Binding TimelineExport}"/>
         <ContentControl Content="{Binding PlayersExport}"/>
         <ContentControl Content="{Binding FilenameExport}"/>

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -50,6 +52,14 @@ public class FilesManager
     return new Settings( CreateFolder( Path.Combine( _vsSettingsFolder,"Servers" ),replayFilename + ".vsreplaysettings" ) );
   }
 
+  public List<string>? GetFileTemplateFiles( )
+  {
+    string folder = Path.Combine( _vsDocsFolder,"Templates" );
+    if( Directory.Exists( folder ) )
+      return Directory.EnumerateFiles( folder,"*.vscsv" ).ToList( );
+    return null;
+  }
+  
   public Bitmap GetCarImage(string carID, string skinID, IImmutableSolidColorBrush carColor, bool bFallBack = true)
   {
     string? file = _carsSettings.LoadString(carID,skinID);

@@ -8,12 +8,14 @@ using Framework.UI;
 using Framework.UI.Values;
 
 using VirtualSteward.Classes;
+using VirtualSteward.Features.FileTemplates.Classes;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ProgressBar.ViewModel;
 using VirtualSteward.Features.Timelines.ViewModels;
 using VirtualSteward.Features.ReplayExport.Values;
 using VirtualSteward.Features.ReplayExport.Exports;
 using VirtualSteward.Features.ReplayExport.Exports.ACReplay;
+using VirtualSteward.Features.ReplayExport.Exports.CSVFile;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
 
 namespace VirtualSteward.Features.ReplayExport;
@@ -32,8 +34,14 @@ public partial class ReplayExport : StateFeature
 	public FeatureCommand ExportCommand { get; }
 	public FeatureCommand CancelCommand { get; }
 
-	public ReplayExport( State state,DataTemplates templates,VMPlayerList players,VMTimelineList timelines,FilesManager fileManager,MessageManager messageManager ) : base( state,
-		templates )
+	public ReplayExport( 
+		State state,
+		DataTemplates templates,
+		VMPlayerList players,
+		VMTimelineList timelines,
+		FileTemplateList fileTemplates,
+		FilesManager fileManager,
+		MessageManager messageManager ) : base( state,templates )
 	{
 		_messageManager = messageManager;
 
@@ -50,7 +58,12 @@ public partial class ReplayExport : StateFeature
 		TimelineExport = new TimelineExportValue( timelines );
 		FilenameExport = new FilenameValue( "","",FilenameValue.DialogType.Save );
 
-		Exporters = new ExporterValue( [new ACReplayExport( )] );
+		Exporters = new ExporterValue( [new ACReplayExport( ),new CSVFileExport( fileTemplates )] )
+		{
+			ValueChanged = OnExporters_ValueChanged
+		};
+		if( Exporters.Value != null )
+			FilenameExport.FilesFilter = Exporters.Value.FilesFilter;
 
 		ExportCommand = new FeatureCommand( )
 		{
@@ -155,9 +168,7 @@ public partial class ReplayExport : StateFeature
 
 			progress?.Report( 0 );
 
-			//await using var stream = File.OpenWrite( filename );
-
-			await Task.Run( ( ) => exporter.ExportReplay( filename,replay,players,startFrame,endFrame ) );
+			await Task.Run( ( ) => exporter.ExportReplay( filename,replay,players,startFrame,endFrame,progress ) );
 
 			progress?.Report( -1 );
 		}
@@ -175,5 +186,14 @@ public partial class ReplayExport : StateFeature
 			return ex.Message;
 		}
 		return null;
+	}
+	
+	private void OnExporters_ValueChanged( BaseExport? exporter )
+	{
+		if( exporter != null )
+		{
+			FilenameExport.FileExtension = exporter.FilesExtension;
+			FilenameExport.FilesFilter = exporter.FilesFilter;
+		}
 	}
 }

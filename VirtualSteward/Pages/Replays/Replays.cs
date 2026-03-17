@@ -7,6 +7,7 @@ using Framework.UI.ViewModels;
 
 using VirtualSteward.Classes;
 using VirtualSteward.Features.CurrentReplay;
+using VirtualSteward.Features.FileTemplates;
 using VirtualSteward.Features.PlayersCars;
 using VirtualSteward.Features.PlayersLines;
 using VirtualSteward.Features.PlayersList;
@@ -63,7 +64,7 @@ public class Replays : StateFeature
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
         Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
-        Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,filesManager,messageManager ).AddCommands( LeftToolbar ) );
+        Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,new FileTemplates( templates,filesManager ).TemplateFiles,filesManager,messageManager ).AddCommands( LeftToolbar ) );
 
         Panels.FirstAlwaysActive = true;
     }

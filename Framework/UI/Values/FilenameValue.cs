@@ -25,10 +25,11 @@ public partial class FilenameValue : BaseValue<string>
   }
   public string FileExtension
   {
-    get => Value != null ? Path.GetExtension( Value ) :  string.Empty;
+    get => Value != null ? Path.GetExtension( Value ) : string.Empty;
+    set => Value = Path.Combine( FileFolder,FileName + value );
   }
 
-  public string FilesFilter = "All files|*.*";
+  public List<FilePickerFileType> FilesFilter = []; 
 
   public FilenameValue( string name,string title,DialogType dialogMode = DialogType.Open ) : base( "",name,title )
   {
@@ -52,8 +53,8 @@ public partial class FilenameValue : BaseValue<string>
 
         var task = window.StorageProvider.OpenFilePickerAsync( new FilePickerOpenOptions( )
         {
-          //FileTypeFilter = [fileTypes],
-          //SuggestedStartLocation = directory
+          FileTypeFilter = FilesFilter,
+          //SuggestedStartLocation = 
         } );
         if( await task is { Count: > 0 } )
         {
@@ -69,7 +70,7 @@ public partial class FilenameValue : BaseValue<string>
 
         var task = window.StorageProvider.SaveFilePickerAsync( new FilePickerSaveOptions( )
         {
-          //FileTypeFilter = [fileTypes],
+          FileTypeChoices = FilesFilter,
           //SuggestedStartLocation = directory
         } );
         if( await task is not null && task.Result is not null )
