@@ -28,7 +28,7 @@ public partial class Home : StateFeature
     private readonly Server.Server _server;
     private readonly VMReplayPreviewList _allReplays = [];
 
-    [ObservableProperty] private bool _isLoading = false;
+    [ObservableProperty] private bool _replaysLoading = false;
 
     public string Icon { get; } = "\xf225";
 
@@ -58,6 +58,8 @@ public partial class Home : StateFeature
             "{By player}/PlayerName",
         ] );
         AddConfiguration( HomeSettings = new CMHomeSettings( this ) );
+
+        ReplaysLoading = LatestReplays.IsBusy = true;
     }
 
     public override Feature AddDataTemplates( DataTemplates templates )
@@ -90,6 +92,7 @@ public partial class Home : StateFeature
     {
         await LoadReplays( _filesManager );
 
+        ReplaysLoading = LatestReplays.IsBusy = false;
         //_ = Task.Run( ( ) => LoadReplays( _filesManager ) );
         await base.OnLoaded( settings );
     }

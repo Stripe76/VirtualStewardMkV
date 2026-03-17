@@ -101,16 +101,14 @@
                                     IsVisible="{TemplateBinding InputGesture,Converter={x:Static ObjectConverters.IsNotNull}}"
                                     Margin="8,0,0,0"
                                     Opacity="0.5"
-                                    Text="{TemplateBinding InputGesture,
-                                                           Converter={StaticResource KeyGestureConverter}}"
+                                    Text="{TemplateBinding InputGesture,Converter={StaticResource KeyGestureConverter}}"
                                     VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                         <Popup
                             HorizontalOffset="-24"
                             IsLightDismissEnabled="False"
-                            IsOpen="{TemplateBinding IsSubMenuOpen,
-                                                     Mode=TwoWay}"
+                            IsOpen="{TemplateBinding IsSubMenuOpen,Mode=TwoWay}"
                             Name="PART_Popup"
                             Opacity="0"
                             OverlayInputPassThroughElement="{CompiledBinding $parent[Menu]}"

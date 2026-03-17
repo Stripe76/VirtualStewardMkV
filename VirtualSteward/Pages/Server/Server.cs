@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls.Templates;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Framework.Settings;
 using Framework.UI;
+using Framework.Settings;
 
 using VirtualSteward.ViewModels;
 using VirtualSteward.ACNetwork.Shared;
@@ -42,6 +43,10 @@ public partial class Server : StateFeature
     public CMServerWeather ServerWeather { get; }
     
     public CarSelection CarSelection { get; }
+
+    [ObservableProperty] private bool _startReplay;
+    [ObservableProperty] private bool _LaunchCM;
+    [ObservableProperty] private bool _LaunchAC;
 
     public Server( State state,DataTemplates templates,string title,FilesManager filesManager,MessageManager messageManager ) : base( state,templates,title )
     {
@@ -91,8 +96,7 @@ public partial class Server : StateFeature
         LoadServerConfigurations(  );
     }
 
-    [RelayCommand( CanExecute = nameof( CanStartServer ) )]
-    public void StartServer( )
+    [RelayCommand( CanExecute = nameof( CanStartServer ) )] public void StartServer( )
     {
         if( _serverManager == null || !_serverManager.IsRunning )
         {
@@ -106,7 +110,8 @@ public partial class Server : StateFeature
                     ServerStatus.IsStarting = true;
                     
                     _serverManager = StartServer( _settings,replay,_state.Players,_state.Track,_serverDebug );
-                    _serverManager.Play( 0,10000 );
+                    if( StartReplay )
+                        _serverManager.Play( 0,10000 );
 
                     ServerStatus.IsStarting = false;
                     ServerStatus.SetServerManager( _serverManager );
@@ -134,6 +139,19 @@ public partial class Server : StateFeature
         return _state.Replay.IsLoaded;
     }
 
+    [RelayCommand] protected void SetStartReplay(  )
+    {
+        StartReplay = !StartReplay;
+    }
+    [RelayCommand] protected void SetLauncCM(  )
+    {
+        LaunchCM = !LaunchCM;
+    }
+    [RelayCommand] protected void SetLauncAC(  )
+    {
+        LaunchAC = !LaunchAC;
+    }
+    
     private static ServerManager StartServer( ACServerSettings settings,VMReplay replay,VMPlayerList players,VMTrackInfo trackInfo,VMServerDebug serverDebug )
     {
         settings.TrackID = trackInfo.TrackID;

@@ -4,15 +4,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Pages.Server"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Background="{DynamicResource BackgroundColor}">
     <Design.DataContext>
         <vm:Server/>
     </Design.DataContext>
     <Grid ColumnDefinitions="* 6 *">
         <Grid RowDefinitions="Auto *">
             <StackPanel Orientation="Horizontal">
-                <ContentControl Content="{Binding ServerStart}"/>
-                <ContentControl Content="{Binding ServerStatus}"/>
+                <SplitButton Classes="Primary" Margin="6,6,0,0" Width="200" Height="48" Content="Start server" Command="{Binding StartServerCommand}">
+                    <SplitButton.Flyout>
+                        <MenuFlyout Placement="RightEdgeAlignedTop">
+                            <MenuItem Header="Start replay" Command="{Binding SetStartReplay}" IsChecked="{Binding StartReplay}"/>
+                            <MenuItem Header="Launch CM" Command="{Binding SetLauncCM}" IsChecked="{Binding LaunchCM}"/>
+                            <MenuItem Header="Launch AC" Command="{Binding SetLauncAC}" IsEnabled="False" IsChecked="{Binding LaunchAC}"/>
+                        </MenuFlyout>
+                    </SplitButton.Flyout>
+                </SplitButton>
+                <ContentControl Content="{Binding ServerStatus}" Padding="16"/>
             </StackPanel>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                 <WrapPanel Orientation="Horizontal">

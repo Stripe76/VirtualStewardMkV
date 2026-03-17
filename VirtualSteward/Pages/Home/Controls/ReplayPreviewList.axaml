@@ -3,15 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Grid RowDefinitions="Auto *">
         <TextBlock Classes="h2" Text="{Binding Title}" Margin="8" PointerReleased="InputElement_OnPointerReleased" ToolTip.Tip="Click to expand/collapse"/>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" IsVisible="{Binding IsExpanded}">
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding}" VerticalAlignment="Top">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <Panel>
+                <ItemsControl ItemsSource="{Binding}" VerticalAlignment="Top">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <shadui:BusyArea IsBusy="{Binding IsBusy}" Height="200"/>
+            </Panel>
         </ScrollViewer>
     </Grid>
 </UserControl>

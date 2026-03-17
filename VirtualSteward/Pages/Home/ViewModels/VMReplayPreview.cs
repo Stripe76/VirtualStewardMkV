@@ -32,8 +32,18 @@ public class VMReplayPreview : UIItem
 
 public partial class VMReplayPreviewList( string title = "" ) : ObservableCollectionEx<VMReplayPreview>
 {
-    private bool _isExpanded = true;
+    private bool _isExpanded = true,_isBusy = false;
 
+    public bool IsBusy
+    {
+        get => _isBusy;
+        set
+        {
+            _isBusy = value;
+
+            OnPropertyChanged( new PropertyChangedEventArgs( nameof( IsBusy ) ) );
+        }
+    }
     public bool IsExpanded
     {
         get => _isExpanded;
