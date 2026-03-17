@@ -28,7 +28,7 @@ public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : Tr
     _items = items;
     _items.CollectionChanged += Items_CollectionChanged;
     
-    _items.Refresh(  );
+    BuildTree( _rootNode,_items,_paths );
   }
 
   private TreeNode BuildTree( TreeNode root,ObservableCollectionEx<T> items,List<string> paths )

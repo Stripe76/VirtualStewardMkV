@@ -37,7 +37,7 @@ public partial class Home : StateFeature
     public VMReplayPreviewList LatestReplays { get; } = new( "Latests" );
     public VMReplayPreviewList RecentReplays { get; } = new( "Recents" );
 
-    public TreePath<VMReplayPreview,VMReplayGroupTreeNode> ReplaysTree { get; }
+    public TreePath<VMReplayPreview,VMReplayGroupTreeNode>? ReplaysTree { get; set; }
 
     public Home( State state,
                  DataTemplates templates,
@@ -51,12 +51,6 @@ public partial class Home : StateFeature
         _replays = replays;
         _filesManager = filesManager;
 
-        ReplaysTree = new TreePath<VMReplayPreview,VMReplayGroupTreeNode>( _allReplays,[
-            "{By date}/MonthGrouping",
-            "{By track}/TrackName",
-            "{By car}/CarName",
-            "{By player}/PlayerName",
-        ] );
         AddConfiguration( HomeSettings = new CMHomeSettings( this ) );
 
         ReplaysLoading = LatestReplays.IsBusy = true;
@@ -93,7 +87,16 @@ public partial class Home : StateFeature
         await LoadReplays( _filesManager );
 
         ReplaysLoading = LatestReplays.IsBusy = false;
-        //_ = Task.Run( ( ) => LoadReplays( _filesManager ) );
+
+        ReplaysTree = new TreePath<VMReplayPreview,VMReplayGroupTreeNode>( _allReplays,
+        [
+            "{By date}/MonthGrouping",
+            "{By track}/TrackName",
+            "{By car}/CarName",
+            "{By player}/PlayerName",
+        ] );
+        OnPropertyChanged( nameof( ReplaysTree ) );
+
         await base.OnLoaded( settings );
     }
     public override void OnClosing( Settings settings )
@@ -177,21 +180,21 @@ public partial class Home : StateFeature
             {
                 var replays = await Task.Run( ( ) => ReplayInfo.GetReplaysInfos( filesManager.ReplaysFolder,progress ) );
 
-                List<VMReplayPreview> sorted = [];
+                List<VMReplayPreview> unsorted = [];
                 foreach( var replay in replays )
                 {
                     var trackInfo = new VMTrackInfo( _state.GetTrackInfo( replay.TrackID,replay.TrackVariantID,false ),filesManager.ACTracksFolder );
                     var carInfo = new VMCarInfo( _state.GetCarInfo( replay.CarID ),0,filesManager.ACCarsFolder );
                     var carSKinInfo = new VMCarSkinInfo( replay.CarID,replay.CarSkinID,filesManager.ACCarsFolder );
 
-                    sorted.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
+                    unsorted.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
                 }
                 _allReplays.SupressNotification = true;
-                _allReplays.Add( sorted.OrderBy( x => x.TrackName ).ToList( ) );
+                _allReplays.Add( unsorted.OrderByDescending( ( x ) => x.ReplayInfo.ReplayDate ).ToList( ) );
                 _allReplays.SupressNotification = false;
 
                 LatestReplays.SupressNotification = true;
-                LatestReplays.Add( _allReplays.OrderByDescending( ( x ) => x.ReplayInfo.ReplayDate ).Take( 6 ).ToList( ) );
+                LatestReplays.Add( _allReplays.Take( 6 ).ToList( ) );
                 LatestReplays.SupressNotification = false;
             }
         }
