@@ -25,19 +25,25 @@ public class Options : StateFeature
         if( !File.Exists( Path.Combine( Settings.ACFolder.Value ?? "","acs.exe" ) ) )
         {
             errors = true;
+            
             Settings.ACFolder.Error = "AC not found";
         }
         else
         {
+            _state.ACFolder = Settings.ACFolder.Value;
+            
             Settings.ACFolder.Error = null;
         }
         if( !Directory.Exists( Settings.ReplaysFolder.Value ?? "" ) )
         {
             warnings = true;
+            
             Settings.ReplaysFolder.Warning = "Folder not found";
         }
         else
         {
+            _state.ReplaysFolder = Settings.ReplaysFolder.Value;
+
             Settings.ReplaysFolder.Warning = null;
         }
         Error = errors;

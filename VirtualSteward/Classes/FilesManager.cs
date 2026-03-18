@@ -54,10 +54,17 @@ public class FilesManager
 
   public List<string>? GetFileTemplateFiles( )
   {
+    List<string> templates = [];
+      
     string folder = Path.Combine( _vsDocsFolder,"Templates" );
-    if( Directory.Exists( folder ) )
-      return Directory.EnumerateFiles( folder,"*.vscsv" ).ToList( );
-    return null;
+    if (Directory.Exists(folder))
+      templates.AddRange( Directory.EnumerateFiles(folder, "*.vscsv").ToList() );
+
+    folder = Path.Combine( _vsFolder,"Templates" );
+    if (Directory.Exists(folder))
+      templates.AddRange( Directory.EnumerateFiles(folder, "*.vscsv").ToList() );
+    
+    return templates;
   }
   
   public Bitmap GetCarImage(string carID, string skinID, IImmutableSolidColorBrush carColor, bool bFallBack = true)
@@ -71,16 +78,20 @@ public class FilesManager
       }
       else
       {
-        string? body = _carsSettings.LoadString(carID,"Base");
-        body ??= _carsSettings.LoadString("Generic","Base" );
+        string? mask = _carsSettings.LoadString( carID,"Mask",null );
+        mask ??= _carsSettings.LoadString( "Generic","Mask",null );
 
-        if (body != null)
+        string? body = _carsSettings.LoadString( carID,"Base",null );
+        body ??= _carsSettings.LoadString( "Generic","Base",null );
+
+        if (mask != null && body != null )
         {
+          mask = Path.Combine(VSCarsFolder,mask);
           body = Path.Combine(VSCarsFolder,body);
 
-          if (File.Exists(body))
+          if (File.Exists(mask) && File.Exists(body) )
           {
-            return CreateCarImage(body, carColor);
+            return CreateCarImage(mask, body, carColor);
           }
         }
       }
@@ -122,26 +133,30 @@ public class FilesManager
     }
     return bodyBitmap;
   }
-  private static Bitmap CreateCarImage(string bodyFile, IImmutableSolidColorBrush carColor)
+  private static Bitmap CreateCarImage(string maskFile,string bodyFile, IImmutableSolidColorBrush carColor)
   {
+    using var maskStream = File.OpenRead(maskFile);
     using var bodyStream = File.OpenRead(bodyFile);
 
+    WriteableBitmap maskBitmap = WriteableBitmap.DecodeToHeight(maskStream, 300, BitmapInterpolationMode.None);
     WriteableBitmap bodyBitmap = WriteableBitmap.DecodeToHeight(bodyStream, 300, BitmapInterpolationMode.None);
 
+    using ILockedFramebuffer maskFrame = maskBitmap.Lock();
     using ILockedFramebuffer bodyFrame = bodyBitmap.Lock();
     unsafe
     {
-      var mask = new Span<uint>((byte*)bodyFrame.Address, bodyFrame.RowBytes * bodyFrame.Size.Height);
+      var mask = new Span<uint>((byte*)maskFrame.Address, maskFrame.RowBytes * maskFrame.Size.Height);
+      var body = new Span<uint>((byte*)bodyFrame.Address, bodyFrame.RowBytes * bodyFrame.Size.Height);
 
       uint color = carColor.Color.ToUInt32();
-      int width = bodyFrame.Size.Width, height = bodyFrame.Size.Height;
+      int width = maskFrame.Size.Width, height = maskFrame.Size.Height;
       for (int x = 0; x < width; x++)
       {
         for (int y = 0; y < height; y++)
         {
           int offset = x + y * width;
-          if (mask[offset] == 0xFFFF00FF)
-            mask[offset] = color;
+          if ( ( body[offset] & 0xFF000000) == 0 && mask[offset] == 0xFF000000)
+            body[offset] = color;
         }
       }
     }
@@ -156,5 +171,4 @@ public class FilesManager
     return file != null ? Path.Combine( folder,file ) : folder;
   }
   #endregion
-
 }

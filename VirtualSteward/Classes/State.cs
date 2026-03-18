@@ -21,7 +21,10 @@ public partial class State : ObservableObject
 
     private readonly SortedList<string,CarInfo> _cars = [];
     private readonly SortedList<string,TrackInfo> _tracks = [];
-    
+
+    [ObservableProperty] private string _ACFolder = "";
+    [ObservableProperty] private string _replaysFolder = "";
+
     [ObservableProperty] private VMReplay _replay = new( );
     [ObservableProperty] private VMCarInfo _car = new( "" );
     [ObservableProperty] private VMTrackInfo _track = new( "","" );
@@ -92,6 +95,13 @@ public class StateFeature : Feature
         _state.PropertyChanged += State_PropertyChanged;
     }
 
+    public virtual void OnACFolderChanged( )
+    {
+    }
+    public virtual void OnReplayFolderChanged( )
+    {
+    }
+
     public virtual void OnReplayChanged( VMReplay replay )
     {
     }
@@ -110,6 +120,10 @@ public class StateFeature : Feature
                 OnReplayChanged( state.Replay );
             else if( e.PropertyName.Equals( nameof( State.Track ) ) )
                 OnTrackChanged( state.Track );
+            else if( e.PropertyName.Equals( nameof( State.ACFolder ) ) )
+                OnACFolderChanged( );
+            else if( e.PropertyName.Equals( nameof( State.ReplaysFolder ) ) )
+                OnReplayFolderChanged( );
             //else if( e.PropertyName.Equals( nameof( State.TracklinesLoaded ) ) )
               //  OnTracklinesLoaded( state.CurrentTrack,state.TracklineFiles );
         }

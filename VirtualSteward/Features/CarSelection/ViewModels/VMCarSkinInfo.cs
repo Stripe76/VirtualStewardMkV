@@ -21,7 +21,7 @@ public class VMCarSkinInfo : UIItem
         {
             if( File.Exists( PreviewImageFile ) )
                 return _imageBitmap ??= new Bitmap( PreviewImageFile );
-            return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/AD.png" ) ) );
+            return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/ADLarge.png" ) ) );
         }
     }
     public string PreviewImageFile { get; internal set; }

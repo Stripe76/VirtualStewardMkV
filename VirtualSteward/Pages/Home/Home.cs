@@ -70,6 +70,18 @@ public partial class Home : StateFeature
         return this;
     }
 
+    public override void OnACFolderChanged( )
+    {
+        if( ReplaysTree != null )
+            LoadReplays( _filesManager );
+    }
+
+    public override void OnReplayFolderChanged( )
+    {
+        if( ReplaysTree != null )
+            LoadReplays( _filesManager );
+    }
+
     public override void OnReplayChanged( VMReplay replay )
     {
         if( replay.IsLoaded && replay.FileFullPath != string.Empty )
@@ -190,10 +202,12 @@ public partial class Home : StateFeature
                     unsorted.Add( new VMReplayPreview( new VMReplayInfo( replay,trackInfo,carInfo,carSKinInfo ),GetCommands( replay.FileFullPath ) ) );
                 }
                 _allReplays.SupressNotification = true;
+                _allReplays.Clear(  );
                 _allReplays.Add( unsorted.OrderByDescending( ( x ) => x.ReplayInfo.ReplayDate ).ToList( ) );
                 _allReplays.SupressNotification = false;
 
                 LatestReplays.SupressNotification = true;
+                LatestReplays.Clear(  );
                 LatestReplays.Add( _allReplays.Take( 6 ).ToList( ) );
                 LatestReplays.SupressNotification = false;
             }

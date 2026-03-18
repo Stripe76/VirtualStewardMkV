@@ -33,6 +33,8 @@ public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : Tr
 
   private TreeNode BuildTree( TreeNode root,ObservableCollectionEx<T> items,List<string> paths )
   {
+    root.Children.Clear(  );
+    
     int id = 0;
     foreach( var path in paths )
     {

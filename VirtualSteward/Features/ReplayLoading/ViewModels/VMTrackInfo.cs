@@ -43,7 +43,7 @@ public class VMTrackInfo : UIItem
     {
       if( File.Exists( PreviewImageFile ) )
         return _imageBitmap ??= new Bitmap( PreviewImageFile );
-      return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/AD.png" ) ) );
+      return _imageBitmap = new Bitmap( AssetLoader.Open( new Uri( "avares://VirtualSteward/Assets/ADLarge.png" ) ) );
     }
   }
 

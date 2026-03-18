@@ -70,5 +70,25 @@
       </None>
       <None Remove="Assets\AD.png" />
       <AvaloniaResource Include="Assets\AD.png" />
+      <None Update="Cars\Cursor.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Cars\Mask.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Cars\MX5 Cup Base.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Cars\MX5 Cup Mask.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Cars\MX5 Cup Shadow.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Cars\Selected.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Remove="Assets\ADLarge.png" />
+      <AvaloniaResource Include="Assets\ADLarge.png" />
     </ItemGroup>
 </Project>

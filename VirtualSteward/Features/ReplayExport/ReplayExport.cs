@@ -141,6 +141,7 @@ public partial class ReplayExport : StateFeature
 						else
 							_messageManager.ShowSuccess( "Replay exported",result );
 
+						FilenameExport.CanOverwrite = false;
 						ExportCommand.IsBusy = false;
 					}
 				}
