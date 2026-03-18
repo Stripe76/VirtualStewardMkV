@@ -19,9 +19,17 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid RowDefinitions="Auto">
-        <StackPanel Orientation="Vertical" Background="{DynamicResource BackgroundColor60}">
-            <Slider Value="{Binding CurrentFrame}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
+    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto *">
+        <Grid Width="30" ColumnDefinitions="6 Auto" IsVisible="{Binding ShowName}" Background="{DynamicResource BackgroundColor}" PointerPressed="InputElement_OnPointerPressed">
+            <Rectangle Fill="{DynamicResource InfoColor}"  IsVisible="{Binding IsActive}"/>
+            <TextBlock Grid.Column="1" Text="{Binding TimelineName}" Width="50" Margin="20,0,0,0" PointerPressed="InputElement_OnPointerPressed">
+                <TextBlock.RenderTransform>
+                    <RotateTransform Angle="-90"></RotateTransform>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+        </Grid>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Background="{DynamicResource BackgroundColor60}">
+            <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding CurrentFrame}"/>
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
@@ -42,10 +50,10 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 
-                <Slider Value="{Binding ScrubA}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
-                <Slider Value="{Binding ScrubB}" Minimum="{Binding Start}" Maximum="{Binding End}"/>
+                <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubA}"/>
+                <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubB}"/>
             </Grid>
-            <Slider Value="{Binding CurrentFrame}" Minimum="{Binding ScrubA}" Maximum="{Binding ScrubB}"/>
+            <Slider Minimum="{Binding ScrubA}" Maximum="{Binding ScrubB}" Value="{Binding CurrentFrame}"/>
         </StackPanel>
     </Grid>
 </UserControl>

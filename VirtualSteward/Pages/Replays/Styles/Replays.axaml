@@ -1,8 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StyleInclude Source="../../../Features/PlayersList/Styles/PlayersList.axaml" />
-
     <Style Selector="Grid.Toolbar">
         <Setter Property="MinWidth" Value="280"/>
     </Style>

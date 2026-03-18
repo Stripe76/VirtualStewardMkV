@@ -35,4 +35,10 @@ public partial class Timeline : UserControl
             }
         }
     }
+
+    private void InputElement_OnPointerPressed( object? sender,PointerPressedEventArgs e )
+    {
+        if( DataContext is not null and VMTimeline timeline )
+            timeline.IsActive = true;
+    }
 }

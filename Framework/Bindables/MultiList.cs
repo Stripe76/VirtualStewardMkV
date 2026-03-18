@@ -119,12 +119,20 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
     
     item.PropertyChanged += ItemOnPropertyChanged; 
 
-    if( select )
+    if( select  && !item.IsSelected )
       item.IsSelected = true;
-    if( visible )
+    else if ( item.IsSelected )
+      UpdateSelecteds( item );
+    
+    if( visible && !item.IsVisible )
       item.IsVisible = true;
-    if( active )
+    else if ( item.IsVisible )
+      UpdateVisibles( item );
+
+    if( active && !item.IsActive )
       item.IsActive = true;
+    else if ( item.IsActive )
+      UpdateActives( item );
   }
   public bool AddIfNotContains( T item,bool select = false,bool active = false,bool visible = true )
   {
@@ -171,102 +179,120 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
     _selectedList.Clear( );
   }
 
+  private void UpdateActives( T item )
+  {
+    if( item.IsActive )
+    {
+      if( !MultiActiveEnabled && !item.IsMultiActive )
+      {
+        foreach( T activeItem in this )
+        {
+          if( activeItem != item && activeItem.IsActive )
+            activeItem.IsActive = false;
+        }
+      }
+      if( !_activeList.Contains( item ) )
+        _activeList.Add( item );
+
+      _lastActiveItem = item;
+    }
+    else
+    {
+      _activeList.Remove( item );
+
+      if( _lastActiveItem == item )
+      {
+        if( _activeList.Count > 0 )
+        {
+          _lastActiveItem = _activeList[^1];
+        }
+        else
+        {
+          if( FirstAlwaysActive && Count > 0 )
+            Items[0].IsActive = true;
+            //_lastActiveItem = Items[0];
+          else
+            _lastActiveItem = null;
+        }
+      }
+    }
+    OnPropertyChanged( nameof( ActiveItem ) );
+
+    ActiveItemChanged?.Invoke( this,ActiveItem );
+  }
+  private void UpdateVisibles( T item )
+  {
+    if (item.IsVisible)
+    {
+      if (!_visibleList.Contains(item))
+        _visibleList.Add(item);
+    }
+    else
+    {
+      _visibleList.Remove(item);
+    }
+  }
+  private void UpdateSelecteds( T item )
+  {
+    if (item.IsSelected)
+    {
+      if (!MultiSelectedEnabled)
+      {
+        foreach (T selectedItem in this)
+        {
+          if (selectedItem != item && selectedItem.IsSelected)
+            selectedItem.IsSelected = false;
+        }
+      }
+      if (!_selectedList.Contains(item))
+        _selectedList.Add(item);
+
+      if( LastSelectedAsActive )
+        item.IsActive = true;
+
+      OnPropertyChanged(nameof(SelectedItem));
+
+      SelectedItemChanged?.Invoke(this, SelectedItem);
+    }
+    else
+    {
+      _selectedList.Remove(item);
+
+      SelectedItemChanged?.Invoke(this, SelectedItem);
+    }
+  }
+  
   private void ItemOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
   {
-    if (sender is not null and T item)
+    if( sender is not null and T item )
     {
-      if( e.PropertyName == nameof( IMultiListItem.IsActive ) )
+      switch( e.PropertyName )
       {
-        if( item.IsActive )
-        {
-          if( !MultiActiveEnabled || !item.IsMultiActive )
-          {
-            foreach( T activeItem in this )
-            {
-              if( activeItem != item && activeItem.IsActive )
-                activeItem.IsActive = false;
-            }
-          }
-          if( !_activeList.Contains( item ) )
-            _activeList.Add( item );
-
-          _lastActiveItem = item;
-        }
-        else
-        {
-          _activeList.Remove( item );
-
-          if( _activeList.Count > 0 )
-            _lastActiveItem = _activeList[0];
-          else
-          {
-            if( FirstAlwaysActive && Count > 0 )
-              _lastActiveItem = Items[0];
-            else
-              _lastActiveItem = null;
-          }
-        }
-        OnPropertyChanged( nameof( ActiveItem ) );
-
-        ActiveItemChanged?.Invoke( this,ActiveItem );
-      }
-      else if (e.PropertyName == nameof(IMultiListItem.IsSelected))
-      {
-        if (item.IsSelected)
-        {
-          if (!MultiSelectedEnabled)
-          {
-            foreach (T selectedItem in this)
-            {
-              if (selectedItem != item && selectedItem.IsSelected)
-                selectedItem.IsSelected = false;
-            }
-          }
-          if (!_selectedList.Contains(item))
-            _selectedList.Add(item);
-
-          if( LastSelectedAsActive )
-            item.IsActive = true;
-
-          OnPropertyChanged(nameof(SelectedItem));
-
-          SelectedItemChanged?.Invoke(this, SelectedItem);
-        }
-        else
-        {
-          _selectedList.Remove(item);
-
-          SelectedItemChanged?.Invoke(this, SelectedItem);
-        }
-      }
-      else if (e.PropertyName == nameof(IMultiListItem.IsVisible))
-      {
-        if (item.IsVisible)
-        {
-          if (!_visibleList.Contains(item))
-            _visibleList.Add(item);
-        }
-        else
-        {
-          _visibleList.Remove(item);
-        }
-      }
-      else if (e.PropertyName == nameof(IMultiListItem.DeleteItem))
-      {
-        Remove( item );
+        case nameof( IMultiListItem.IsActive ):
+          UpdateActives( item );
+          break;
+        case nameof( IMultiListItem.IsSelected ):
+          UpdateSelecteds( item );
+          break;
+        case nameof( IMultiListItem.IsVisible ):
+          UpdateVisibles( item );
+          break;
+        case nameof( IMultiListItem.DeleteItem ):
+          Remove( item );
+          break;
       }
     }
   }
   private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
   {
-    if (e.Action == NotifyCollectionChangedAction.Reset )
+    if( e.Action == NotifyCollectionChangedAction.Reset )
     {
-      _selectedList.Clear();
-      _activeList.Clear();
-      _visibleList.Clear();
+      _selectedList.Clear( );
+      _activeList.Clear( );
+      _visibleList.Clear( );
 
-      OnPropertyChanged(nameof(ActiveItem));
-      OnPropertyChanged(nameof(SelectedItem));
+      OnPropertyChanged( nameof( ActiveItem ) );
+      OnPropertyChanged( nameof( SelectedItem ) );
     }
   }
 

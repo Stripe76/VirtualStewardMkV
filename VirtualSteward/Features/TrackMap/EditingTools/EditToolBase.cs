@@ -13,9 +13,9 @@ public class EditingTool
   {
     return false;
   }
-  public virtual void LeftMouseUp( Point screenPos,Point trackPos )
+  public virtual bool LeftMouseUp( Point screenPos,Point trackPos )
   {
-
+    return false;
   }
   public virtual bool LeftMouseMove( Point screenPos,Point trackPos )
   {
@@ -26,9 +26,9 @@ public class EditingTool
   {
     return false;
   }
-  public virtual void RightMouseUp( Point screenPos,Point trackPos )
+  public virtual bool RightMouseUp( Point screenPos,Point trackPos )
   {
-
+    return false;
   }
   public virtual bool RightMouseMove( Point screenPos,Point trackPos )
   {

@@ -8,8 +8,7 @@ using ACLibrary.Tracklines;
 using Avalonia;
 using Framework.UI;
 using Framework.Bindables;
-
-using VirtualSteward.Features.TrackMap.ViewModels;
+using Framework.Helpers;
 
 namespace VirtualSteward.Features.Tracklines.ViewModels;
 
@@ -115,35 +114,10 @@ public class VMTrackline : UIItem
     return FileName;
   }
 
-  #region Colors
-  public static IList<IImmutableSolidColorBrush> LineColors
+  public uint FindNearestPoint( Point pt,uint startFrame,int before,int after )
   {
-    get => [.. _lineBrushes];
+    return _lineData.FindNearestPoint( pt,startFrame,before,after );
   }
-
-  private static readonly IImmutableSolidColorBrush[] _lineBrushes = {
-    Brushes.Red,
-    Brushes.Green,
-    Brushes.Blue,
-    Brushes.BlueViolet,
-    Brushes.MediumTurquoise,
-    Brushes.Brown,
-    Brushes.Orange,
-    Brushes.LimeGreen,
-    Brushes.Olive,
-    Brushes.Bisque,
-    Brushes.Plum,
-    Brushes.PowderBlue,
-    Brushes.Purple,
-    Brushes.Salmon,
-    Brushes.SteelBlue,
-    Brushes.Goldenrod,
-    Brushes.DarkSlateBlue,
-    Brushes.Tan,
-    Brushes.Khaki,
-    Brushes.DeepPink,
-  };
-  #endregion
 }
 
 public class VMTracklineList( bool multiSelect = false ) : MultiList<VMTrackline>( multiSelect,false )
@@ -193,5 +167,29 @@ public class VMTracklineDataList : List<VMTracklineData>
         //totalLength += this[i].Length;
       return totalLength;
     }
+  }
+  
+  public uint FindNearestPoint( Point pt,uint startFrame,int before,int after )
+  {
+    uint start = (uint)Math.Max( 0,(int)startFrame - (int)before );
+    if( before < 0 )
+      start = 0;
+    uint end = (uint)Math.Min( Count,(int)startFrame + (int)after );
+    if( after < 0 )
+      end = (uint)Count;
+
+    uint nNearest = 0;
+    double dMin = Double.MaxValue;
+
+    for( uint i = start; i < end; i++ )
+    {
+      double d = Mathematics.Distance( pt.X,pt.Y,this[(int)i].Position.X,this[(int)i].Position.Y );
+      if( d < dMin )
+      {
+        nNearest = i;
+        dMin = d;
+      }
+    }
+    return nNearest;
   }
 }

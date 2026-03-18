@@ -1,45 +1,51 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-
 using Avalonia.Controls.Templates;
 
-using Framework.UI;
-
+using VirtualSteward.Classes;
 using VirtualSteward.Features.TrackMap.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.Timelines.ViewModels;
 
 namespace VirtualSteward.Features.PlayersLines;
 
-public class PlayersLines : Feature
+public class PlayersLines : StateFeature
 {
     private readonly VMMap _map;
-    private readonly VMMapLineNewList _lines  = [];
+    private readonly VMMapLineList _lines  = [];
+    private readonly VMMapLinesLayer _linesLayer; 
     private readonly ObservableCollection<VMPlayer> _players;
-    
-    public PlayersLines(DataTemplates templates,VMMap map,VMPlayerList players) : base(templates)
+
+    public PlayersLines( State state,DataTemplates? templates,VMMap map,VMTimeline timeline,VMPlayerList players ) : base( state,templates,null,timeline )
     {
         _map = map;
         _players = players.SelectedItems;
         _players.CollectionChanged += SelectedPlayers_CollectionChanged;
-        
+
         UpdateLines( );
 
-        map.Layers.Add( new VMMapLinesLayer( _lines ) );
+        map.Layers.Add( _linesLayer = new VMMapLinesLayer( _lines ) );
+    }
+
+    public override void OnTimelineChange( VMTimeline timeline,TimelineChangeType type )
+    {
+        if( type == TimelineChangeType.IsActive )
+            _linesLayer.IsVisible = timeline.IsActive;
     }
 
     private void UpdateLines()
     {
         _lines.Clear();
-        
-        foreach (var player in _players)
-        {
-            foreach (var lap in player.Laps.SelectedItems)
-            {
-                lap.Lines ??= GenerateLapLines(_map, player, lap);
 
-                foreach (var line in lap.Lines )
+        foreach( var player in _players )
+        {
+            foreach( var lap in player.Laps.SelectedItems )
+            {
+                lap.Lines ??= GenerateLapLines( _map,player,lap );
+
+                foreach( var line in lap.Lines )
                 {
-                    _lines.Add(line.UpdatePolylines(_map.Zoom,_map.Offset,_map.Clipping));
+                    _lines.Add( line.UpdatePolylines( _map.Zoom,_map.Offset,_map.Clipping ) );
                 }
             }
             player.Laps.SelectedItems.CollectionChanged -= SelectedLaps_CollectionChanged;
@@ -47,25 +53,25 @@ public class PlayersLines : Feature
         }
     }
 
-    private static VMMapLineNewList GenerateLapLines(VMMap map,VMPlayer player,VMPlayerLap lap)
+    private static VMMapLineList GenerateLapLines(VMMap map,VMPlayer player,VMPlayerLap lap)
     {
-        VMMapLineNewList lines =
+        VMMapLineList lines =
         [
-            new VMMapLineNew( player.GetLineSegment(lap.StartFrame, lap.EndFrame),player.LineStyle )
+            new VMMapLine( player.GetLineSegment(lap.StartFrame, lap.EndFrame),player.LineStyle )
         ];
         var brakings = player.GetBrakingLineSegment(lap.StartFrame, lap.EndFrame);
         foreach (var line in brakings)
         {
-            lines.Add(new VMMapLineNew(line, player.LineStyle));
+            lines.Add(new VMMapLine(line, player.LineStyle));
         }
         return lines;
     }
 
-    private void SelectedPlayers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void SelectedLaps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         UpdateLines( );
     }
-    private void SelectedLaps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void SelectedPlayers_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         UpdateLines( );
     }

@@ -10,15 +10,15 @@ using Framework.Bindables;
 
 namespace VirtualSteward.Features.TrackMap.ViewModels;
 
-public class VMMapLineNew( PointCollection line,VMMapLineStyle style ) : UIBase
+public class VMMapLine( PointCollection line,VMMapLineStyle style ) : UIBase
 {
     public VMMapLineStyle Style = style;
 
     public PolylineList Polylines { get; } = [];
 
-    public VMMapLineNew UpdatePolylines( double zoom, Point offset,Rect clipping )
+    public VMMapLine UpdatePolylines( double zoom,Point offset,Rect clipping )
     {
-        var polys = VMMap.GetPolylinePointsClipped(line, zoom, offset, clipping, false);
+        var polys = VMMap.GetPolylinePointsClipped( line,zoom,offset,clipping,false );
 
         Polylines.Clear();
         foreach (var poly in polys)
@@ -35,7 +35,7 @@ public class VMMapLineNew( PointCollection line,VMMapLineStyle style ) : UIBase
     }
 }
 
-public class VMMapLineNewList : ObservableCollectionEx<VMMapLineNew>
+public class VMMapLineList : ObservableCollectionEx<VMMapLine>
 {
     
 }

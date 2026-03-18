@@ -7,7 +7,7 @@
     <WrapPanel>
         <TextBlock Text="{Binding Title,StringFormat={}{0}:}" ToolTip.Tip="{Binding Description}" MinWidth="90" VerticalAlignment="Center"/>
         <Grid VerticalAlignment="Center" ColumnDefinitions="*,Auto">
-            <Slider MinWidth="{Binding MinWidth}" Value="{Binding Value}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}"/>
+            <Slider MinWidth="{Binding MinWidth}" Minimum="{Binding Minimum}" Maximum="{Binding Maximum}" Value="{Binding Value}"/>
             <TextBlock Grid.Column="1" MinWidth="50" Text="{Binding TextValue}" VerticalAlignment="Center"/>
         </Grid>
     </WrapPanel>

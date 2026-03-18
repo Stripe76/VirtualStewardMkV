@@ -1,0 +1,33 @@
+<UserControl x:Class="VirtualSteward.Features.LapsMerge.Pages.LapsMerge"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.LapsMerge"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" IsVisible="{Binding IsVisible}">
+    <Design.DataContext>
+        <vm:LapsMerge/>
+    </Design.DataContext>
+    <Grid Height="260" RowDefinitions="Auto * Auto">
+        <Grid ColumnDefinitions="* Auto">
+            <TextBlock Classes="h4 Muted" Margin="8,0,0,4" Text="Merged laps"/>
+            <Menu Grid.Column="1">
+                <MenuItem Padding="5" Margin="0,0,10,0">
+                    <MenuItem.Header>
+                        <Viewbox><TextBlock Text="&#xf26e;" Classes="LucideIcon" Foreground="{DynamicResource MutedColor}"/></Viewbox>
+                    </MenuItem.Header>
+                    <MenuItem Header="Enable checkpoints" Command="{Binding SwitchEnableCheckpointsCommand}" IsChecked="{Binding Chekpoints.ShowCheckpoints}"/>
+                    <Separator/>
+                    <MenuItem Header="Edit checkpoints" Command="{Binding SwitchCheckpointsEditingCommand}" IsEnabled="{Binding Chekpoints.ShowCheckpoints}" IsChecked="{Binding Chekpoints.EditingMode}"/>
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <ScrollViewer Grid.Row="1">
+            <Panel>
+                <TextBlock Classes="Muted" Width="220" Height="100" TextWrapping="Wrap" Margin="10" Text="Select players/laps in the players list to merge laps" IsVisible="{Binding ShowInstructions}"/>
+                <ItemsControl ItemsSource="{Binding MergedPlayers}"/>
+            </Panel>
+        </ScrollViewer>
+        <TextBlock Grid.Row="2" Classes="h4 Muted" Margin="8,0,0,4" Text="Players"/>
+    </Grid>
+</UserControl>

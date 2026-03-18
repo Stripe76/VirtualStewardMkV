@@ -19,6 +19,7 @@ public partial class MapDisplay : UserControl
 
   private Point _offset = new Point(0,0),_selectedPoint = default;
 
+  private EditingTool? _editingTool;
   private EditingTool _mapMoveEditingTool;
   private readonly EditingTool _defaultEditingTool;
 
@@ -81,7 +82,8 @@ public partial class MapDisplay : UserControl
 
   public EditingTool? EditingTool
   {
-    get => _map?.EditingTool ?? _defaultEditingTool;
+    get => _editingTool ?? _defaultEditingTool;
+    set => _editingTool = value;
   }
 
   public MapDisplay( )
@@ -130,6 +132,10 @@ public partial class MapDisplay : UserControl
 
       Offset = new Point( Bounds.Size.Width / 2 - X,Bounds.Size.Height / 2 - Y );
       //Offset = new Point( Bounds.Size.Width / 2,Bounds.Size.Height / 2 );
+    }
+    else if( e.PropertyName != null && e.PropertyName.Equals( nameof( VMMap.EditingTool ) ) )
+    {
+      _editingTool = _map.EditingTool;
     }
     /*
     if( e.PropertyName != null && e.PropertyName.Equals( nameof( GUIMap.ShowTrackModel ) ) )
@@ -193,11 +199,13 @@ public partial class MapDisplay : UserControl
         {
           if( args.InitialPressMouseButton == MouseButton.Left )
           {
-            EditingTool.LeftMouseUp( ptMouse,ptTrack );
+            if( EditingTool.LeftMouseUp( ptMouse,ptTrack ) )
+              EditingTool = _defaultEditingTool;
           }
           else if( args.InitialPressMouseButton == MouseButton.Right )
           {
-            EditingTool.RightMouseUp( ptMouse,ptTrack );
+            if( EditingTool.RightMouseUp( ptMouse,ptTrack ))
+              EditingTool = _defaultEditingTool;
           }
         }
       }

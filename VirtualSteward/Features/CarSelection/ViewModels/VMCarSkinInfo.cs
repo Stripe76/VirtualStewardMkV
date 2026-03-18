@@ -32,6 +32,12 @@ public class VMCarSkinInfo : UIItem
         Title = skinID;
         PreviewImageFile = Path.Combine( carsFolder,carID,"skins",skinID,"preview.jpg" );
     }
+    public VMCarSkinInfo( VMCarSkinInfo copySkinInfo )
+    {
+        ID = copySkinInfo.ID;
+        Title = copySkinInfo.Title;
+        PreviewImageFile = copySkinInfo.PreviewImageFile;
+    }
     public VMCarSkinInfo( CarSkinInfo info,string imageFile )
     { 
         ID = info.Name;

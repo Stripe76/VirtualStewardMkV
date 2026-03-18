@@ -69,7 +69,6 @@ public class VMMap( bool defaultMapMove ) : UIBase
     get => _display;
     set => SetProperty( ref _display,value );
   }
-
   public Point CenterOn
   {
     get => _centerOn;
@@ -84,6 +83,7 @@ public class VMMap( bool defaultMapMove ) : UIBase
   public EditingTool? EditingTool
   {
     get => _editingTool;
+    set => SetProperty( ref _editingTool,value );
   }
 
   public bool EnableDefaultMapMove

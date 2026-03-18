@@ -1,0 +1,22 @@
+<UserControl x:Class="VirtualSteward.Features.Checkpoints.Pages.Checkpoints"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.Checkpoints"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" IsVisible="{Binding IsActive}">
+    <Design.DataContext>
+        <vm:Checkpoints/>
+    </Design.DataContext>
+    <WrapPanel Orientation="Horizontal">
+        <StackPanel Background="{DynamicResource BackgroundColor60}">
+            <TextBlock Classes="h2 Muted" Text="Checkpoints editing"/>
+            <TextBlock Classes="Muted" Margin="10,0,0,0" Text="Right click to add/remove a checkpoint, left click to move a checkpoint"/>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Commands}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </WrapPanel>
+</UserControl>

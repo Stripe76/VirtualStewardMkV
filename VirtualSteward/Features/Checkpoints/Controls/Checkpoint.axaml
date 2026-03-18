@@ -1,0 +1,15 @@
+<UserControl x:Class="VirtualSteward.Features.Checkpoints.Controls.Checkpoint"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.Checkpoints.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMCheckpoint/>
+    </Design.DataContext>
+    <Panel Margin="185,185,0,0" PointerPressed="InputElement_OnPointerPressed">
+        <Ellipse Width="30" Height="30" Fill="Orange"/>
+        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Title}" FontSize="15" FontWeight="ExtraBold" Foreground="Black"/>
+    </Panel>
+</UserControl>

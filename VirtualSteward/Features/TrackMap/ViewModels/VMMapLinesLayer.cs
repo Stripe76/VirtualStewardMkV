@@ -2,9 +2,9 @@ using Avalonia;
 
 namespace VirtualSteward.Features.TrackMap.ViewModels;
 
-public class VMMapLinesLayer( VMMapLineNewList lines ) : VMMapLayer
+public class VMMapLinesLayer( VMMapLineList lines ) : VMMapLayer
 {
-    public VMMapLineNewList Lines { get; } = lines;
+    public VMMapLineList Lines { get; } = lines;
 
     public override void UpdateLayer( double zoom,Point offset,Rect clipping )
     {

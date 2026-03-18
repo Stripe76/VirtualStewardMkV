@@ -18,7 +18,7 @@
             IsEnabled="{Binding !IsBusy}"
             shadui:ButtonAssist.ShowProgress="{Binding IsBusy}">
         <Panel>
-            <Viewbox IsVisible="{Binding IsIcon}"><TextBlock Classes="LucideIcon" Text="{Binding Icon}"/></Viewbox>
+            <Viewbox IsVisible="{Binding IsIcon}"><TextBlock Classes="LucideIcon" Text="{Binding Icon}" ToolTip.Tip="{Binding Tooltip}"/></Viewbox>
             <TextBlock IsVisible="{Binding !IsIcon}" Text="{Binding Text}" />
         </Panel>
     </Button>

@@ -12,6 +12,7 @@ public class PlayersExportValue : BaseValue<PlayersExportItem>
 {
   private readonly VMPlayerList _players;
 
+  public VMPlayerList Players => _players;
   public PlayersExportItemList Items
   {
     get;

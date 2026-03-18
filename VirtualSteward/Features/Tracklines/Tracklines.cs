@@ -25,7 +25,7 @@ public class Tracklines : StateFeature
   private readonly FilesManager _filesManager;
 
   private readonly VMTracklineFileList _tracklineFiles = [];
-  private readonly VMMapLineNewList _trackLimitsLines  = [];
+  private readonly VMMapLineList _trackLimitsLines  = [];
   
   public VMMapLineStyle LineStyle { get; }
   public TracklineFileValue TracklineFile { get; }
@@ -101,11 +101,11 @@ public class Tracklines : StateFeature
         (VMTrackline? leftSide,VMTrackline? rightSide) = CreateTrackLimits( file );
         if( leftSide != null )
         {
-          _trackLimitsLines.Add( new VMMapLineNew( leftSide.GetLinePoints( 0,0 ),LineStyle ) );
+          _trackLimitsLines.Add( new VMMapLine( leftSide.GetLinePoints( 0,0 ),LineStyle ) );
         }
         if( rightSide != null )
         {
-          _trackLimitsLines.Add( new VMMapLineNew( rightSide.GetLinePoints( 0,0 ),LineStyle ) );
+          _trackLimitsLines.Add( new VMMapLine( rightSide.GetLinePoints( 0,0 ),LineStyle ) );
 
           if( ((double)_map.Display.Height) / rightSide.Height * 0.9f < ((double)_map.Display.Width) / rightSide.Width * 0.9f )
             _map.Zoom = ((double)_map.Display.Height) / rightSide.Height * 0.9f;
@@ -117,6 +117,7 @@ public class Tracklines : StateFeature
         }
       }
     }
+    _state.TracklineFile = file;
   }
 
   private static async Task<VMTracklineList?> LoadTracklineAsync( string filename,bool selectedLines,IProgress<float>? progress )
