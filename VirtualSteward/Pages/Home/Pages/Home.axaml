@@ -13,9 +13,9 @@
         <ContentControl Grid.Row="0" Content="{Binding RecentReplays}"/>
         <ContentControl Grid.Row="1" Content="{Binding LatestReplays}"/>
 
-        <TextBlock Grid.Row="2" Classes="h2" Text="All replays" Margin="8,4,4,4"/>
+        <TextBlock Grid.Row="2" Classes="h2 Muted" Text="All replays" Margin="8,4,4,4"/>
         <Grid Grid.Row="3" ColumnDefinitions="300 *">
-            <ScrollViewer Content="{Binding ReplaysTree}" />
+            <ScrollViewer Content="{Binding ReplaysTree}"/>
             <ScrollViewer Grid.Column="1">
                 <Panel>
                     <ItemsControl ItemsSource="{Binding ReplaysTree.LastNodes.SelectedItem.ChildrenItems}">

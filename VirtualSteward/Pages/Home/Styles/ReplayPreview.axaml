@@ -41,8 +41,4 @@
     <Style Selector="Border:pointerover TextBlock.Title">
         <Setter Property="Opacity" Value="0"/>
     </Style>
-    
-    <Style Selector="TextBlock.Selected">
-        <Setter Property="Background" Value="{DynamicResource InfoColor60}"/>
-    </Style>
 </Styles>

@@ -46,7 +46,7 @@
                     <Panel.Styles>
                         <Style Selector="shadui|BusyArea[IsBusy=True]">
                             <Style Selector="^ Border#AreaBackground">
-                                <Setter Property="Opacity" Value="0.80" />
+                                <Setter Property="Opacity" Value="0.00" />
                                 <Setter Property="IsHitTestVisible" Value="True" />
                             </Style>
                             <Style Selector="^ StackPanel#Content">

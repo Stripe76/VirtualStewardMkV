@@ -55,8 +55,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Background="{DynamicResource BackgroundColor}"
-                BorderThickness="1">
+        <Border Background="{DynamicResource BackgroundColor}" BorderThickness="1">
           <Grid ColumnDefinitions="Auto,*">
             <Border Grid.Column="0"
                     Width="28"
@@ -70,7 +69,7 @@
             </Border>
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="1"
-                              FontSize="22"
+                              FontSize="18"
                               Padding="{TemplateBinding Padding}"
                               VerticalAlignment="Center"
                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -138,11 +137,11 @@
                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalAlignment}"
                             Content="{TemplateBinding Header}"
-                            IsChecked="{TemplateBinding IsExpanded,
-                                                        Mode=TwoWay}"
+                            IsChecked="{TemplateBinding IsExpanded,Mode=TwoWay}"
                             Theme="{StaticResource SimpleExpanderToggleButtonRightTheme}" />
               <ContentPresenter Name="PART_ContentPresenter"
                                 Grid.Row="1"
+                                FontSize="15"
                                 Padding="{TemplateBinding Padding}"
                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -157,6 +156,7 @@
         <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonDownTheme}" />
       </Style>
     </Style>
+    
     <Style Selector="^[ExpandDirection=Up]">
       <Setter Property="Template">
         <ControlTemplate>
@@ -189,6 +189,7 @@
         <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonUpTheme}" />
       </Style>
     </Style>
+    
     <Style Selector="^[ExpandDirection=Right]">
       <Setter Property="Template">
         <ControlTemplate>
@@ -221,6 +222,7 @@
         <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonRightTheme}" />
       </Style>
     </Style>
+    
     <Style Selector="^[ExpandDirection=Left]">
       <Setter Property="Template">
         <ControlTemplate>
@@ -253,5 +255,7 @@
         <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonLeftTheme}" />
       </Style>
     </Style>
+
+    
   </ControlTheme>
 </ResourceDictionary>

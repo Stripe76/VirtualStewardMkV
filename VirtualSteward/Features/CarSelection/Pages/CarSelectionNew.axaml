@@ -24,6 +24,6 @@
                 </ItemsControl.DataTemplates>
             </ItemsControl>
         </StackPanel>
-        <ContentControl Grid.Column="1" Content="{Binding SelectCarsTree}"/>
+        <ScrollViewer Grid.Column="1" Content="{Binding SelectCarsTree}"/>
     </Grid>
 </UserControl>

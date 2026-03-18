@@ -11,4 +11,10 @@
     <Style Selector="RepeatButton.Input">
         <Setter Property="Margin" Value="5,5,0,0" />
     </Style>
+    <Style Selector="CheckBox.TreeLeaf">
+        <Setter Property="Margin" Value="0,3,0,3" />
+    </Style>
+    <Style Selector="CheckBox.TreeLeaf:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource InfoColor}"/>
+    </Style>
 </Styles>

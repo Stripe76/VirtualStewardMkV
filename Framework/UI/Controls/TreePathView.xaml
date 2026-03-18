@@ -11,7 +11,6 @@
   <ItemsControl ItemsSource="{Binding Nodes}">
       <ItemsControl.Styles>
           <Style Selector="Expander">
-              <Setter Property="FontSize" Value="18" />
               <Setter Property="Margin" Value="4" />
           </Style>
       </ItemsControl.Styles>
