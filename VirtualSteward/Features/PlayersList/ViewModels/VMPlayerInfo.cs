@@ -17,6 +17,15 @@ public partial class VMPlayerInfo : UIItem
     public VMCarInfo CarInfo { get; }
     public VMCarSkinInfo CarSkinInfo { get; set; }
 
+    public VMPlayerInfo( VMPlayerInfo copyPlayerInfo )
+    {
+        _playerName = copyPlayerInfo.PlayerName;
+        _playerTeam = copyPlayerInfo.PlayerTeam;
+        _playerNation = copyPlayerInfo.PlayerNation;
+
+        CarInfo = new VMCarInfo( copyPlayerInfo.CarInfo );
+        CarSkinInfo = new VMCarSkinInfo( copyPlayerInfo.CarSkinInfo );
+    }
     public VMPlayerInfo( ReplayCar replayCar,VMCarInfo carInfo,VMCarSkinInfo skinInfo )
     {
         _playerName = replayCar.PlayerName;

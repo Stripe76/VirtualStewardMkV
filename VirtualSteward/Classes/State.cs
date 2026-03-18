@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using ACLibrary.Cars;
 using ACLibrary.Tracks;
 using Avalonia.Controls.Templates;
@@ -11,7 +10,9 @@ using VirtualSteward.Features.CarSelection.ViewModels;
 using VirtualSteward.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.Features.Timelines.ViewModels;
 using VirtualSteward.Features.Tracklines.ViewModels;
+using VirtualSteward.Features.TrackMap.ViewModels;
 
 namespace VirtualSteward.Classes;
 
@@ -28,8 +29,9 @@ public partial class State : ObservableObject
     [ObservableProperty] private VMReplay _replay = new( );
     [ObservableProperty] private VMCarInfo _car = new( "" );
     [ObservableProperty] private VMTrackInfo _track = new( "","" );
-
-    public VMPlayerList Players { get; } = new( true,true );
+    [ObservableProperty] private VMTracklineFile? _tracklineFile;
+    
+    public VMPlayerList Players { get; } = new( true,false );
 
     public State( FilesManager filesManager)
     {
@@ -80,19 +82,32 @@ public partial class State : ObservableObject
 
 public class StateFeature : Feature
 {
+    public enum TimelineChangeType
+    {
+        Scrubs,
+        IsActive,
+        CurrentFrame,
+    }
+    
     protected readonly State _state;
 
-    public StateFeature( State state,string headerTitle = "" ) : base(null,headerTitle)
+    public StateFeature( State state,string headerTitle = "" ) : base( null,headerTitle )
     {
         _state = state;
         _state.PropertyChanged += State_PropertyChanged;
     }
-    public StateFeature( State state,DataTemplates templates, string headerTitle = "" ) : base(templates,headerTitle)
+    public StateFeature( State state,DataTemplates? templates,string headerTitle = "" ) : base( templates,headerTitle )
     {
-        AddDataTemplates( templates );
-
         _state = state;
         _state.PropertyChanged += State_PropertyChanged;
+    }
+    public StateFeature( State state,DataTemplates? templates,VMMap? map,VMTimeline? timeline = null,string headerTitle = "" ) : base( templates,headerTitle )
+    {
+        _state = state;
+        _state.PropertyChanged += State_PropertyChanged;
+
+        map?.PropertyChanged += Map_PropertyChanged;
+        timeline?.PropertyChanged += Timeline_PropertyChanged;
     }
 
     public virtual void OnACFolderChanged( )
@@ -102,16 +117,30 @@ public class StateFeature : Feature
     {
     }
 
+    public virtual void OnMapChange( VMMap map )
+    {
+        
+    }
+    public virtual void OnTimelineChange( VMTimeline timeline,TimelineChangeType type )
+    {
+        
+    }
+    
     public virtual void OnReplayChanged( VMReplay replay )
     {
     }
     public virtual void OnTrackChanged( VMTrackInfo trackInfo )
     {
     }
-    public virtual void OnTracklinesLoaded( VMTrackInfo trackInfo,VMTracklineFileList tracklinesFiles )
+    public virtual void OnTracklinesLoaded( VMTrackInfo trackInfo,VMTracklineFile? tracklinesFiles )
     {
     }
 
+    private void Map_PropertyChanged( object? sender,PropertyChangedEventArgs e )
+    {
+        if( sender is not null and VMMap map && e.PropertyName == nameof( VMMap.Offset ) )
+            OnMapChange( map );
+    }
     private void State_PropertyChanged( object? sender,System.ComponentModel.PropertyChangedEventArgs e )
     {
         if( sender is not null and State state && e.PropertyName != null )
@@ -124,8 +153,27 @@ public class StateFeature : Feature
                 OnACFolderChanged( );
             else if( e.PropertyName.Equals( nameof( State.ReplaysFolder ) ) )
                 OnReplayFolderChanged( );
-            //else if( e.PropertyName.Equals( nameof( State.TracklinesLoaded ) ) )
-              //  OnTracklinesLoaded( state.CurrentTrack,state.TracklineFiles );
+            else if( e.PropertyName.Equals( nameof( State.TracklineFile ) ) )
+                OnTracklinesLoaded( state.Track,state.TracklineFile );
+        }
+    }
+    private void Timeline_PropertyChanged( object? sender,PropertyChangedEventArgs e )
+    {
+        if( sender is not null and VMTimeline timeline )
+        {
+            switch( e.PropertyName )
+            {
+                case nameof( VMTimeline.CurrentFrame ):
+                    OnTimelineChange( timeline,TimelineChangeType.CurrentFrame );
+                    break;
+                case nameof( VMTimeline.IsActive ):
+                    OnTimelineChange( timeline,TimelineChangeType.IsActive );
+                    break;
+                case nameof( VMTimeline.ScrubA ):
+                case nameof( VMTimeline.ScrubB ):
+                    OnTimelineChange( timeline,TimelineChangeType.Scrubs );
+                    break;
+            }
         }
     }
 }

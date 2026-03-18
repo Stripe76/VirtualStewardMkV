@@ -24,13 +24,9 @@
     <Style Selector="Grid.PlayerInfo">
         <Setter Property="MinWidth" Value="250"/>
     </Style>
-    <Style Selector="Button.PlayerInfo">
+    <Style Selector="ToggleButton.Input">
         <Setter Property="IsVisible" Value="False"/>
-        <Setter Property="Padding" Value="4,0,4,0"/>
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundColor60}"/>
-    </Style>
-    <Style Selector="ToggleButton.PlayerInfo">
-        <Setter Property="IsVisible" Value="False"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="4,0,4,0"/>
         <Setter Property="MinHeight" Value="0"/>
     </Style>
@@ -65,7 +61,7 @@
         <Setter Property="Margin" Value="4"/>
     </Style>
     <Style Selector="ToggleButton.PlayerLap">
-        <Setter Property="Width" Value="25"/>
+        <Setter Property="MinWidth" Value="25"/>
         <Setter Property="MinHeight" Value="25"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Foreground" Value="{DynamicResource MutedColor}"/>

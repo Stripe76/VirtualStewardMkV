@@ -1,15 +1,13 @@
 ﻿using ACLibrary.Data;
 using ACLibrary.Replays;
-//using Framework.Helpers;
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Avalonia;
 using Framework.Helpers;
 using VirtualSteward.Datasources.ViewModels;
-//using VirtualSteward.Features.DataTemplates.Classes;
 
 namespace VirtualSteward.Datasources;
 
@@ -37,6 +35,11 @@ public abstract class CarDatasource
   public virtual ReplayCarData? GetSaveData( uint frame )
   {
     return null;
+  }
+
+  public virtual uint GetNearestFrame( Point pt,uint startFrame,int before,int after )
+  {
+    return 0;
   }
 
   public abstract VMCarData? GetCarData( uint frame );
@@ -130,6 +133,30 @@ public class ReplayFileDatasource : CarDatasource
   public override ReplayCarData? GetSaveData( uint frame )
   {
     return _replayData[MapFrame( frame )];
+  }
+
+  public override uint GetNearestFrame( Point pt,uint startFrame,int before,int after )
+  {
+    int start = Math.Max( 0,(int)startFrame - (int)before );
+    if( before < 0 )
+      start = 0;
+    int end = Math.Min( _replayData.Length,(int)startFrame + (int)after );
+    if( after < 0 )
+      end = _replayData.Length;
+
+    uint frame = startFrame;
+    double min = double.MaxValue;
+
+    for( int i = start; i < end; i++ )
+    {
+      double d = Mathematics.Distance( pt.X,pt.Y,_replayData[i].Frame.BodyTranslation.X,_replayData[i].Frame.BodyTranslation.Z );
+      if( d < min )
+      {
+        frame = (uint)i;
+        min = d;
+      }
+    }
+    return frame;
   }
 
   public override VMCarData? GetCarData( uint frame )

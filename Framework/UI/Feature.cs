@@ -120,8 +120,9 @@ public partial class Feature : UIItem
         templates.Add(new FuncDataTemplate<Toolbar>((_, _) => new Controls.Toolbar()));
         templates.Add(new FuncDataTemplate<ActivePage>((_, _) => new Controls.ActivePage()));
 
-        templates.Add(new FuncDataTemplate<RepeatCommand>((_, _) => new Controls.RepeatCommand()));
-        templates.Add(new FuncDataTemplate<FeatureCommand>((_, _) => new Controls.FeatureCommand()));
+        templates.Add( new FuncDataTemplate<RepeatCommand>( ( _,_ ) => new Controls.RepeatCommand( ) ) );
+        templates.Add( new FuncDataTemplate<ToggleCommand>( ( _,_ ) => new Controls.ToggleCommand( ) ) );
+        templates.Add( new FuncDataTemplate<FeatureCommand>( ( _,_ ) => new Controls.FeatureCommand( ) ) );
 
         templates.Add( new FuncDataTemplate<FolderValue>( ( _,_ ) => new Inputs.FilenameInput( ) ) );
         templates.Add( new FuncDataTemplate<FilenameValue>( ( _,_ ) => new Inputs.FilenameInput( ) ) );
@@ -203,6 +204,38 @@ public class FeatureList : List<Feature>
 public class RepeatCommand : FeatureCommand
 {
     
+}
+
+public partial class ToggleCommand : FeatureCommand
+{
+    [ObservableProperty] private object? _object;
+    [ObservableProperty] private string? _property;
+
+    public bool IsChecked
+    {
+        get
+        {
+            if( _property != null )
+            {
+                var property = _object?.GetType( ).GetProperty( _property );
+                if( property != null )
+                {
+                    if( property.GetValue( _object ) is not null and bool value )
+                        return value;
+                }
+            }
+            return false;
+        }
+        set
+        {
+            if( _property != null )
+            {
+                var property = _object?.GetType( ).GetProperty( _property );
+                if( property != null )
+                    property.SetValue( _object,value );
+            }
+        }
+    }
 }
 
 public class FeatureCommandList : ObservableCollection<FeatureCommand>

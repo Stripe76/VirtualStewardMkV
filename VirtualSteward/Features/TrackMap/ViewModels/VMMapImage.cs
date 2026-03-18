@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,6 +28,7 @@ public partial class VMMapImage : UIBase
     public TransformGroup Transforms { get; } = new TransformGroup();
 
     public IImage Image { get; }
+    public ICommand? PointerPressed { get; set; }
 
     public VMMapImage( IImage image )
     {

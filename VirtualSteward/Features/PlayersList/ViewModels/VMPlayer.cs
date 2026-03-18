@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Avalonia;
 
 using ACLibrary.Replays;
@@ -18,8 +17,18 @@ namespace VirtualSteward.Features.PlayersList.ViewModels;
 
 public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 {
+  [Flags]
+  public enum ShowCommand
+  {
+    Expand = 1,
+    Edit = 2,
+    Delete = 4,
+    All = 0xFF
+  }
+  
   private readonly int _playerID = 0;
 
+  [ObservableProperty] private object? _header;
   [ObservableProperty] private bool _isEditingMode;
 
   public int PlayerID => _playerID;
@@ -27,8 +36,9 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   public CarDatasource Datasource { get; }
 
   public VMPlayerInfo PlayerInfo { get; }
-  public VMMapImage CarImage { get; }
+
   public VMMapLineStyle LineStyle { get; }
+  public VMMapImage CarImage { get; }
 
   public VMPlayerLapList Laps
   {
@@ -41,6 +51,24 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 
   public VMPlayerInfoEditing InfoEditing { get; }
 
+  public FeatureCommandList Commands { get; } = [];
+
+  public VMPlayer( int playerID,VMPlayer copyPlayer,CarDatasource datasource,VMMapLineStyle lineStyle,VMMapImage carImage,ShowCommand commands = ShowCommand.All )
+  {
+    _playerID = playerID;
+
+    PlayerInfo = new VMPlayerInfo( copyPlayer.PlayerInfo );
+    Datasource = datasource;
+    
+    CarImage = carImage;
+    CarImage.BindIsVisible( this );
+
+    LineStyle = lineStyle;
+
+    InfoEditing = new VMPlayerInfoEditing( this );
+    
+    CreateCommands( commands );
+  }
   public VMPlayer( int idPlayer,ReplayCar replayCar,ReplayTail replayTail,VMCarInfo carInfo,VMCarSkinInfo skinInfo,VMMapLineStyle lineStyle,VMMapImage carImage )
   {
     _playerID = idPlayer;
@@ -54,6 +82,8 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     LineStyle = lineStyle;
 
     InfoEditing = new VMPlayerInfoEditing( this );
+    
+    CreateCommands( ShowCommand.All );
   }
   public VMPlayer( int playerID,string playerName,string playerNation,string playerTeam,string carID,string skinID,CarDatasource? datasource = null )
   {
@@ -64,59 +94,8 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     //_lineColor = LineColors[((PlayerID < 0) ? 0 : PlayerID) % LineColors.Count];
     
     Datasource = datasource ?? new EmptyDatasource( );
-  }
-
-  private VMPlayerLapList CreateLapsList()
-  {
-    VMPlayerLapList lapList = new(true);
-
-    uint currentLap = 0;
-    uint frames = (uint)Datasource.Length;
-    for (uint i = 1; i < frames; i++)
-    {
-      uint lapTime = Datasource.GetLapTime(i);
-      uint prevLapTime = Datasource.GetLapTime(i - 1);
-
-      //if( pos != null && last != null )
-      {
-        if (i == 1 && prevLapTime != 0)
-        {
-          lapList.Add(new VMPlayerLap(currentLap, 0, frames,LineStyle));
-        }
-
-        // Giri e tempi sul giro
-        if ((lapTime < prevLapTime) || (lapTime > 0 && prevLapTime == 0))
-        {
-          if (lapList.Count > 0)
-          {
-            VMPlayerLap lastLap = lapList[^1];
-            lastLap.EndFrame = i - 1;
-
-            //if( pos.LastLapTime > 0 )
-            //lastLap.LapTime = pos.LastLapTime;
-            //else
-            lastLap.LapTime = prevLapTime;
-          }
-          lapList.Add(new VMPlayerLap(++currentLap, i, frames,LineStyle) );
-        }
-      }
-    }
-    return lapList;
-  }
-  private VMPlayerLapList CreateBestLapsList()
-  {
-    List<VMPlayerLap> allLaps = Laps.Where(x => x.LapTime > 0).ToList();
-
-    allLaps.Sort((x, y) => (int)x.LapTime - (int)y.LapTime);
-
-    if (allLaps.Count > 0)
-    {
-      allLaps[0].IsActive = true;
-      allLaps[0].IsSelected = true;
-    }
-    VMPlayerLapList bestLaps = new(true);
-    bestLaps.AddRange(allLaps);
-    return bestLaps;
+    
+    CreateCommands( ShowCommand.All );
   }
 
   public PointCollection GetLineSegment(uint start, uint end, int maxLength = 24000)
@@ -171,6 +150,92 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
       //arPoints.Add( arPoints[0] );
     }
     return linesPoints;
+  }
+
+  private void CreateCommands( ShowCommand commands )
+  {
+    Commands.Clear(  );
+
+    if( (commands & ShowCommand.Expand) == ShowCommand.Expand )
+    {
+      Commands.Add( new ToggleCommand( )
+      {
+        Icon = "\xf173",
+        Object = this,
+        Property = "IsExpanded",
+      } );
+    }
+    if( (commands & ShowCommand.Edit) == ShowCommand.Edit )
+    {
+      Commands.Add( new ToggleCommand( )
+      {
+        Icon = "\xf28e",
+        Object = this,
+        Property = "IsEditingMode",
+      } );
+    }
+    if( (commands & ShowCommand.Delete) == ShowCommand.Delete )
+    {
+      Commands.Add( new ToggleCommand( )
+      {
+        Icon = "\xf317",
+        Object = this,
+        Property = "DeleteItem",
+      } );
+    }
+  }
+  
+  private VMPlayerLapList CreateLapsList()
+  {
+    VMPlayerLapList lapList = new(true);
+
+    uint currentLap = 0;
+    uint frames = (uint)Datasource.Length;
+    for (uint i = 1; i < frames; i++)
+    {
+      uint lapTime = Datasource.GetLapTime(i);
+      uint prevLapTime = Datasource.GetLapTime(i - 1);
+
+      //if( pos != null && last != null )
+      {
+        if (i == 1 && prevLapTime != 0)
+        {
+          lapList.Add(new VMPlayerLap(currentLap, 0, frames,LineStyle));
+        }
+
+        // Giri e tempi sul giro
+        if ((lapTime < prevLapTime) || (lapTime > 0 && prevLapTime == 0))
+        {
+          if (lapList.Count > 0)
+          {
+            VMPlayerLap lastLap = lapList[^1];
+            lastLap.EndFrame = i - 1;
+
+            //if( pos.LastLapTime > 0 )
+            //lastLap.LapTime = pos.LastLapTime;
+            //else
+            lastLap.LapTime = prevLapTime;
+          }
+          lapList.Add(new VMPlayerLap(++currentLap, i, frames,LineStyle) );
+        }
+      }
+    }
+    return lapList;
+  }
+  private VMPlayerLapList CreateBestLapsList()
+  {
+    List<VMPlayerLap> allLaps = Laps.Where(x => x.LapTime > 0).ToList();
+
+    allLaps.Sort((x, y) => (int)x.LapTime - (int)y.LapTime);
+
+    if (allLaps.Count > 0)
+    {
+      allLaps[0].IsActive = true;
+      allLaps[0].IsSelected = true;
+    }
+    VMPlayerLapList bestLaps = new(true);
+    bestLaps.AddRange(allLaps);
+    return bestLaps;
   }
 
   public int CompareTo(VMPlayer? obj)

@@ -6,8 +6,10 @@ using Framework.UI;
 using Framework.UI.ViewModels;
 
 using VirtualSteward.Classes;
+using VirtualSteward.Features.Checkpoints;
 using VirtualSteward.Features.CurrentReplay;
 using VirtualSteward.Features.FileTemplates;
+using VirtualSteward.Features.LapsMerge;
 using VirtualSteward.Features.PlayersCars;
 using VirtualSteward.Features.PlayersLines;
 using VirtualSteward.Features.PlayersList;
@@ -35,8 +37,10 @@ public class Replays : StateFeature
     public TrackMap TrackMap { get; }
     public ReplayTimelines Timelines { get; }
 
+    public LapsMerge LapsMerge { get; }
+
     public UIBaseList Headers { get; } = [];
-    public UIItemList Panels { get; } = [];
+    public UIItemList Panels { get; } = new UIItemList( ) { MultiActiveEnabled = true };
     public UIBaseList Footers { get; } = [];
 
     public VMPlayerList Players => _state.Players;
@@ -58,13 +62,19 @@ public class Replays : StateFeature
         _replayReset = (ResetReplay) new ResetReplay( state ).AddCommands( RightToolbar );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
         _ = new PlayersList( templates );
-        _ = new PlayersCars( templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
-        _ = new PlayersLines( templates,TrackMap.Map,state.Players );
+        _ = new PlayersLines( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
+        _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
 
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
         Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
         Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,new FileTemplates( templates,filesManager ).TemplateFiles,filesManager,messageManager ).AddCommands( LeftToolbar ) );
+
+        Checkpoints chekpoints = new Checkpoints( state,templates,filesManager,TrackMap.Map );
+        Panels.Add( chekpoints );
+        
+        LapsMerge = (LapsMerge)new LapsMerge( _state,templates,filesManager,Timelines.Timelines,TrackMap,chekpoints ) { IsVisible = false }.AddCommands( LeftToolbar );
+        _ = new TimelinesScrubs( state,templates,state.Players,TrackMap.Map,Timelines.ReplayTimeline );
 
         Panels.FirstAlwaysActive = true;
     }

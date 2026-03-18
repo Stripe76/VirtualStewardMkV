@@ -84,8 +84,11 @@ public class Mathematics
   }
   public static double Distance( double aX,double aY,double bX,double bY )
   {
-    double d = Math.Sqrt( (bX - aX) * (bX - aX) + (bY - aY) * (bY - aY) );
-    return d;
+    return Math.Sqrt( (bX - aX) * (bX - aX) + (bY - aY) * (bY - aY) );
+  }
+  public static double DistanceSqrd( double aX,double aY,double bX,double bY )
+  {
+    return (bX - aX) * (bX - aX) + (bY - aY) * (bY - aY);
   }
 
   public static double Direction( double aX,double aY,double bX,double bY )

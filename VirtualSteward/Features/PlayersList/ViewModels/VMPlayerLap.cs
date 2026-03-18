@@ -30,7 +30,7 @@ public class VMPlayerLap( uint lapNumber,uint startFrame,uint endFrame,VMMapLine
     public uint StartFrame = startFrame;
     public uint EndFrame = endFrame;
 
-    public VMMapLineNewList? Lines = null;
+    public VMMapLineList? Lines = null;
         
     public override string ToString()
     {

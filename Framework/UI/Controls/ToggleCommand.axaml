@@ -1,0 +1,21 @@
+<UserControl x:Class="Framework.UI.Controls.ToggleCommand"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Framework.UI"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:ToggleCommand/>
+    </Design.DataContext>
+    <ToggleButton Classes="Input"
+                  Classes.Icon="{Binding IsIcon}"
+                  IsChecked="{Binding IsChecked}"
+                  shadui:ButtonAssist.ShowProgress="{Binding IsBusy}">
+        <Panel>
+            <Viewbox IsVisible="{Binding IsIcon}"><TextBlock Classes="LucideIcon" Text="{Binding Icon}" ToolTip.Tip="{Binding Tooltip}"/></Viewbox>
+            <TextBlock IsVisible="{Binding !IsIcon}" Text="{Binding Text}" />
+        </Panel>
+    </ToggleButton>
+</UserControl>

@@ -28,7 +28,7 @@ public partial class ReplayExport : StateFeature
 	private readonly FeatureCommandList _commands = [];
 
 	public ExporterValue Exporters { get; }
-	public PlayersExportValue PlayersExport { get; }
+	public PlayersExportValue PlayersExport { get; internal set; }
 	public TimelineExportValue TimelineExport { get; }
 	public FilenameValue FilenameExport { get; }
 	public FeatureCommand ExportCommand { get; }
@@ -55,7 +55,10 @@ public partial class ReplayExport : StateFeature
 			}
 		);
 		PlayersExport = new PlayersExportValue( players );
-		TimelineExport = new TimelineExportValue( timelines );
+		TimelineExport = new TimelineExportValue( timelines )
+		{
+			ValueChanged = OnTimeline_ValueChanged 
+		};
 		FilenameExport = new FilenameValue( "","",FilenameValue.DialogType.Save ) { CheckOverwrite = true };
 
 		Exporters = new ExporterValue( [new ACReplayExport( ),new CSVFileExport( fileTemplates )] )
@@ -207,6 +210,15 @@ public partial class ReplayExport : StateFeature
 		{
 			FilenameExport.FileExtension = exporter.FilesExtension;
 			FilenameExport.FilesFilter = exporter.FilesFilter;
+		}
+	}
+	private void OnTimeline_ValueChanged( TimelineExportItem? obj )
+	{
+		if( obj != null && PlayersExport.Players != obj.Timeline.Players )
+		{
+			PlayersExport = new PlayersExportValue( obj.Timeline.Players );
+
+			OnPropertyChanged( nameof( PlayersExport ) );
 		}
 	}
 }

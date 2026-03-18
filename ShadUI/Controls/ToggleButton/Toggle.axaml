@@ -9,9 +9,9 @@
     </Design.PreviewWith>
 
     <ControlTheme TargetType="ToggleButton" x:Key="{x:Type ToggleButton}">
-        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Padding" Value="8" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
         <Setter Property="CornerRadius" Value="{DynamicResource LgCornerRadius}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -90,6 +90,9 @@
         <Style Selector="^ /template/ Border#NameBorderContainer:pointerover">
             <Setter Property="Cursor" Value="Hand" />
         </Style>
+        <Style Selector="^ /template/ Border#NameBorderContainer:pointerover TextBlock">
+            <Setter Property="Foreground" Value="Red" />
+        </Style>
 
         <!--  NoPressedAnimation  -->
         <Style Selector="^.NoPressedAnimation">
@@ -99,12 +102,11 @@
         </Style>
 
         <!--  Default  -->
-        <Style Selector="^.Default">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+        <Style Selector="^">
+            <Setter Property="Padding" Value="8,8" />
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}" />
+            </Style>
         </Style>
 
         <!--  Outline  -->

@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Framework.Settings;
+using VirtualSteward.ViewModels;
 
 namespace VirtualSteward.Classes;
 
@@ -22,6 +23,7 @@ public class FilesManager
   public string ReplaysFolder { get; set; }
 
   public string VSCarsFolder => Path.Combine( _vsFolder,"Cars" );
+  public string VSCheckpointsFolder => Path.Combine( _vsDocsFolder,"Checkpoints" );
 
   public string ACCarsFolder => Path.Combine( ACFolder,"content","cars" );
   public string ACTracksFolder => Path.Combine( ACFolder,"content","tracks" ); 
@@ -45,6 +47,13 @@ public class FilesManager
   public string GetSettingsFilename(  )
   {
     return CreateFolder( Path.Combine( _vsSettingsFolder ),"VirtualSteward.ini" );
+  }
+
+  public string GetCheckpointsFileName( VMTrackInfo trackinfo )
+  {
+    string folder = CreateFolder( Path.Combine( _vsDocsFolder,"Checkpoints" ) );
+
+    return Path.Combine( folder,trackinfo.TrackID + trackinfo.VariantID + ".vscheckpoints" );
   }
 
   public Settings GetServerSettings( string replayFilename )

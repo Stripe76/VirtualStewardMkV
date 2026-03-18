@@ -27,11 +27,13 @@
         </StackPanel>
         
         <ScrollViewer Grid.Row="1" Grid.Column="0">
-            <ItemsControl ItemsSource="{Binding Players}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <StackPanel>
+                <StackPanel.Styles>
+                    <StyleInclude Source="../../../Features/PlayersList/Styles/PlayersList.axaml" />
+                </StackPanel.Styles>
+                <ContentControl Content="{Binding LapsMerge}"/>
+                <ItemsControl ItemsSource="{Binding Players}"/>
+            </StackPanel>
         </ScrollViewer>
         
         <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Footers}">

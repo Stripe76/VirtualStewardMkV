@@ -13,10 +13,17 @@ namespace VirtualSteward.Features.Timelines.ViewModels;
 
 public partial class VMTimeline : UIItem
 {
+  [ObservableProperty] private bool _showName = true;
+
   [ObservableProperty] private string _timelineName;
   [ObservableProperty] private VMPlayerList _players;
 
-  [ObservableProperty] private uint _currentFrame = 0;
+  private uint _currentFrame = 0;
+  public uint CurrentFrame
+  {
+    get => _currentFrame;
+    set => SetCurrentFrame( value,false,true );
+  }
 
   [ObservableProperty] private uint _start = 0,_end = 0,_totalLength = 0;
   [ObservableProperty] private uint _scrubA = 0,_scrubB = 0;
@@ -47,6 +54,21 @@ public partial class VMTimeline : UIItem
     Start = 0;
     End = TotalLength = players.MaxFrames;
     CurrentFrame = 0;
+  }
+
+  public void SetCurrentFrame( uint frame,bool smoothing,bool updateServer )
+  {
+    _currentFrame = frame;
+
+    OnPropertyChanged( nameof( CurrentFrame ) );
+    //OnPropertyChanged( nameof( CurrentTime ) );
+
+    if( !IsActive )
+      IsActive = true;
+
+    //if( updateServer )
+      //UpdateServer( );
+    //UpdatePlayerCarsPosition( smoothing && _followPlayer == null );
   }
 
   private void SetPlayerLapsMarkers( VMPlayer player )

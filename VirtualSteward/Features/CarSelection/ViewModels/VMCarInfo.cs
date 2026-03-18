@@ -81,6 +81,16 @@ public class VMCarInfo : UIItem
 
     _skinInfoList = [];
   }
+  public VMCarInfo( VMCarInfo copyCarInfo )
+  {
+    CarID = copyCarInfo.CarID;
+    Model = copyCarInfo.Model;
+    Brand = copyCarInfo.Model;
+
+    NumberOfWings = copyCarInfo.NumberOfWings;
+
+    _skinInfoList = copyCarInfo.CarSkinsList;
+  }
   public VMCarInfo( CarInfo? info,uint numberOfWings,string? skinsFolder = null )
   {
     CarID = info?.CarID??"";

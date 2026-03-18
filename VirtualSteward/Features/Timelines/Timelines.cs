@@ -10,11 +10,11 @@ namespace VirtualSteward.Features.Timelines;
 public class ReplayTimelines : StateFeature
 {
     public VMTimeline ReplayTimeline => Timelines[0];
-    public VMTimelineList Timelines { get; } = [];
+    public VMTimelineList Timelines { get; } = new VMTimelineList( ) { FirstAlwaysActive = true };
     
     public ReplayTimelines(State state,DataTemplates templates,VMPlayerList players) : base(state,templates)
     {
-        Timelines.Add(new VMTimeline("Replay timeline",players));
+        Timelines.Add( new VMTimeline( "Replay",players ) );
     }
 
     public override Feature AddDataTemplates(DataTemplates templates)
@@ -30,6 +30,9 @@ public class ReplayTimelines : StateFeature
         ReplayTimeline.ScrubB = ReplayTimeline.End;
 
         if( ReplayTimeline.Players.Count > 0 )
+        {
             ReplayTimeline.Players[0].IsActive = true;
+            ReplayTimeline.Players[0].IsActive = false;
+        }
     }
 }
