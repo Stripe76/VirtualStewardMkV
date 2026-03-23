@@ -72,7 +72,7 @@
                         </Border.Transitions>
                     </Border>
                     <Border
-                        Background="{TemplateBinding shadui:ButtonAssist.HoverBackground}"
+                        Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"

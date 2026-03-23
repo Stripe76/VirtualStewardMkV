@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-using NodaTime;
 using Avalonia.Threading;
 
 using ACConnection.Model;
@@ -14,12 +13,12 @@ using ACConnection.Network.Packets;
 using ACConnection.Network.Packets.Protocol;
 
 using Framework.Bindables;
-
 using VirtualSteward.ACNetwork;
 using VirtualSteward.ACNetwork.Shared;
 using VirtualSteward.Datasources.ViewModels;
 using VirtualSteward.Features.CarSelection.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.Realtime.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Server.ViewModels;
 
@@ -34,11 +33,13 @@ public class ServerManager : BindableBase
   private readonly ACServerSettings _settings;
   private readonly VMServerDebug? _serverDebug = null;
 
+  private VMFrameValidation? _frameValidation = null;
+
   private byte _pakSequenceId = 0;
   private double _replayFrequency = 30;
-  private uint _timeOffset = 0,_frameOffset = 0,_lastFrame = 0,_loopStart = 0,_loopEnd = 0;
+  private uint _timeOffset = 0,_frameOffset = 0,_lastFrame = 0;
 
-  private bool _isRunning = false,_isPlaying = false,_firstUpdateReceived = false;
+  private bool _isStarting = false,_isRunning = false,_isPlaying = false,_firstUpdateReceived = false;
 
   private float _lastSunAngle = 0;
   private readonly VMTrackObjectData _currentObjectData = new( );
@@ -52,15 +53,20 @@ public class ServerManager : BindableBase
 
   private CancellationTokenSource? _serverLoopTokenSource = null;
 
+  public bool IsStarting
+  {
+    get => _isStarting;
+    internal set => SetProperty( ref _isStarting,value );
+  }
   public bool IsRunning
   {
     get => _isRunning;
-    internal set { SetProperty( ref _isRunning,value ); }
+    internal set => SetProperty( ref _isRunning,value );
   }
   public bool IsPlaying
   {
     get => _isRunning && _isPlaying;
-    internal set { SetProperty( ref _isPlaying,value ); }
+    internal set => SetProperty( ref _isPlaying,value );
   }
 
   public uint CurrentFrame
@@ -82,12 +88,11 @@ public class ServerManager : BindableBase
     _serverDebug = serverDebug;
   }
 
-  public void Play( uint loopStart,uint loopEnd )
+  public void Play( VMFrameValidation? frameValidation = null )
   {
     _frameOffset = _lastFrame;
     _timeOffset = (uint)_timeSource.Elapsed.TotalMilliseconds;
-
-    SetLoopFrames( loopStart,loopEnd );
+    _frameValidation = frameValidation;
 
     IsPlaying = true;
   }
@@ -98,14 +103,10 @@ public class ServerManager : BindableBase
     IsPlaying = false;
   }
 
-  public void SetLoopFrames( uint loopStart,uint loopEnd )
-  {
-    _loopStart = loopStart;
-    _loopEnd = loopEnd;
-  }
-
   public void StartServer( ObservableCollection<VMCarInfo>? additionalCars,double replayFrequency,uint startingFrame,Serilog.ILogger? logger = null )
   {
+    IsStarting = true;
+    
     _replayFrequency = replayFrequency;
 
     _acServer ??= new ACServer( _timeSource,Server_PacketReceived,_serverDebug )
@@ -143,6 +144,7 @@ public class ServerManager : BindableBase
     {
       throw new Exception( "Server manager: Cannot create ACServer instance");
     }
+    IsStarting = false;
   }
   public void StopServer( )
   {
@@ -187,7 +189,14 @@ public class ServerManager : BindableBase
         {
           uint timeStamp = (uint)_timeSource.Elapsed.TotalMilliseconds;
           uint milliseconds = timeStamp - _timeOffset;
-          uint frame = ValidateFrame( _frameOffset + (uint)(milliseconds / _replayFrequency) );
+          
+          uint frame = _frameOffset + (uint)(milliseconds / _replayFrequency);
+          uint validatedFrame = _frameValidation?.ValidateFrame( (int)frame ) ?? frame;
+          if( frame != validatedFrame )
+          {
+            _frameOffset = validatedFrame;
+            _timeOffset = (uint)_timeSource.ElapsedMilliseconds;
+          }
           uint frameTimeStamp = _timeOffset + (uint)((frame-_frameOffset) * _replayFrequency);
 
           _pakSequenceId += (byte)(frame - _lastFrame);
@@ -277,13 +286,19 @@ public class ServerManager : BindableBase
       {
         ChatMessage cm = (ChatMessage)packet;
 
-        if( cm.Message.Equals( "reset" ) )
-          SetStartingFrame( _loopStart );
-        else if( cm.Message.Equals( "start" ) )
-          Play( _loopStart,_loopEnd );
-        else if( cm.Message.Equals( "pause" ) || cm.Message.Equals( "stop" ) )
-          Stop( );
-
+        switch( cm.Message )
+        {
+          case "reset":
+            SetStartingFrame( _frameValidation?.ValidateFrame( 0 ) ?? 0 );
+            break;
+          case "start":
+            Play( _frameValidation );
+            break;
+          case "pause":
+          case "stop":
+            Stop( );
+            break;
+        }
         _acServer.SendChat( cm.Message );
       }
     }
@@ -384,40 +399,20 @@ public class ServerManager : BindableBase
     return true;
   }
 
-  private uint ValidateFrame( uint frame )
-  {
-    uint resultFrame = frame;
-    if( _loopStart == _loopEnd )
-    {
-      if( resultFrame < 0 )
-        resultFrame = 0;
-      else if( resultFrame >= _loopEnd )
-        resultFrame = _loopEnd;
-    }
-    else
-    {
-      if( resultFrame < _loopStart )
-        resultFrame = _loopEnd;
-      else if( resultFrame >= _loopEnd )
-        resultFrame = _loopStart;
-    }
-    if( resultFrame != frame )
-    {
-      _frameOffset = resultFrame;
-      _timeOffset = (uint)_timeSource.ElapsedMilliseconds;
-    }
-    return resultFrame;
-  }
-
   private void UpdateWeather( uint frame )
   {
     if( _acServer != null )
     {
       if( _lastWeather == null )
       {
-        _acServer.SendWeather( _settings.Weather.WeatherData,new( SystemClock.Instance.GetCurrentInstant( ),DateTimeZone.Utc ) );
-        //_acServer.SendWeatherFx( _settings.Weather.WeatherData,new( SystemClock.Instance.GetCurrentInstant( ),DateTimeZone.Utc ) );
-
+        //_acServer.SendWeather( _settings.Weather.WeatherData,new( SystemClock.Instance.GetCurrentInstant( ),DateTimeZone.Utc ) );
+        
+        //var time = LocalTime.FromSecondsSinceMidnight( (int)(_settings.TimeOfDay * (24 * 60 * 60-1)) );
+        
+        //_acServer.SendWeatherFx( _settings.Weather.WeatherData,time.On( LocalDate.FromDateTime( DateTime.Now ) ) );
+        
+        _acServer.SendWeatherFx( _settings.Weather.WeatherData,new DateTimeOffset( DateTime.Now.Date.ToUniversalTime(  ) ).AddSeconds( _settings.TimeOfDay * (24 * 60 * 60-1) ) );
+        
         _lastWeather = _settings.Weather;
       }
       // 16*((HOURS*3600)+(MINUTES*60)+SECONDS-46800)/(50400-46800)
@@ -425,8 +420,8 @@ public class ServerManager : BindableBase
       //if( _trackObjects.GetObjectData( frame,_currentObjectData ) )
         //sunAngle = _currentObjectData.SunAngle;
 
-      if( _lastSunAngle != sunAngle )
-        _acServer.SendSunAngle( _lastSunAngle = sunAngle );
+      //if( _lastSunAngle != sunAngle )
+        //_acServer.SendSunAngle( _lastSunAngle = sunAngle );
     }
   }
 

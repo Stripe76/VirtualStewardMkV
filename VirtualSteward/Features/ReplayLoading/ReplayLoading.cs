@@ -37,7 +37,7 @@ public partial class ReplayLoading : StateFeature
 
 		_openReplay = new FeatureCommand( )
 		{
-			Icon = "\xf1f9;",
+			Icon = "\xf1f9",
 			Text = "Open replay file",
 			Tooltip = "Open replay file",
 			RoutedCommand = LoadReplayCommand

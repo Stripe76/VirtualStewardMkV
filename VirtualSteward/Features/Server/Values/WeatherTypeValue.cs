@@ -6,9 +6,18 @@ using VirtualSteward.ACNetwork.Weather;
 
 namespace VirtualSteward.Features.Server.Values;
 
-public class WeatherTypeValue( ) : BaseValue<WeatherFxType>( WeatherFxType.Clear,"WeatherType","Weather:" )
+public class WeatherTypeValue : BaseValue<string>
 {
     public static readonly DefaultWeatherTypeProvider WeatherTypeProvider = new ( );
 
-    public IEnumerable<object> Items { get; } = Enum.GetValues( typeof( WeatherFxType ) ).Cast<object>( );
+    public List<string> Items { get; } = [];
+    
+    public WeatherTypeValue( string name,string title ) : base( "Clear",name,title )
+    {
+        foreach( var s in Enum.GetValues<WeatherFxType>( ) )
+        {
+            Items.Add( s.ToString( ) );
+        }
+        Items.Sort( );
+    }
 }

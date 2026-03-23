@@ -1,4 +1,7 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls.Templates;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,18 +19,23 @@ using VirtualSteward.Features.CarSelection.ViewModels;
 
 using VirtualSteward.Features.Server.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.Realtime.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Server.Classes;
 using VirtualSteward.Features.Server.Configurations;
 using VirtualSteward.Features.Server.Values;
+using VirtualSteward.Features.Timelines.ViewModels;
 using VirtualSteward.Pages.Server.ViewModels;
 
 namespace VirtualSteward.Pages.Server;
 
 public partial class Server : StateFeature
 {
+    private readonly VMFrameValidationTimeline _frameValidation;
+
     private readonly FilesManager _fileManager;
     private readonly MessageManager _messageManager;
+    
     private readonly ACServerSettings _settings = new ACServerSettings( );
     private readonly VMServerDebug _serverDebug = new VMServerDebug( );
 
@@ -36,26 +44,26 @@ public partial class Server : StateFeature
     public string Icon { get; } = "\xf202";
 
     public FeatureCommand ServerStart { get; }
-    public VMServerStatus ServerStatus { get; }
-
+    public VMFrameValidationTimeline FrameValidation => _frameValidation;
+        
+    public CMServerStartOptions StartOptions { get; } 
     public CMServerPorts ServerPorts { get; }
     public CMServerOptions ServerOptions { get; }
     public CMServerWeather ServerWeather { get; }
-    
     public CarSelection CarSelection { get; }
 
-    [ObservableProperty] private bool _startReplay;
-    [ObservableProperty] private bool _LaunchCM;
-    [ObservableProperty] private bool _LaunchAC;
+    [ObservableProperty] private VMServerStatus _serverStatus = new VMServerStatus( );
 
-    public Server( State state,DataTemplates templates,string title,FilesManager filesManager,MessageManager messageManager ) : base( state,templates,title )
+    public Server( State state,DataTemplates templates,string title,VMTimeline timeline,VMFrameValidationTimeline frameValidation,FilesManager filesManager,MessageManager messageManager ) : base( state,templates,title )
     {
         _fileManager = filesManager;
         _messageManager = messageManager;
+        _frameValidation = frameValidation;
 
+        StartOptions = new CMServerStartOptions( this,timeline );
         ServerPorts = new CMServerPorts( _settings ) { Width = 395 } ;
         ServerOptions = new CMServerOptions( _settings ) { Width = 395 } ;
-        ServerWeather = new CMServerWeather( _settings )
+        ServerWeather = new CMServerWeather( _settings,this )
         {
             Width = 395,
             WeatherType =
@@ -71,7 +79,6 @@ public partial class Server : StateFeature
             Text = "Start server",
             RoutedCommand = StartServerCommand
         };
-        ServerStatus = new VMServerStatus( );
     }
 
     public override async Task OnLoaded( Settings settings )
@@ -83,6 +90,7 @@ public partial class Server : StateFeature
     {
         templates.Add( new FuncDataTemplate<Server>( ( _,_ ) => new Pages.Server( ) ) );
         templates.Add( new FuncDataTemplate<WeatherTypeValue>( ( _,_ ) => new Framework.UI.Inputs.ComboboxInput( ) ) );
+        templates.Add( new FuncDataTemplate<HeadlightsValue>( ( _,_ ) => new Framework.UI.Inputs.ComboboxInput( ) ) );
 
         templates.Add( new FuncDataTemplate<VMServerStatus>( ( _,_ ) => new Controls.ServerStatus( ) ) );
 
@@ -96,7 +104,13 @@ public partial class Server : StateFeature
         LoadServerConfigurations(  );
     }
 
-    [RelayCommand( CanExecute = nameof( CanStartServer ) )] public void StartServer( )
+    public void UpdateWeather( )
+    {
+        _serverManager?.ResendWeather(  );
+    }
+    
+    [RelayCommand( CanExecute = nameof( CanStartServer ) )]
+    public void StartServer( )
     {
         if( _serverManager == null || !_serverManager.IsRunning )
         {
@@ -107,16 +121,26 @@ public partial class Server : StateFeature
             {
                 try
                 {
-                    ServerStatus.IsStarting = true;
+                    ServerStatus.SetServerManager( _serverManager = StartServer( _settings,replay,_state.Track,_state.Players,CarSelection.SelectedCars.SelectedItems,_serverDebug ) );
+
+                    StartOptions.LoopReplay.Value = _frameValidation.LoopReplay;
+                    StartOptions.LoopScrubs.Value = _frameValidation.LoopScrubs; 
+                    StartOptions.LoopStart.Value = (int)_frameValidation.ScrubA;
+                    StartOptions.LoopEnd.Value = (int)_frameValidation.ScrubB;
                     
-                    _serverManager = StartServer( _settings,replay,_state.Players,_state.Track,_serverDebug );
-                    if( StartReplay )
-                        _serverManager.Play( 0,10000 );
-
-                    ServerStatus.IsStarting = false;
-                    ServerStatus.SetServerManager( _serverManager );
-
                     SaveServerConfigurations( );
+
+                    ServerStatus.ServerLink = new Uri( "acmanager://race/online/join?query=race/online/join&ip=" + _settings.ServerAddress + "&httpPort=" + _settings.HttpPort );
+
+                    string message = StartOptions.LaunchCM ? "" : "Click to launch CM: ";
+                    ServerStatus.ServerAddress = $"{message}{_settings.ServerName} - {_settings.ServerAddress}:{_settings.HttpPort}";
+                    
+                    if( StartOptions.StartReplay )
+                        StartReplay(  );
+                    if( StartOptions.LaunchCM )
+                        StartContentManager( );
+
+                    Success = true;
                 }
                 catch( Exception ex )
                 {
@@ -139,20 +163,52 @@ public partial class Server : StateFeature
         return _state.Replay.IsLoaded;
     }
 
-    [RelayCommand] protected void SetStartReplay(  )
+    [RelayCommand] private void StopServer( )
     {
-        StartReplay = !StartReplay;
+        _serverManager?.StopServer( );
+        _serverManager = null;
+
+        Success = false;
     }
-    [RelayCommand] protected void SetLauncCM(  )
+
+    [RelayCommand] private void StartReplay( )
     {
-        LaunchCM = !LaunchCM;
+        _serverManager?.Play( _frameValidation );
     }
-    [RelayCommand] protected void SetLauncAC(  )
+    [RelayCommand] private void StopReplay( )
     {
-        LaunchAC = !LaunchAC;
+        _serverManager?.Stop( );
     }
-    
-    private static ServerManager StartServer( ACServerSettings settings,VMReplay replay,VMPlayerList players,VMTrackInfo trackInfo,VMServerDebug serverDebug )
+
+    [RelayCommand] private void StartContentManager( )
+    {
+        if( _serverManager != null )
+            Process.Start( "xdg-open",ServerStatus.ServerLink.ToString(  ) );
+    }
+
+    [RelayCommand] protected void SetLaunchCM(  )
+    {
+        StartOptions.LaunchCM.Value = !StartOptions.LaunchCM.Value;
+    }
+    [RelayCommand] protected void SetLaunchAC(  )
+    {
+        //StartOptions.LaunchAC = !LaunchAC;
+    }
+    [RelayCommand] protected void SetLaunchReplay(  )
+    {
+        StartOptions.StartReplay.Value = !StartOptions.StartReplay.Value;
+    }
+
+    [RelayCommand] protected void SetLoopReplay(  )
+    {
+        FrameValidation.LoopReplay = !FrameValidation.LoopReplay;
+    }
+    [RelayCommand] protected void SetLoopScrubs(  )
+    {
+        FrameValidation.LoopScrubs = !FrameValidation.LoopScrubs;
+    }
+
+    private static ServerManager StartServer( ACServerSettings settings,VMReplay replay,VMTrackInfo trackInfo,VMPlayerList players,ObservableCollection<VMCarInfo> additionalCars,VMServerDebug serverDebug )
     {
         settings.TrackID = trackInfo.TrackID;
         settings.VariantID = trackInfo.VariantID;
@@ -177,7 +233,7 @@ public partial class Server : StateFeature
 
         //logger?.Information( "Starting server" );
 
-        serverManager.StartServer( null,replay.ReplayFrequency,0 );
+        serverManager.StartServer( additionalCars,replay.ReplayFrequency,0 );
 
         return serverManager;
     }
@@ -188,30 +244,80 @@ public partial class Server : StateFeature
         {
             Settings settings = _fileManager.GetServerSettings( _state.Replay.FileName );
 
+            StartOptions.Deserialize( settings );
             ServerOptions.Deserialize( settings );
             ServerWeather.Deserialize( settings );
             ServerPorts.Deserialize( settings );
+
+            while( CarSelection.SelectedCars.SelectedItems.Count > 0 )
+                CarSelection.SelectedCars.SelectedItems[0].IsSelected = false;
+            CarSelection.SelectedCars.ActiveItem = null;
+            
+            LoadSelectedCars( settings );
         }
     }
     private void SaveServerConfigurations( )
     {
         Settings settings = _fileManager.GetServerSettings( _state.Replay.FileName );
         
+        StartOptions.Serialize( settings );
         ServerOptions.Serialize( settings );
         ServerWeather.Serialize( settings );
         ServerPorts.Serialize( settings );
+
+        SaveSelectedCars( settings );
         
         settings.SaveFile(  );
     }
 
-    private void WeatherTypeValueChanged( WeatherFxType value )
+    private void LoadSelectedCars( Settings settings )
     {
-        WeatherType weatherType = WeatherTypeValue.WeatherTypeProvider.GetWeatherType( value );
+        int count = settings.LoadInt( "CARS","Cars" );
+        for( int i = 0; i < count; i++ )
+        {
+            string? s = settings.LoadString( "CARS",i.ToString( ) );
 
-        ServerWeather.RainIntensity.Value = weatherType.RainIntensity;
-        ServerWeather.RainWater.Value = weatherType.RainWater;
-        ServerWeather.RainWetness.Value = weatherType.RainWetness;
+            if( s != null )
+            {
+                string[] split = s.Split( ';' );
 
+                if( split.Length == 2 )
+                {
+                    var car = CarSelection.SelectedCars.FirstOrDefault( ( x ) => x.CarID.Equals( split[0] ) );
+                    if( car != null )
+                    {
+                        car.IsSelected = true;
+                        car.SelectedSkinID = split[1];
+                    }
+                }
+            }
+        }
+    }
+    private void SaveSelectedCars( Settings settings )
+    {
+        int index = 0;
+        foreach( var car in CarSelection.SelectedCars.SelectedItems )
+        {
+            settings.Save( "CARS",index++.ToString( ),$"{car.CarID};{car.SelectedSkinID}" );
+        }
+        settings.Save( "CARS","Cars",index );
+    }
+
+    private void WeatherTypeValueChanged( string value )
+    {
+        if( Enum.TryParse( value,out WeatherFxType v ) )
+        {
+            WeatherType weatherType = WeatherTypeValue.WeatherTypeProvider.GetWeatherType( v );
+
+            _settings.Weather.WeatherData.Type = v;
+            _settings.Weather.WeatherData.UpcomingType = v;
+
+            ServerWeather.RainIntensity.Value = weatherType.RainIntensity;
+            ServerWeather.RainWater.Value = weatherType.RainWater;
+            ServerWeather.RainWetness.Value = weatherType.RainWetness;
+
+            UpdateWeather( );
+        }
         /*
         _settings.Weather.WeatherData.Type = value;
         _settings.Weather.WeatherData.UpcomingType = value;

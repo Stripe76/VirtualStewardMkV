@@ -18,6 +18,7 @@ public class CMServerOptions( ACServerSettings settings ) : Configuration( "SERV
   };
   public readonly MappedValueUInt MapFrequency = new( nameof( MapFrequency ),"Map update",[0,1,2,3,4,5,6,7,8,9,10,12,14,18,19] )
   {
+    IsVisible = false,
     Unit = "hz",
     Description = "Update frequency of the map in Virtual Steward, doesn't affect the server",
     DisplayTexts = new SortedList<int,string>( ) { { 0,"Off" }, { 14,"As server" } },

@@ -19,6 +19,7 @@ public partial class Feature : UIItem
 
     [ObservableProperty] private bool _error = false;
     [ObservableProperty] private bool _warning = false;
+    [ObservableProperty] private bool _success = false;
     
     public  string HeaderTitle { get; init; }
 

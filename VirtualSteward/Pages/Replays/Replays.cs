@@ -18,6 +18,7 @@ using VirtualSteward.Features.Tracklines;
 using VirtualSteward.Features.TrackMap;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.Realtime;
+using VirtualSteward.Features.Realtime.ViewModels;
 using VirtualSteward.Features.ReplayExport;
 using VirtualSteward.Features.ResetReplay;
 using VirtualSteward.Features.Timelines;
@@ -26,6 +27,7 @@ namespace VirtualSteward.Pages.Replays;
 
 public class Replays : StateFeature
 {
+    private readonly Realtime _realtime;
     private readonly ResetReplay _replayReset;
     private readonly ReplayLoading _replayLoading;
 
@@ -44,6 +46,7 @@ public class Replays : StateFeature
     public UIBaseList Footers { get; } = [];
 
     public VMPlayerList Players => _state.Players;
+    public VMFrameValidationTimeline FrameValidation => _realtime.FrameValidation;
     
     public Replays( State state,
                     DataTemplates templates,
@@ -67,7 +70,7 @@ public class Replays : StateFeature
 
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
-        Panels.Add( new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
+        Panels.Add( _realtime = new Realtime( state,templates,Timelines.ReplayTimeline ),false,true );
         Panels.Add( new ReplayExport( state,templates,state.Players,Timelines.Timelines,new FileTemplates( templates,filesManager ).TemplateFiles,filesManager,messageManager ).AddCommands( LeftToolbar ) );
 
         Checkpoints chekpoints = new Checkpoints( state,templates,filesManager,TrackMap.Map );

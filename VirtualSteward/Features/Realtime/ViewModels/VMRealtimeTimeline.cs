@@ -5,16 +5,13 @@ namespace VirtualSteward.Features.Realtime.ViewModels;
 
 public class VMRealtimeTimeline : VMRealtime
 {
-  private VMReplay _replay;
   private readonly VMTimeline _timeline;
+  private readonly VMFrameValidation _frameValidation;
 
-  private int _carSmoothing = 1;
+  private VMReplay _replay;
+  
+  private uint _frameOffset;
   private double _replayFrequency;
-
-  private bool _isUpdatingFrame = false;
-  protected bool _loopReplay = false,_loopScrubs = false;
-
-  private uint _frameOffset,_loopStart = 0,_loopEnd = 0;
 
   public VMReplay Replay
   {
@@ -31,56 +28,19 @@ public class VMRealtimeTimeline : VMRealtime
   {
     get => _timeline;
   }
+  public VMFrameValidation FrameValidation => _frameValidation;
 
-  public uint FrameOffset
-  {
-    get => _frameOffset;
-  }
-
-  public int MovementSmoothing
-  {
-    get => _carSmoothing;
-    set => SetProperty( ref _carSmoothing,value );
-  }
-
-  public bool LoopReplay
-  {
-    get => _loopReplay;
-    set
-    {
-      if( SetProperty( ref _loopReplay,value ) )
-        UpdateLoopFrames( );
-    }
-  }
-  public bool LoopScrubs
-  {
-    get => _loopScrubs;
-    set
-    {
-      if( SetProperty( ref _loopScrubs,value ) )
-        UpdateLoopFrames( );
-    }
-  }
-
-  public VMRealtimeTimeline( VMReplay replay,VMTimeline timeline,uint replayFrequencyMs ) : base( replayFrequencyMs )
+  public VMRealtimeTimeline( VMReplay replay,VMTimeline timeline,VMFrameValidation frameValidation,uint replayFrequencyMs ) : base( replayFrequencyMs )
   {
     _replay = replay;
-    _replayFrequency = _replay.ReplayFrequency; 
+    _replayFrequency = _replay.ReplayFrequency;
 
     _timeline = timeline;
-    _timeline.PropertyChanged += Timeline_PropertyChanged;
+    _frameValidation = frameValidation; 
 
     FrequencyMs = (uint)(1000 / _replay.ReplayFrequency);
   }
 
-  public override void Play( )
-  {
-    //PlaySlowMotion = 1;
-
-    //_frameOffset = startFrame;
-
-    base.Play( );
-  }
   public override void Stop( )
   {
     base.Stop( );
@@ -120,67 +80,21 @@ public class VMRealtimeTimeline : VMRealtime
 
     if( IsPlaying )
     {
-      uint nFrame = (uint)(_frameOffset + ((milliseconds * PlaySpeed / PlaySlowMotion) / _replayFrequency));
+      int frame = (int)(_frameOffset + ((milliseconds * PlaySpeed / PlaySlowMotion) / _replayFrequency));
+      uint validatedFrame = _frameValidation.ValidateFrame( frame ); 
 
-      _isUpdatingFrame = true;
-      _timeline.CurrentFrame = ValidateFrame(nFrame);
-      _isUpdatingFrame = false;
+      if( validatedFrame != frame )
+      {
+        _frameOffset = validatedFrame;
+
+        TimeOffset = (uint)TimeSource.ElapsedMilliseconds;
+      }
+      _timeline.CurrentFrame = validatedFrame;
     }
   }
 
   public override bool CanPlay( )
   {
     return _replay.IsLoaded;
-  }
-
-  private void UpdateLoopFrames( )
-  {
-    _loopEnd = _loopScrubs ? (_loopReplay ? _timeline.ScrubB : _timeline.End) : _timeline.End;
-    _loopStart = _loopScrubs ? (_loopReplay ? _timeline.ScrubA : _loopEnd) : (_loopReplay ? 0 : _loopEnd);
-
-    //_server?.SetLoopFrames( _loopStart,_loopEnd );
-  }
-
-  private uint ValidateFrame( uint frame )
-  {
-    uint resultFrame = frame;
-    if( _loopStart == _loopEnd )
-    {
-      if( resultFrame < 0 )
-        resultFrame = 0;
-      else if( resultFrame >= _loopEnd )
-        resultFrame = _loopEnd;
-    }
-    else
-    {
-      if( resultFrame < _loopStart )
-        resultFrame = _loopEnd;
-      else if( resultFrame >= _loopEnd )
-        resultFrame = _loopStart;
-    }
-    if( resultFrame != frame )
-    {
-      _frameOffset = resultFrame;
-
-      TimeOffset = (uint)TimeSource.ElapsedMilliseconds;
-    }
-    return resultFrame;
-  }
-
-  private void Timeline_PropertyChanged( object? sender,System.ComponentModel.PropertyChangedEventArgs e )
-  {
-    if( !_isUpdatingFrame && e.PropertyName == nameof( VMTimeline.CurrentFrame ) )
-    {
-      //if( TrafficManager == null )
-      {
-        TimeOffset = (uint)TimeSource.Elapsed.TotalMilliseconds;
-
-        _frameOffset = _timeline.CurrentFrame;
-      }
-    }
-    if( e.PropertyName == nameof( VMTimeline.ScrubA ) || e.PropertyName == nameof( VMTimeline.ScrubB ) )
-    {
-      UpdateLoopFrames( );
-    }
   }
 }

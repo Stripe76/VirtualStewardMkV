@@ -1,5 +1,4 @@
-﻿using Framework.Bindables;
-using System.Collections;
+﻿using System.Collections;
 
 namespace Framework.UI.Values;
 
@@ -86,10 +85,12 @@ public class BaseUnmanagedValue<T> : BaseValue<T> where T : unmanaged
 
 public class BaseInt( string name,string? title = null ) : BaseUnmanagedValue<int>( int.MinValue,int.MaxValue,name,title )
 {
+  public static implicit operator int(BaseInt d) => d.Value;
 }
 
 public class BaseBool( string name,string? title = null ) : BaseUnmanagedValue<bool>( false,true,name,title )
 {
+  public static implicit operator bool(BaseBool d) => d.Value;
 }
 
 public class BaseSwitchBool( string name,string titleOn,string titleOff ) : BaseUnmanagedValue<bool>( false,true,name,titleOn )

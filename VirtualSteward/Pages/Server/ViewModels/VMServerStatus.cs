@@ -1,6 +1,8 @@
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
-
+using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
 
 using VirtualSteward.Features.Server.Classes;
@@ -12,6 +14,9 @@ public partial class VMServerStatus : UIBase
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private bool _isStarting;
+
+    [ObservableProperty] private Uri _serverLink;
+    [ObservableProperty] private string _serverAddress;
     
     public VMServerStatus(  )
     {
@@ -32,5 +37,12 @@ public partial class VMServerStatus : UIBase
             IsRunning = serveManager.IsRunning;
             IsPlaying = serveManager.IsPlaying;
         }
+    }
+
+    [RelayCommand]
+    protected void LauncCM( Uri? address )
+    {
+        if( address is not null )
+            Process.Start( "xdg-open",address.ToString(  ) );
     }
 }

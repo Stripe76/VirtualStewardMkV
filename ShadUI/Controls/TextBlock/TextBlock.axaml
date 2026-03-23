@@ -55,6 +55,9 @@
             <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
         </Style>
 
+        <Style Selector="^.Success">
+            <Setter Property="Foreground" Value="{DynamicResource SuccessColor}" />
+        </Style>
         <Style Selector="^.Error">
             <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
         </Style>

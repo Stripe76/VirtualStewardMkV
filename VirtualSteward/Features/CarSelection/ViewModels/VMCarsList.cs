@@ -31,7 +31,7 @@ public class VMCarsList : BindableBase
     if( cars != null )
     {
       foreach( var car in cars )
-        Cars.Add( new( car.CarID,car.SkinID ) );
+        Cars.Add( new VMCarsListItem( car.CarID,car.SelectedSkinID ) );
     }
   }
   public VMCarsList( string file,string[] fileLines )

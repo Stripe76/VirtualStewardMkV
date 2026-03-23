@@ -10,18 +10,51 @@
     </Design.DataContext>
     <Grid ColumnDefinitions="* 6 *">
         <Grid RowDefinitions="Auto *">
-            <StackPanel Orientation="Horizontal">
-                <SplitButton Classes="Primary" Margin="6,6,0,0" Width="200" Height="48" Content="Start server" Command="{Binding StartServerCommand}">
-                    <SplitButton.Flyout>
-                        <MenuFlyout Placement="RightEdgeAlignedTop">
-                            <MenuItem Header="Start replay" Command="{Binding SetStartReplay}" IsChecked="{Binding StartReplay}"/>
-                            <MenuItem Header="Launch CM" Command="{Binding SetLauncCM}" IsChecked="{Binding LaunchCM}"/>
-                            <MenuItem Header="Launch AC" Command="{Binding SetLauncAC}" IsEnabled="False" IsChecked="{Binding LaunchAC}"/>
-                        </MenuFlyout>
-                    </SplitButton.Flyout>
-                </SplitButton>
-                <ContentControl Content="{Binding ServerStatus}" Padding="16"/>
-            </StackPanel>
+            <Grid ColumnDefinitions="210 8 *">
+                <Panel>
+                    <SplitButton Classes="Primary" IsVisible="{Binding !ServerStatus.IsRunning}" Margin="6,6,0,0" Width="200" Height="48" Content="Start server" Command="{Binding StartServerCommand}">
+                        <SplitButton.Flyout>
+                            <MenuFlyout Placement="RightEdgeAlignedTop">
+                                <MenuItem Header="Start replay" Command="{Binding SetLaunchReplayCommand}" IsChecked="{Binding StartOptions.StartReplayProperty.Value}"/>
+                                <MenuItem Header="Launch CM" Command="{Binding SetLaunchCMCommand}" IsChecked="{Binding StartOptions.LaunchCMProperty.Value}"/>
+                                <MenuItem Header="Launch AC" Command="{Binding SetLaunchACCommand}" IsEnabled="False"/>
+                                <Separator/>
+                                <MenuItem Header="Loop replay" Command="{Binding SetLoopReplayCommand}" IsChecked="{Binding FrameValidation.LoopReplay}"/>
+                                <MenuItem Header="Only selection" Command="{Binding SetLoopScrubsCommand}" IsChecked="{Binding FrameValidation.LoopScrubs}"/>
+                            </MenuFlyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding ServerStatus.IsRunning}">
+                        <Button Classes="Primary" HorizontalAlignment="Left" Margin="6,6,0,0" Width="140" Height="48" Content="Stop server" Command="{Binding StopServerCommand}"/>
+                        <Button IsVisible="{Binding !ServerStatus.IsPlaying}" Margin="6,6,0,0" Width="50" Height="48" Command="{Binding StartReplayCommand}">
+                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf29d;"/></Viewbox>
+                        </Button>
+                        <Button IsVisible="{Binding ServerStatus.IsPlaying}" Margin="6,6,0,0" Width="50" Height="48" Command="{Binding StopReplayCommand}">
+                            <Viewbox><TextBlock Classes="LucideIcon" Text="&#xf28a;"/></Viewbox>
+                        </Button>
+                    </StackPanel>
+                </Panel>
+                <UniformGrid Columns="1" Grid.Column="1" Margin="6,6,0,0" Height="50" IsVisible="{Binding !ServerStatus.IsRunning}">
+                    <UniformGrid.Styles>
+                        <Style Selector="Rectangle">
+                            <Setter Property="Width" Value="10"/>
+                            <Setter Property="Height" Value="10"/>
+                            <Setter Property="Stroke" Value="Gray"/>
+                            <Setter Property="StrokeThickness" Value="1"/>
+                            <Setter Property="Fill" Value="Transparent"></Setter>
+                            <Style Selector="^.Selected">
+                                <Setter Property="Fill" Value="{DynamicResource InfoColor}"></Setter>
+                            </Style>
+                        </Style>
+                    </UniformGrid.Styles>
+                    <Rectangle Classes.Selected="{Binding StartOptions.StartReplayProperty.Value}"/>
+                    <Rectangle Classes.Selected="{Binding StartOptions.LaunchCMProperty.Value}"/>
+                    <Rectangle />
+                    <Rectangle Classes.Selected="{Binding FrameValidation.LoopReplay}"/>
+                    <Rectangle Classes.Selected="{Binding FrameValidation.LoopScrubs}"/>
+                </UniformGrid>
+                <ContentControl Grid.Column="2" Content="{Binding ServerStatus}" Padding="16"/>
+            </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                 <WrapPanel Orientation="Horizontal">
                     <ContentControl Content="{Binding ServerOptions}"/>

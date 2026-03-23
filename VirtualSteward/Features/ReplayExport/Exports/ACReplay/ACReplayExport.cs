@@ -56,7 +56,7 @@ public class ACReplayExport( ) : BaseExport( "ACReplay","As AC replay file" )
         cars[i] = new ReplayCar( GetReplayCarData( datasource,startFrame,endFrame ),GetReplayCarLaps( player ) )
         {
           CarID = player.PlayerInfo.CarInfo.CarID,
-          CarSkinID = player.PlayerInfo.CarSkinInfo.ID,
+          CarSkinID = player.PlayerInfo.CarSkinInfo.SkinID,
           PlayerName = player.PlayerInfo.PlayerName,
           PlayerTeam = player.PlayerInfo.PlayerTeam,
           PlayerNation = player.PlayerInfo.PlayerNation,

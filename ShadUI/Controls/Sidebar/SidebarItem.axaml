@@ -142,6 +142,9 @@
             <Setter Property="RenderTransform" Value="scale(0.95, 0.95)" />
         </Style>
 
+        <Style Selector="^.Success">
+            <Setter Property="Foreground" Value="{DynamicResource SuccessColor}" />
+        </Style>
         <Style Selector="^.Error">
             <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
         </Style>

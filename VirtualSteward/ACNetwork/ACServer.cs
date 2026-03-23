@@ -11,9 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-using NodaTime;
-//using NodaTime.Extensions;
-
 using ACConnection.Model;
 using ACConnection.Utils;
 using ACConnection.Network.Tcp;
@@ -244,7 +241,7 @@ public class ACServer
         AllowTyreBlankets = settings.TiresBlanket,
         AutoClutchAllowed = true,
         CarModel = newPlayer.PlayerInfo.CarInfo.CarID,
-        CarSkin = newPlayer.PlayerInfo.CarInfo.SkinID,
+        CarSkin = newPlayer.PlayerInfo.CarSkinInfo.SkinID,
         FuelConsumptionRate = settings.FuelRate,
         HasExtraLap = false,
         InvertedGridPositions = 0,
@@ -302,7 +299,7 @@ public class ACServer
         {
           SessionId = (byte)car.PlayerID,
           Model = car.PlayerInfo.CarInfo.CarID,
-          Skin = (car.PlayerInfo.CarInfo.SkinID + "/ACA3").Replace( "/ACA3/ACA3","/ACA3" ),
+          Skin = (car.PlayerInfo.CarSkinInfo.SkinID + "/ACA3").Replace( "/ACA3/ACA3","/ACA3" ),
           Name = car.PlayerInfo.PlayerName,
           Team = car.PlayerInfo.PlayerTeam,
           NationCode = car.PlayerInfo.PlayerNation,
@@ -371,12 +368,12 @@ public class ACServer
       SendTCPPacket( sa );
     }
   }
-  public void SendWeather( WeatherData weather,ZonedDateTime dateTime )
+  public void SendWeather( WeatherData weather,DateTimeOffset dateTime )
   {
     var wfxParams = new WeatherFxParams
     {
       Type = weather.Type,
-      StartDate = dateTime.Date.AtStartOfDayInZone(DateTimeZone.Utc).ToInstant().ToUnixTimeSeconds()
+      StartDate = dateTime.ToUnixTimeSeconds( )
     };
 
     var weatherType = _weatherTypeProvider.GetWeatherType(wfxParams.Type) with
@@ -390,16 +387,17 @@ public class ACServer
       Ambient = (byte) weather.TemperatureAmbient,
       Road = (byte) weather.TemperatureRoad,
       WindDirection = (short) weather.WindDirection,
-      WindSpeed = (short) weather.WindSpeed
+      WindSpeed = (short) weather.WindSpeed,
     };
-
+    
     SendTCPPacket( weatherUpdate );
   }
-  public void SendWeatherFx( WeatherData weather,ZonedDateTime dateTime )
+  public void SendWeatherFx( WeatherData weather,DateTimeOffset dateTime )
   {
     var newWeather = new CSPWeatherUpdate
     {
-      UnixTimestamp = (ulong) dateTime.Date.AtStartOfDayInZone(DateTimeZone.Utc).ToInstant().ToUnixTimeSeconds(),
+      //UnixTimestamp = (ulong) dateTime.Date.AtStartOfDayInZone(DateTimeZone.Utc).ToInstant().ToUnixTimeSeconds(),
+      UnixTimestamp = (ulong) dateTime.ToUnixTimeSeconds( ),
       WeatherType = (byte) weather.Type,
       UpcomingWeatherType = (byte) weather.UpcomingType,
       TransitionValue = weather.TransitionValue,
@@ -554,7 +552,7 @@ public class ACServer
       EntryListResponseCar entry = new ( )
       {
         Model = player.PlayerInfo.CarInfo.CarID,
-        Skin = player.PlayerInfo.CarInfo.SkinID + "/ACA3",
+        Skin = player.PlayerInfo.CarSkinInfo.SkinID + "/ACA3",
         IsEntryList = true,
         DriverName = player.PlayerInfo.PlayerName != "" ? player.PlayerInfo.PlayerName : null,
         DriverTeam = player.PlayerInfo.PlayerTeam != "" ? player.PlayerInfo.PlayerTeam : null,
@@ -567,7 +565,7 @@ public class ACServer
         entry = new( )
         {
           Model = player.PlayerInfo.CarInfo.CarID,
-          Skin = player.PlayerInfo.CarInfo.SkinID + "/ACA3",
+          Skin = player.PlayerInfo.CarSkinInfo.SkinID + "/ACA3",
           IsEntryList = true,
           DriverName = null,
           DriverTeam = null,
@@ -587,7 +585,7 @@ public class ACServer
           EntryListResponseCar entry = new( )
           {
             Model = info.CarID,
-            Skin = info.SkinID + "/ACA3",
+            Skin = info.SelectedSkinID + "/ACA3",
             IsEntryList = true,
             DriverName = null,
             DriverTeam = null,
@@ -639,13 +637,13 @@ public class ACServer
       foreach( VMCarInfo info in additionalCars )
       {
         if( info.CarID.Equals( requestedCar ) )
-          return info.SkinID;
+          return info.SelectedSkinID;
       }
     }
     foreach( VMPlayer player in replayCars )
     {
       if( player.PlayerInfo.CarInfo.CarID.Equals( requestedCar ) )
-        return player.PlayerInfo.CarInfo.SkinID;
+        return player.PlayerInfo.CarSkinInfo.SkinID;
     }
     return string.Empty;
   }

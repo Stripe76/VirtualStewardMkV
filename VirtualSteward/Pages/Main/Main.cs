@@ -37,7 +37,7 @@ public partial class Main : Feature
         _ = new Features.ProgressBar.ProgressBar(templates);
 
         Replays.Replays replays = new Replays.Replays( _state,templates,"Replay",window,_fileManager,_messageManager );
-        Server.Server server = new Server.Server( _state,templates,"Server",_fileManager,_messageManager );
+        Server.Server server = new Server.Server( _state,templates,"Server",replays.Timelines.ReplayTimeline,replays.FrameValidation,_fileManager,_messageManager );
         Options.Options options = new Options.Options( _state,templates,"Settings",_fileManager );
 
         Pages.Add( new Home.Home( _state,templates,"Home",_fileManager,_messageManager,replays,server ),false,true );

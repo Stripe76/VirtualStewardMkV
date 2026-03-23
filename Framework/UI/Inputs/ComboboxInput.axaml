@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <WrapPanel>
-        <TextBlock Text="{Binding Title}" MinWidth="100"/>
-        <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding Value}" MinWidth="{Binding MinWidth}" MaxDropDownHeight="400"/>
+        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" MinWidth="100"/>
+        <ComboBox Classes="Input" ItemsSource="{Binding Items}" SelectedItem="{Binding Value}" MinWidth="{Binding MinWidth}" MaxDropDownHeight="400"/>
     </WrapPanel>
 </UserControl>

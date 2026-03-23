@@ -27,9 +27,9 @@ public class Configuration : UIBase
 
     // var propValue = obj.GetType( )?.GetProperty( prop )?.GetValue( obj )?.ToString( );
     var type = GetType( );
-    foreach( var property in type.GetFields( ) )
+    foreach( var field in type.GetFields( ) )
     {
-      var value = property.GetValue( this );
+      var value = field.GetValue( this );
       if( value != null )
         values.Add( value );
     }

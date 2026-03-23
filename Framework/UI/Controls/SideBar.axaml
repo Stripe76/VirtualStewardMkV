@@ -23,10 +23,10 @@
                             <shadui:SidebarItemLabel AsSeparator="True"/>
                         </DataTemplate>
                         <DataTemplate DataType="vm:UIItem">
-                            <shadui:SidebarItem Classes.Error="{Binding Error}" Classes.Warning="{Binding Warning}" Content="{Binding HeaderTitle}" IsChecked="{Binding IsActive}" IsEnabled="{Binding IsEnabled}">
+                            <shadui:SidebarItem Classes.Success="{Binding Success}" Classes.Error="{Binding Error}" Classes.Warning="{Binding Warning}" Content="{Binding HeaderTitle}" IsChecked="{Binding IsActive}" IsEnabled="{Binding IsEnabled}">
                                 <shadui:SidebarItem.Icon>
                                     <Viewbox>
-                                        <TextBlock Classes.Error="{Binding Error}" Classes.Warning="{Binding Warning}" Text="{Binding Icon}" Classes="LucideIcon" Foreground="{DynamicResource ForegroundColor}"/>
+                                        <TextBlock Classes.Success="{Binding Success}" Classes.Error="{Binding Error}" Classes.Warning="{Binding Warning}" Text="{Binding Icon}" Classes="LucideIcon" Foreground="{DynamicResource ForegroundColor}"/>
                                     </Viewbox>
                                 </shadui:SidebarItem.Icon>
                             </shadui:SidebarItem>

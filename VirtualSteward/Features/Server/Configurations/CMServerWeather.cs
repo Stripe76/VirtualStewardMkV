@@ -5,7 +5,7 @@ using VirtualSteward.Features.Server.Values;
 
 namespace VirtualSteward.Features.Server.Configurations;
 
-public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERVER_WEATHER","Weather" )
+public class CMServerWeather( ACServerSettings settings,Pages.Server.Server server ) : Configuration( "SERVER_WEATHER","Weather" )
 {
     public RangedFloat TimeOfDay = new( 0,1,nameof( TimeOfDay ),"Time of day" )
     {
@@ -15,22 +15,33 @@ public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERV
             int m = (int)(value * (24 * 60));
             return $"{m / 60:00}:{m % 60:00}";
         },
-        ValueChanged = ( value ) => { settings.TimeOfDay = value; },
+        ValueChanged = ( value ) => { settings.TimeOfDay = value; server.UpdateWeather(  ); },
         Value = .5f,
     };
 
-    public BaseThreeStateBool Headlights = new( nameof( Headlights ),"Headlights (from file/off/on)" )
+    public HeadlightsValue Headlights = new HeadlightsValue( nameof( Headlights ),"Headlights" )
     {
-        ValueChanged = ( value ) => { settings.HeadlightsOnOff = value; },
+        ValueChanged = ( value ) =>
+        {
+            settings.HeadlightsOnOff = value switch
+            {
+                ServerHeadligths.FromReplay => null,
+                ServerHeadligths.AlwaysOn => true,
+                ServerHeadligths.AlwaysOff => false,
+                _ => settings.HeadlightsOnOff
+            };
+            server.UpdateWeather(  );
+        }
+
     };
 
-    public WeatherTypeValue WeatherType = new WeatherTypeValue( );
+    public WeatherTypeValue WeatherType = new WeatherTypeValue( nameof( WeatherType ),"Weather" );
 
     public RangedFloat AmbientTemperature = new( 0,50,nameof( AmbientTemperature ),"Air temp." )
     {
         Unit = "°C",
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.TemperatureAmbient = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.TemperatureAmbient = value; server.UpdateWeather(  );},
         Value = 21f,
     };
 
@@ -38,7 +49,7 @@ public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERV
     {
         Unit = "°C",
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.TemperatureRoad = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.TemperatureRoad = value; server.UpdateWeather(  ); },
         Value = 30f,
     };
 
@@ -46,7 +57,7 @@ public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERV
     {
         Unit = " km/h",
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.WindSpeed = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.WindSpeed = value; server.UpdateWeather(  ); },
         Value = 0f,
     };
 
@@ -54,28 +65,28 @@ public class CMServerWeather( ACServerSettings settings ) : Configuration( "SERV
     {
         Unit = "°",
         Format = "0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.WindDirection = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.WindDirection = value; server.UpdateWeather(  ); },
         Value = 0,
     };
 
     public RangedFloat RainIntensity = new( 0,1,nameof( RainIntensity ),"Rain intensity" )
     {
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainIntensity = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainIntensity = value; server.UpdateWeather(  ); },
         Value = 0f,
     };
 
     public RangedFloat RainWetness = new( 0,1,nameof( RainWetness ),"Rain wetness" )
     {
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainWetness = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainWetness = value; server.UpdateWeather(  ); },
         Value = 0f,
     };
 
     public RangedFloat RainWater = new( 0,1,nameof( RainWater ),"Rain water" )
     {
         Format = "0.0",
-        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainWater = value; },
+        ValueChanged = ( value ) => { settings.Weather.WeatherData.RainWater = value; server.UpdateWeather(  ); },
         Value = 0f,
     };
 }

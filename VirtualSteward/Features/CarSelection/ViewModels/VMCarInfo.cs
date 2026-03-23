@@ -18,12 +18,12 @@ public class VMCarInfo : UIItem
 
   public uint NumberOfWings { get; init; }
 
-  public string SkinID 
+  public string SelectedSkinID 
   {
-    get => CarSkinsList.SelectedItem != null ? CarSkinsList.SelectedItem.ID : "";
+    get => CarSkinsList.SelectedItem != null ? CarSkinsList.SelectedItem.SkinID : "";
     set 
     {
-      VMCarSkinInfo? selectSkin = _skinInfoList.FirstOrDefault(skinInfo => skinInfo.ID.Equals(value));
+      VMCarSkinInfo? selectSkin = _skinInfoList.FirstOrDefault(skinInfo => skinInfo.SkinID.Equals(value));
       if( selectSkin != null )
         SelectedSkin = selectSkin;
     }
@@ -36,8 +36,8 @@ public class VMCarInfo : UIItem
     {
       CarSkinsList.SelectedItem = value; 
       
-      OnPropertyChanged( nameof( SkinID ) );
       OnPropertyChanged( nameof( SelectedSkin ) );
+      OnPropertyChanged( nameof( SelectedSkinID ) );
     }
   }
 
@@ -111,7 +111,7 @@ public class VMCarInfo : UIItem
   public VMCarSkinInfo GetSkin( string skinID )
   {
     foreach( var skinInfo in _skinInfoList )
-      if( skinInfo.ID.Equals( skinID ) )
+      if( skinInfo.SkinID.Equals( skinID ) )
         return skinInfo;
     return new VMCarSkinInfo( "","","" );
   }

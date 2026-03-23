@@ -12,7 +12,7 @@ public class VMCarSkinInfo : UIItem
 {
     private Bitmap? _imageBitmap = null; 
     
-    public string ID;
+    public string SkinID;
     public string Title {  get; set; }
 
     public Bitmap? PreviewImageBitmap
@@ -28,19 +28,19 @@ public class VMCarSkinInfo : UIItem
 
     public VMCarSkinInfo( string carID,string skinID,string carsFolder )
     {
-        ID = skinID;
+        SkinID = skinID;
         Title = skinID;
         PreviewImageFile = Path.Combine( carsFolder,carID,"skins",skinID,"preview.jpg" );
     }
     public VMCarSkinInfo( VMCarSkinInfo copySkinInfo )
     {
-        ID = copySkinInfo.ID;
+        SkinID = copySkinInfo.SkinID;
         Title = copySkinInfo.Title;
         PreviewImageFile = copySkinInfo.PreviewImageFile;
     }
     public VMCarSkinInfo( CarSkinInfo info,string imageFile )
     { 
-        ID = info.Name;
+        SkinID = info.Name;
         Title = info.Title;
         PreviewImageFile = imageFile;
     }
