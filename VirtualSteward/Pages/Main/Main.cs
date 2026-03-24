@@ -29,7 +29,7 @@ public partial class Main : Feature
     public Main( MainWindow window,DataTemplates templates,ThemeWatcher themeWatcher,Settings settings,Settings carsSettings )
     {
 #if !DEBUG
-//#error Update version
+#error Update version
 #endif
         window.Title = "Virtual Steward MkV - BETA 1";
 
