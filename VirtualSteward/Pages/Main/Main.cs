@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
-using ShadUI;
 using CommunityToolkit.Mvvm.Input;
+
+using ShadUI;
 using Avalonia.Controls.Templates;
 
 using Framework.Settings;
@@ -27,6 +28,11 @@ public partial class Main : Feature
     // ReSharper disable VirtualMemberCallInConstructor
     public Main( MainWindow window,DataTemplates templates,ThemeWatcher themeWatcher,Settings settings,Settings carsSettings )
     {
+#if !DEBUG
+#error Update version
+#endif
+        window.Title = "Virtual Steward MkV - BETA";
+
         _settings = settings;
         _fileManager = new FilesManager( _settings,carsSettings );
         _state = new State( _fileManager );

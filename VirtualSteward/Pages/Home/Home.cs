@@ -257,10 +257,9 @@ public partial class Home : StateFeature
     }
     [RelayCommand] private async Task StartServer( string filename )
     {
-        _server.IsActive = true;
-
         await _replays.LoadReplay( filename,false,false );
 
+        _server.IsActive = true;
         _server.StartServer( );
     }
 }

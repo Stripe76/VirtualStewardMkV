@@ -99,9 +99,10 @@ public partial class Server : StateFeature
 
     public override void OnReplayChanged( VMReplay replay )
     {
-        _serverManager?.StopServer( );
-
+        StopServer( );
         LoadServerConfigurations(  );
+
+        startServerCommand?.NotifyCanExecuteChanged( );
     }
 
     public void UpdateWeather( )
@@ -114,6 +115,8 @@ public partial class Server : StateFeature
     {
         if( _serverManager == null || !_serverManager.IsRunning )
         {
+            Success = false;
+            
             _serverManager?.StopServer( );
 
             VMReplay replay = _state.Replay;
