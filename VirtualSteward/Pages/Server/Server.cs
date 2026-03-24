@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls.Templates;
@@ -185,8 +184,7 @@ public partial class Server : StateFeature
 
     [RelayCommand] private void StartContentManager( )
     {
-        if( _serverManager != null )
-            Process.Start( "xdg-open",ServerStatus.ServerLink.ToString(  ) );
+        ServerStatus.LauncCM( null );
     }
 
     [RelayCommand] protected void SetLaunchCM(  )

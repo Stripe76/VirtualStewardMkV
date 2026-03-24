@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
@@ -40,9 +41,26 @@ public partial class VMServerStatus : UIBase
     }
 
     [RelayCommand]
-    protected void LauncCM( Uri? address )
+    public void LauncCM( Uri? address )
     {
-        if( address is not null )
-            Process.Start( "xdg-open",address.ToString(  ) );
+        address ??= ServerLink;
+        
+        try
+        {
+            var uri = address.ToString();
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", ServerLink.ToString());
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 }

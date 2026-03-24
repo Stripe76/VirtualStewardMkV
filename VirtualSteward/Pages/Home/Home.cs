@@ -231,7 +231,7 @@ public partial class Home : StateFeature
             new FeatureCommand( )
             {
                 Icon = "\xf1ec",
-                Text = "Loads the replay",
+                Tooltip = "Loads the replay",
                 IsDefault = true,
                 RoutedCommand = LoadReplayCommand,
                 CommandParameter = filename
@@ -239,7 +239,7 @@ public partial class Home : StateFeature
             new FeatureCommand( )
             {
                 Icon = "\xf202",
-                Text = "Starts the server",
+                Tooltip = "Starts the server",
                 RoutedCommand = StartServerCommand,
                 CommandParameter = filename
             },

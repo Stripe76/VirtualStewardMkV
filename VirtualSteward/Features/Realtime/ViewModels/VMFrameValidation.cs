@@ -52,7 +52,6 @@ public class VMFrameValidationTimeline : VMFrameValidation
 
             _nextFrame = -1;
         }
-       
         int resultFrame = frame;
         if( _loopStart == _loopEnd )
         {
