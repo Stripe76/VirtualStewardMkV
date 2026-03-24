@@ -31,6 +31,15 @@
     <Style Selector="StackPanel">
         <Setter Property="Opacity" Value="0"/>
     </Style>
+    <Style Selector="TextBlock.Date">
+        <Setter Property="Opacity" Value="0"/>
+    </Style>
+    <Style Selector="Rectangle.Background">
+        <Setter Property="Width" Value="300"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Fill" Value="{DynamicResource BackgroundColor}"/>
+    </Style>
     
     <Style Selector="Border:pointerover Image">
         <Setter Property="Opacity" Value="1"/>
@@ -40,5 +49,11 @@
     </Style>
     <Style Selector="Border:pointerover TextBlock.Title">
         <Setter Property="Opacity" Value="0"/>
+    </Style>
+    <Style Selector="Border:pointerover TextBlock.Date">
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+    <Style Selector="Border:pointerover Rectangle.Background">
+        <Setter Property="Opacity" Value="0.75"/>
     </Style>
 </Styles>
