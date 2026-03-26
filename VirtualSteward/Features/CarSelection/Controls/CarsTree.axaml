@@ -1,0 +1,18 @@
+<UserControl x:Class="VirtualSteward.Features.CarSelection.Controls.CarsTree"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.CarSelection.ViewModels"
+             xmlns:uc="clr-namespace:Framework.UI.Controls;assembly=Framework"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMCarsTree/>
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,*">
+        <ContentControl Content="{Binding SearchFilter}"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <uc:TreePathView DataContext="{Binding}"></uc:TreePathView>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

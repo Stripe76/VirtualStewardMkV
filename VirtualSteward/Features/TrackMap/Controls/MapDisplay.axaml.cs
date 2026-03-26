@@ -119,7 +119,6 @@ public partial class MapDisplay : UserControl
     double Y = VMMap.TrackToCanvasY( ptCenter.Y,_map.Zoom );
 
     Offset = new Point( Bounds.Size.Width / 2 - X,Bounds.Size.Height / 2 - Y );
-    //Offset = _offset;
   }
   private void Map_PropertyChanged( object? sender,PropertyChangedEventArgs e )
   {
@@ -168,7 +167,7 @@ public partial class MapDisplay : UserControl
       else if( currentPoint.Properties.IsRightButtonPressed )
         bCapture = EditingTool.RightMouseDown( ptMouse,ptTrack );
       else if( currentPoint.Properties.IsMiddleButtonPressed )
-        _map.Zoom = 1;
+        _map.CenterOn = new Point( ptTrack.X,ptTrack.Y );
 
       if( !bCapture )
       {
@@ -243,49 +242,28 @@ public partial class MapDisplay : UserControl
   
   protected void Track_MouseWheel( object sender,PointerWheelEventArgs args )
   {
-    /*
-    if( false )
+    double dZoomLastX = ScreenToTrackX( Bounds.Size.Width / 2,_map.Zoom );
+    double dZoomLastY = ScreenToTrackY( Bounds.Size.Height / 2,_map.Zoom );
+    
+    if( args.Delta.Y < 0 )
     {
-      // EditMode
-    }
-    else if( Keyboard.IsKeyDown( Key.LeftCtrl ) || Keyboard.IsKeyDown( Key.RightCtrl ) )
-    {
-      // Timeline move
-      if( Timeline != null )
-      {
-        if( e.Delta < 0 )
-          Timeline.CurrentFrame++;
-        else
-          Timeline.CurrentFrame--;
-      }
+      if( (args.KeyModifiers & KeyModifiers.Shift) != 0 )
+        _map.Zoom *= .4f;
+      else
+        _map.Zoom *= .8f;
     }
     else
-    */
     {
-      double dZoomLastX = ScreenToTrackX( Bounds.Size.Width / 2,_map.Zoom );
-      double dZoomLastY = ScreenToTrackY( Bounds.Size.Height / 2,_map.Zoom );
-      
-      if( args.Delta.Y < 0 )
-      {
-        if( (args.KeyModifiers & KeyModifiers.Shift) != 0 )
-          _map.Zoom *= .4f;
-        else
-          _map.Zoom *= .8f;
-      }
+      if( (args.KeyModifiers & KeyModifiers.Shift) != 0 )
+        _map.Zoom *= 1.6f;
       else
-      {
-        if( (args.KeyModifiers & KeyModifiers.Shift) != 0 )
-          _map.Zoom *= 1.6f;
-        else
-          _map.Zoom *= 1.2f;
-      }
-      double X = VMMap.TrackToCanvasX( dZoomLastX,_map.Zoom );
-      double Y = VMMap.TrackToCanvasY( dZoomLastY,_map.Zoom );
-
-      Offset = new Point( Bounds.Size.Width / 2 - X,Bounds.Size.Height / 2 - Y );
+        _map.Zoom *= 1.2f;
     }
-  }
+    double X = VMMap.TrackToCanvasX( dZoomLastX,_map.Zoom );
+    double Y = VMMap.TrackToCanvasY( dZoomLastY,_map.Zoom );
 
+    Offset = new Point( Bounds.Size.Width / 2 - X,Bounds.Size.Height / 2 - Y );
+  }
   #endregion
 
   #region Coordinates conversions

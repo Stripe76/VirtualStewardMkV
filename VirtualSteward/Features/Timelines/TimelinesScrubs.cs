@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Framework.UI;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.ReplayLoading.ViewModels;
 using VirtualSteward.Features.Timelines.EditingTools;
 using VirtualSteward.Features.Timelines.ViewModels;
 using VirtualSteward.Features.TrackMap.ViewModels;
@@ -43,6 +44,10 @@ public partial class TimelinesScrubs : StateFeature
         return this;
     }
 
+    public override void OnReplayChanged( VMReplay replay )
+    {
+        _layer.IsVisible = replay.IsLoaded;
+    }
     public override void OnMapChange( VMMap map )
     {
         UpdateScrubs( map );

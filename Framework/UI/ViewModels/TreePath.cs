@@ -1,11 +1,11 @@
 using System.ComponentModel;
 using System.Collections.Specialized;
-
+using System.Runtime.CompilerServices;
 using Framework.Bindables;
 
 namespace Framework.UI.ViewModels;
 
-public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : TreeNode,new()
+public class TreePath<T,TLastNode> : INotifyPropertyChanged where T : IMultiListItem where TLastNode : TreeNode,new()
 {
   private readonly List<string> _paths;
   private readonly ObservableCollectionEx<T> _items;
@@ -35,13 +35,15 @@ public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : Tr
   {
     root.Children.Clear(  );
     
+    LastNodes.Clear(  );
+    
     int id = 0;
     foreach( var path in paths )
     {
       foreach( var obj in items )
       {
-        //if( !obj.IsEnabled )
-          //continue;
+        if( !obj.IsEnabled )
+          continue;
 
         var currentNode = root;
         var properties = (path+" ^/^").Split( '/' );
@@ -116,32 +118,21 @@ public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : Tr
           }
           currentNode = childNode;
         }
-        if( currentNode != null )
-        {
-          //currentNode.Objects.Add( obj );
-          //currentNode.IsSelected = obj.IsSelected;
-
-          /*
-          currentNode.ShowCheckbox = ShowCheckbox;
-          currentNode.ShowRadiobutton = ShowRadiobutton;
-          currentNode.RadiobuttonGroup = RadiobuttonGroup;
-          currentNode.ShowExpander = ShowExpander;
-          */
-
-          //if( obj.ShowControl )
-            //currentNode.Controls.Add( obj );
-            
-          /*
-          UIElement? detailsControl = obj.GetDetailsControl( );
-          if( detailsControl != null )
-            currentNode.Controls.Add( detailsControl );
-          */
-        }
       }
     }
-    //RaisePropertyChanged( root );
+    OnPropertyChanged( nameof( Nodes ) );
+    
+    RaisePropertyChanged( root );
 
     return root;
+  }
+
+  private static void RaisePropertyChanged( TreeNode node )
+  {
+    node.RaisePropertyChanged( );
+
+    foreach( TreeNode child in node.Children.Values ) 
+      RaisePropertyChanged( child );
   }
 
   private void Items_CollectionChanged( object? sender,NotifyCollectionChangedEventArgs e )
@@ -150,6 +141,13 @@ public class TreePath<T,TLastNode> where T : IMultiListItem where TLastNode : Tr
     {
       BuildTree( _rootNode,_items,_paths );
     }
+  }
+  
+  public event PropertyChangedEventHandler? PropertyChanged;
+
+  protected void OnPropertyChanged( [CallerMemberName] string? propertyName = null )
+  {
+    PropertyChanged?.Invoke( this,new PropertyChangedEventArgs( propertyName ) );
   }
 }
 
@@ -180,6 +178,11 @@ public class TreeNode : UIItem
   public SortedList<string,TreeNode> Children { get; set; } = [];
 
   public IList<TreeNode> ChildrenItems => Children.Values;
+  
+  public void RaisePropertyChanged( )
+  {
+    OnPropertyChanged( nameof( ChildrenItems ) );
+  }
 }
 
 public class TreeLeaf( object item ) : TreeNode

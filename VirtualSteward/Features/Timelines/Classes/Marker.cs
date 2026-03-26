@@ -9,11 +9,11 @@ using Avalonia.Utilities;
 
 namespace VirtualSteward.Features.Timelines.Classes;
 
-[TemplatePart("PART_Thumb",typeof(TextBlock))]
+[TemplatePart("PART_Thumb",typeof(Border))]
 [PseudoClasses(":vertical", ":horizontal")]
 public class Marker : TemplatedControl
 {
-    private TextBlock? _thumb;
+    private Border? _thumb;
     
     public static readonly StyledProperty<double> MinimumProperty =
         RangeBase.MinimumProperty.AddOwner<Marker>();
@@ -232,7 +232,7 @@ public class Marker : TemplatedControl
         }
 
         // try to find the control with the given name
-        _thumb = e.NameScope.Find("PART_Thumb") as TextBlock;
+        _thumb = e.NameScope.Find("PART_Thumb") as Border;
 
         // listen to pointer-released events on the stars presenter.
         if(_thumb != null)
@@ -250,7 +250,7 @@ public class Marker : TemplatedControl
         }
     }
 
-    private Vector CalculateThumbAdjustment(TextBlock thumb, Rect newThumbBounds)
+    private Vector CalculateThumbAdjustment(Border thumb, Rect newThumbBounds)
     {
         return newThumbBounds.Position - thumb.Bounds.Position;
     }

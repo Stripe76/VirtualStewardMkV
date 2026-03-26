@@ -19,7 +19,7 @@ public class ReplayTimelines : StateFeature
 
     public override Feature AddDataTemplates(DataTemplates templates)
     {
-        templates.Add(new FuncDataTemplate<VMTimeline>( (_, _) => new Controls.Timeline()) );
+        templates.Add( new FuncDataTemplate<VMTimeline>( ( _,_ ) => new Controls.Timeline( ) ) );
 
         return this;
     }

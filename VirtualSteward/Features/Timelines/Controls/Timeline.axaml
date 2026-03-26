@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:m="clr-namespace:VirtualSteward.Features.Timelines.Classes"
              xmlns:vm="clr-namespace:VirtualSteward.Features.Timelines.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50" SizeChanged="Control_OnSizeChanged">
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50">
     <Design.DataContext>
         <vm:VMTimeline/>
     </Design.DataContext>

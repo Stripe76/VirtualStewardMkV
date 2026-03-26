@@ -5,7 +5,9 @@
     <ControlTheme TargetType="m:Marker" x:Key="Marker">
       <Setter Property="Template">
         <ControlTemplate>
-          <TextBlock Name="PART_Thumb" Foreground="{DynamicResource MutedColor}" Text="{Binding Title}"/>
+          <Border Name="PART_Thumb" Width="20" Height="20" Background="{DynamicResource BackgroundColor60}">
+            <TextBlock Foreground="{DynamicResource MutedColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Title}"/>
+          </Border>
         </ControlTemplate>
       </Setter>
   </ControlTheme>
