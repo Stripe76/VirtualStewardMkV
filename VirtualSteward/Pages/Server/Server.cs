@@ -30,6 +30,8 @@ namespace VirtualSteward.Pages.Server;
 
 public partial class Server : StateFeature
 {
+    public string Icon { get; } = "\xf202";
+
     private readonly VMFrameValidationTimeline _frameValidation;
 
     private readonly FilesManager _fileManager;
@@ -39,8 +41,6 @@ public partial class Server : StateFeature
     private readonly VMServerDebug _serverDebug = new VMServerDebug( );
 
     private ServerManager? _serverManager;
-
-    public string Icon { get; } = "\xf202";
 
     public FeatureCommand ServerStart { get; }
     public VMFrameValidationTimeline FrameValidation => _frameValidation;
@@ -123,7 +123,7 @@ public partial class Server : StateFeature
             {
                 try
                 {
-                    ServerStatus.SetServerManager( _serverManager = StartServer( _settings,replay,_state.Track,_state.Players,CarSelection.SelectedCars.SelectedItems,_serverDebug ) );
+                    ServerStatus.SetServerManager( _serverManager = StartServer( _settings,replay,_state.Track,_state.Players,CarSelection.CarsList.SelectedItems,_serverDebug ) );
 
                     StartOptions.LoopReplay.Value = _frameValidation.LoopReplay;
                     StartOptions.LoopScrubs.Value = _frameValidation.LoopScrubs; 
@@ -187,24 +187,24 @@ public partial class Server : StateFeature
         ServerStatus.LauncCM( null );
     }
 
-    [RelayCommand] protected void SetLaunchCM(  )
+    [RelayCommand] private void SetLaunchCM(  )
     {
         StartOptions.LaunchCM.Value = !StartOptions.LaunchCM.Value;
     }
-    [RelayCommand] protected void SetLaunchAC(  )
+    [RelayCommand] private void SetLaunchAC(  )
     {
         //StartOptions.LaunchAC = !LaunchAC;
     }
-    [RelayCommand] protected void SetLaunchReplay(  )
+    [RelayCommand] private void SetLaunchReplay(  )
     {
         StartOptions.StartReplay.Value = !StartOptions.StartReplay.Value;
     }
 
-    [RelayCommand] protected void SetLoopReplay(  )
+    [RelayCommand] private void SetLoopReplay(  )
     {
         FrameValidation.LoopReplay = !FrameValidation.LoopReplay;
     }
-    [RelayCommand] protected void SetLoopScrubs(  )
+    [RelayCommand] private void SetLoopScrubs(  )
     {
         FrameValidation.LoopScrubs = !FrameValidation.LoopScrubs;
     }
@@ -250,9 +250,9 @@ public partial class Server : StateFeature
             ServerWeather.Deserialize( settings );
             ServerPorts.Deserialize( settings );
 
-            while( CarSelection.SelectedCars.SelectedItems.Count > 0 )
-                CarSelection.SelectedCars.SelectedItems[0].IsSelected = false;
-            CarSelection.SelectedCars.ActiveItem = null;
+            while( CarSelection.CarsList.SelectedItems.Count > 0 )
+                CarSelection.CarsList.SelectedItems[0].IsSelected = false;
+            CarSelection.CarsList.ActiveItem = null;
             
             LoadSelectedCars( settings );
         }
@@ -284,7 +284,7 @@ public partial class Server : StateFeature
 
                 if( split.Length == 2 )
                 {
-                    var car = CarSelection.SelectedCars.FirstOrDefault( ( x ) => x.CarID.Equals( split[0] ) );
+                    var car = CarSelection.CarsList.FirstOrDefault( ( x ) => x.CarID.Equals( split[0] ) );
                     if( car != null )
                     {
                         car.IsSelected = true;
@@ -297,7 +297,7 @@ public partial class Server : StateFeature
     private void SaveSelectedCars( Settings settings )
     {
         int index = 0;
-        foreach( var car in CarSelection.SelectedCars.SelectedItems )
+        foreach( var car in CarSelection.CarsList.SelectedItems )
         {
             settings.Save( "CARS",index++.ToString( ),$"{car.CarID};{car.SelectedSkinID}" );
         }

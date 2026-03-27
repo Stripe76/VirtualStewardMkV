@@ -25,7 +25,7 @@ public class CarSelection : Feature
   public VMProgress Progress { get; set; }
 
   public VMCarsTree CarsTree { get; }
-  public VMCarInfoList SelectedCars { get; set; }
+  public VMCarInfoList CarsList { get; set; }
 
   public CarSelection( DataTemplates? templates,string title,FilesManager filesManager,VMCarInfoList selectedCars )
   {
@@ -33,8 +33,8 @@ public class CarSelection : Feature
 
     Progress = new VMProgress( );
 
-    SelectedCars = selectedCars;
-    CarsTree = new VMCarsTree( SelectedCars,SearchFilterChanged );
+    CarsList = selectedCars;
+    CarsTree = new VMCarsTree( CarsList );
 
     if( templates != null )
       AddDataTemplates( templates );
@@ -54,10 +54,10 @@ public class CarSelection : Feature
     //if( _carsListsFolder != null && LoadCarsLists( _carsListsFolder,CarsLists,_logger ) )
     //SelectedCarsList = CarsLists[0];
 
-    await LoadCarsInfosListAsync( _filesManager.ACCarsFolder,SelectedCars,Progress,null );
+    await LoadCarsInfosListAsync( _filesManager.ACCarsFolder,CarsList,Progress,null );
   }
 
-  public async Task LoadCarsInfosListAsync( string carsFolder,VMCarInfoList cars,IProgress<float>? progress = null,Serilog.ILogger? logger = null )
+  public static async Task LoadCarsInfosListAsync( string carsFolder,VMCarInfoList cars,IProgress<float>? progress = null,Serilog.ILogger? logger = null )
   {
     try
     {
@@ -101,62 +101,5 @@ public class CarSelection : Feature
 
       progress?.Report( -2 );
     }
-  }
-
-  private void SearchFilterChanged( string? searchFilter )
-  {
-    {
-      if( IsValidSearchText( searchFilter ) )
-      {
-        string[] keys = searchFilter.Split( " " );
-        foreach( var info in SelectedCars )
-        {
-          info.IsEnabled = IsMatch( info,keys );
-        }
-        CarsTree.ExpandAll = true;
-
-        SelectedCars.Refresh(  );
-      }
-      else if( CarsTree.ExpandAll )
-      {
-        foreach( var info in SelectedCars )
-          info.IsEnabled = true;
-        CarsTree.ExpandAll = false;
-        
-        SelectedCars.Refresh(  );
-      }
-    }
-  }
-
-  private static readonly char[] _numbers = ['0','1','2','3','4','5','6','7','8','9'];
-  private static bool IsValidSearchText( string searchText )
-  {
-    if( string.IsNullOrEmpty( searchText ) )
-      return false;
-
-    string[] keys = searchText.Split( " " );
-    foreach( string key in keys )
-    {
-      if( key.Length >= 3 )
-        return true;
-      if( key.Length >= 2 && searchText.IndexOfAny( _numbers ) >= 0 )
-        return true;
-    }
-    return false;
-  }
-  private static bool IsMatch( VMCarInfo info,string[] keys )
-  {
-    info.SearchKeys ??= info.Brand.ToLower( ) + " " + info.Model.ToLower( );
-
-    if( info.SearchKeys != null )
-    {
-      foreach( string key in keys )
-      {
-        if( info.SearchKeys.IndexOf( key,StringComparison.Ordinal ) < 0 )
-          return false;
-      }
-      return true;
-    }
-    return false;
   }
 }

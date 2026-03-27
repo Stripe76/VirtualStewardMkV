@@ -12,6 +12,8 @@ public class TreePath<T,TLastNode> : INotifyPropertyChanged where T : IMultiList
 
   private readonly TreeNode _rootNode = new ( ) { Title = "root" };
 
+  public ObservableCollectionEx<T> Items => _items;
+  
   public bool ShowExpander { get; set; } = false;
   public bool ShowCheckbox { get; set; } = false;
   public bool ShowRadiobutton { get; set; } = false;
@@ -28,6 +30,11 @@ public class TreePath<T,TLastNode> : INotifyPropertyChanged where T : IMultiList
     _items = items;
     _items.CollectionChanged += Items_CollectionChanged;
     
+    BuildTree( _rootNode,_items,_paths );
+  }
+
+  public void Refresh( )
+  {
     BuildTree( _rootNode,_items,_paths );
   }
 
@@ -144,7 +151,6 @@ public class TreePath<T,TLastNode> : INotifyPropertyChanged where T : IMultiList
   }
   
   public event PropertyChangedEventHandler? PropertyChanged;
-
   protected void OnPropertyChanged( [CallerMemberName] string? propertyName = null )
   {
     PropertyChanged?.Invoke( this,new PropertyChangedEventArgs( propertyName ) );
