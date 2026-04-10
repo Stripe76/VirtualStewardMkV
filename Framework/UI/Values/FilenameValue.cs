@@ -47,6 +47,11 @@ public partial class FilenameValue : BaseValue<string>
     DialogMode = dialogMode;
   }
 
+  public void UpdateOverwrite( )
+  {
+    OnValueChanged(  );
+  }
+
   protected override void OnValueChanged( )
   {
     CanOverwrite = false;

@@ -7,6 +7,7 @@ using VirtualSteward.Datasources;
 using VirtualSteward.Features.FileTemplates.Classes;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.Features.Tracklines.ViewModels;
 
 namespace VirtualSteward.Features.ReplayExport.Exports.CSVFile;
 
@@ -19,7 +20,7 @@ public class CSVFileExport( FileTemplateList templates ) : BaseExport( "CSVFile"
   public override string FilesExtension { get; } = ".csv";
   public override List<FilePickerFileType> FilesFilter { get; } = [new FilePickerFileType( "CSV files" ) { Patterns = ["*.csv"] },new FilePickerFileType( "All files" ) { Patterns = ["*.*"] }];
 
-  public override void ExportReplay( string filename,VMReplay replay,IList<VMPlayer> players,uint startFrame,uint endFrame,IProgress<float>? progress = null )
+  public override void ExportReplay( string filename,VMReplay replay,VMTracklineFile? tracklineFile,IList<VMPlayer> players,uint startFrame,uint endFrame,IProgress<float>? progress = null )
   {
     if( _fileTemplates.Value == null )
       throw new Exception( "Not data template file selected" );

@@ -9,7 +9,7 @@
     <Design.DataContext>
         <vm:VMPlayer/>
     </Design.DataContext>
-    
+
     <shadui:Card Classes.Accent="{Binding IsActive}" Classes.Selected="{Binding IsSelected}" Classes="PlayerInfo" PointerPressed="Player_PointerPressed">
         <shadui:Card.Header>
             <shadui:CardDescription>

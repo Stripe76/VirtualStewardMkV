@@ -1,10 +1,13 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <x:Double x:Key="PanelOpacity">.9</x:Double>
+
     <!--  basic colors  -->
     <Color x:Key="Black20">#33000000</Color>
     <Color x:Key="ForegroundColor">#E5E5E5</Color>
     <Color x:Key="ForegroundLeadColor">#A1A1AA</Color>
     <Color x:Key="BackgroundColor">#191A1C</Color>
+    <Color x:Key="BackgroundColor80">#CD191A1C</Color>
     <Color x:Key="BackgroundColor60">#99191A1C</Color>
     <Color x:Key="BackgroundColor20">#33191A1C</Color>
     <Color x:Key="MutedColor">#A0A0A9</Color>
@@ -60,6 +63,8 @@
     <Color x:Key="BusyAreaOverlayColor">#1971717A</Color>
 
     <Color x:Key="CardBackgroundColor">#222222</Color>
+    <Color x:Key="CardBackgroundColor90">#E6222222</Color>
+    <Color x:Key="CardBackgroundColor80">#CD222222</Color>
     <Color x:Key="CardBackgroundColor60">#99222222</Color>
     <Color x:Key="CardBackgroundColor20">#33222222</Color>
 

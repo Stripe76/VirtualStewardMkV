@@ -5,7 +5,7 @@
     <!-- PlayerInfo -->
     <Style Selector="shadui|Card.PlayerInfo">
         <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Background" Value="{DynamicResource CardBackgroundColor60}"/>
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundColor90}"/>
         <Setter Property="Margin" Value="5,0,5,0" />
         <Setter Property="Padding" Value="4" />
         <Setter Property="HasShadow" Value="False" />

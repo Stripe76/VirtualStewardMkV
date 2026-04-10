@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="25">
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="25" IsVisible="{Binding IsVisible}" IsEnabled="{Binding IsEnabled}">
     <WrapPanel Classes="Input">
         <TextBlock Text="{Binding Title}"/>
         <ComboBox MinWidth="{Binding MinWidth}" ItemsSource="{Binding Items}" DisplayMemberBinding="{Binding Title}" SelectedItem="{Binding Value}"/>

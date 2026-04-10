@@ -5,17 +5,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Features.ReplayExport"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             IsVisible="{Binding IsVisible}" Background="{DynamicResource BackgroundColor60}">
+             IsVisible="{Binding IsVisible}">
     <Design.DataContext>
         <vm:ReplayExport/>
     </Design.DataContext>
-    <WrapPanel Margin="5">
-        <ContentControl Content="{Binding Exporters}"/>
-        <ContentControl Content="{Binding Exporters.Value.Parameter}"/>
-        <ContentControl Content="{Binding TimelineExport}"/>
-        <ContentControl Content="{Binding PlayersExport}"/>
-        <ContentControl Content="{Binding FilenameExport}"/>
-        <ContentControl Content="{Binding ExportCommand}"/>
-        <ContentControl Content="{Binding CancelCommand}"/>
-    </WrapPanel>
+    <Panel>
+        <Border Background="{DynamicResource BackgroundColor}" Opacity="{DynamicResource PanelOpacity}"/>
+        <WrapPanel Margin="5">
+            <ContentControl Content="{Binding Exporters}" Margin="0,0,10,0"/>
+            <ContentControl Content="{Binding Exporters.Value.Parameter}"/>
+            <ContentControl Content="{Binding TimelineExport}" IsEnabled="{Binding IsEnabled}"/>
+            <ContentControl Content="{Binding PlayersExport}"/>
+            <ContentControl Content="{Binding FilenameExport}"/>
+            <ContentControl Content="{Binding ExportCommand}"/>
+            <ContentControl Content="{Binding CancelCommand}"/>
+        </WrapPanel>
+    </Panel>
 </UserControl>

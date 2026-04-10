@@ -44,7 +44,7 @@ public abstract class CarDatasource
 
   public abstract VMCarData? GetCarData( uint frame );
   public abstract VMServerData? GetServerData( uint frame,VMServerData? serverData = null );
-  public abstract VMCarPosition? GetPositionAndRotation( uint frame );
+  public abstract VMCarPosition? GetPositionAndRotation( uint frame,VMCarPosition? carPosition = null );
 
   public abstract uint GetLapTime( uint frame );
 
@@ -63,7 +63,7 @@ public class EmptyDatasource : CarDatasource
   {
     return null;
   }
-  public override VMCarPosition? GetPositionAndRotation( uint frame )
+  public override VMCarPosition? GetPositionAndRotation( uint frame,VMCarPosition? carPosition = null )
   {
     return null;
   }
@@ -249,24 +249,26 @@ public class ReplayFileDatasource : CarDatasource
 #endif
     return serverData;
   }
-  public override VMCarPosition? GetPositionAndRotation( uint frame )
+  public override VMCarPosition? GetPositionAndRotation( uint frame,VMCarPosition? carPosition = null )
   {
     ACCarFrame replayData = _replayData[MapFrame( frame )].Frame;
 
-    _carPosition.Position.X = replayData.BodyTranslation.X;
-    _carPosition.Position.Y = replayData.BodyTranslation.Z;
-    _carPosition.Position.Z = replayData.BodyTranslation.Y;
+    carPosition ??= _carPosition; 
 
-    _carPosition.Rotation.X = (float)replayData.BodyOrientation.X;
-    _carPosition.Rotation.Y = (float)replayData.BodyOrientation.Y;
-    _carPosition.Rotation.Z = (float)replayData.BodyOrientation.Z;
+    carPosition.Position.X = replayData.BodyTranslation.X;
+    carPosition.Position.Y = replayData.BodyTranslation.Z;
+    carPosition.Position.Z = replayData.BodyTranslation.Y;
 
-    _carPosition.BrakePedal = replayData.Brake;
+    carPosition.Rotation.X = (float)replayData.BodyOrientation.X;
+    carPosition.Rotation.Y = (float)replayData.BodyOrientation.Y;
+    carPosition.Rotation.Z = (float)replayData.BodyOrientation.Z;
 
-    _carPosition.LapTime = replayData.LapTime;
-    _carPosition.LastLapTime = replayData.LastLap;
+    carPosition.BrakePedal = replayData.Brake;
 
-    return _carPosition;
+    carPosition.LapTime = replayData.LapTime;
+    carPosition.LastLapTime = replayData.LastLap;
+
+    return carPosition;
   }
 
   public override uint GetLapTime( uint frame )

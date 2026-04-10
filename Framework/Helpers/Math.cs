@@ -86,6 +86,11 @@ public class Mathematics
   {
     return Math.Sqrt( (bX - aX) * (bX - aX) + (bY - aY) * (bY - aY) );
   }
+
+  public static double DistanceSqrd( Vector3 a,Vector3 b )
+  {
+    return (a - b).LengthSquared( );
+  }
   public static double DistanceSqrd( double aX,double aY,double bX,double bY )
   {
     return (bX - aX) * (bX - aX) + (bY - aY) * (bY - aY);

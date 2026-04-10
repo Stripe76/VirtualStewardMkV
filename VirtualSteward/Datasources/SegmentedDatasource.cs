@@ -74,7 +74,7 @@ public class SegmentedDatasource( CarDatasource datasource ) : CarDatasource
   {
     return _datasource.GetServerData( MapFrame( frame ) );
   }
-  public override VMCarPosition? GetPositionAndRotation( uint frame )
+  public override VMCarPosition? GetPositionAndRotation( uint frame,VMCarPosition? carPosition = null )
   {
     return _datasource.GetPositionAndRotation( MapFrame( frame ) );
   }

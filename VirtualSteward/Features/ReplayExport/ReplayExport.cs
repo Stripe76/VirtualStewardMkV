@@ -16,7 +16,9 @@ using VirtualSteward.Features.ReplayExport.Values;
 using VirtualSteward.Features.ReplayExport.Exports;
 using VirtualSteward.Features.ReplayExport.Exports.ACReplay;
 using VirtualSteward.Features.ReplayExport.Exports.CSVFile;
+using VirtualSteward.Features.ReplayExport.Exports.SVGFile;
 using VirtualSteward.Features.ReplayLoading.ViewModels;
+using VirtualSteward.Features.Tracklines.ViewModels;
 
 namespace VirtualSteward.Features.ReplayExport;
 
@@ -61,7 +63,7 @@ public partial class ReplayExport : StateFeature
 		};
 		FilenameExport = new FilenameValue( "","",FilenameValue.DialogType.Save ) { CheckOverwrite = true };
 
-		Exporters = new ExporterValue( [new ACReplayExport( ),new CSVFileExport( fileTemplates )] )
+		Exporters = new ExporterValue( [new ACReplayExport( ),new CSVFileExport( fileTemplates ),new SVGFileExport( )] )
 		{
 			ValueChanged = OnExporters_ValueChanged
 		};
@@ -110,7 +112,8 @@ public partial class ReplayExport : StateFeature
 		ShowReplayExportPageCommand.NotifyCanExecuteChanged( );
 	}
 
-	[RelayCommand] protected async void ExportReplay( )
+	[RelayCommand]
+	protected async void ExportReplay( )
 	{
 		var exporter = Exporters.Value;
 		if( exporter != null )
@@ -137,7 +140,7 @@ public partial class ReplayExport : StateFeature
 
 						_messageManager.ShowProgress( "Exporting replay file",_progress );
 
-						string? result = await ExportReplay( filename,exporter,_state.Replay,players,startFrame,endFrame,_progress );
+						string? result = await ExportReplay( filename,exporter,_state.Replay,_state.TracklineFile,players,startFrame,endFrame,_progress );
 
 						if( result != null )
 							_messageManager.ShowError( "Error exporting replay",result );
@@ -145,6 +148,8 @@ public partial class ReplayExport : StateFeature
 							_messageManager.ShowSuccess( "Replay exported",result );
 
 						FilenameExport.CanOverwrite = false;
+						FilenameExport.UpdateOverwrite(  );
+						
 						ExportCommand.IsBusy = false;
 					}
 				}
@@ -156,7 +161,8 @@ public partial class ReplayExport : StateFeature
 		return FilenameExport is { Value: not null,CanOverwrite: true };
 	}
 	
-	[RelayCommand(CanExecute = nameof(CanShowReplayExportPage))] protected void ShowReplayExportPage( )
+	[RelayCommand(CanExecute = nameof(CanShowReplayExportPage))]
+	protected void ShowReplayExportPage( )
 	{
 		IsActive = !IsActive;
 	}
@@ -165,7 +171,8 @@ public partial class ReplayExport : StateFeature
 		return _state.Replay.IsLoaded;
 	}
 
-	[RelayCommand] protected void Close( )
+	[RelayCommand]
+	protected void Close( )
 	{
 		IsActive = false;
 	}
@@ -173,6 +180,7 @@ public partial class ReplayExport : StateFeature
 	private static async Task<string?> ExportReplay( string filename,
 		BaseExport exporter,
 		VMReplay replay,
+		VMTracklineFile? tracklineFile,
 		IList<VMPlayer> players,
 		uint startFrame,
 		uint endFrame,
@@ -184,7 +192,7 @@ public partial class ReplayExport : StateFeature
 
 			progress?.Report( 0 );
 
-			await Task.Run( ( ) => exporter.ExportReplay( filename,replay,players,startFrame,endFrame,progress ) );
+			await Task.Run( ( ) => exporter.ExportReplay( filename,replay,tracklineFile,players,startFrame,endFrame,progress ) );
 
 			progress?.Report( -1 );
 		}
@@ -208,6 +216,8 @@ public partial class ReplayExport : StateFeature
 	{
 		if( exporter != null )
 		{
+			TimelineExport.IsVisible = exporter.ShowTimelineExport;
+
 			FilenameExport.FileExtension = exporter.FilesExtension;
 			FilenameExport.FilesFilter = exporter.FilesFilter;
 		}

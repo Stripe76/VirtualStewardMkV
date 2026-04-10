@@ -18,42 +18,45 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto *">
-        <Grid Width="30" ColumnDefinitions="6 Auto" IsVisible="{Binding ShowName}" Background="{DynamicResource BackgroundColor}" PointerPressed="InputElement_OnPointerPressed">
-            <Rectangle Fill="{DynamicResource InfoColor}"  IsVisible="{Binding IsActive}"/>
-            <TextBlock Grid.Column="1" Text="{Binding TimelineName}" Width="50" Margin="20,0,0,0" PointerPressed="InputElement_OnPointerPressed">
-                <TextBlock.RenderTransform>
-                    <RotateTransform Angle="-90"></RotateTransform>
-                </TextBlock.RenderTransform>
-            </TextBlock>
-        </Grid>
-        <StackPanel Grid.Column="1" Orientation="Vertical" Background="{DynamicResource BackgroundColor60}">
-            <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding CurrentFrame}"/>
-            <Grid>
-                <Grid.Resources>
-                    <ResourceDictionary>
-                        <ResourceDictionary.MergedDictionaries>
-                            <ResourceInclude Source="../Styles/Scrubs.axaml"/>
-                        </ResourceDictionary.MergedDictionaries>
-                    </ResourceDictionary>
-                </Grid.Resources>
-                
-                <ItemsControl ItemsSource="{Binding Markers}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate><Grid/></ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <m:Marker Theme="{StaticResource Marker}" Value="{Binding Position}" Minimum="{Binding Start}" Maximum="{Binding End}" Orientation="Horizontal" VerticalAlignment="Center" PointerPressed="Marker_OnPointerPressed"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                
-                <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubA}"/>
-                <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubB}"/>
+
+    <Panel>
+        <Border Background="{DynamicResource BackgroundColor}" Opacity="{DynamicResource PanelOpacity}"/>
+        <Grid RowDefinitions="Auto" ColumnDefinitions="Auto *">
+            <Grid Width="30" ColumnDefinitions="6 Auto" IsVisible="{Binding ShowName}" Background="{DynamicResource BackgroundColor}" PointerPressed="InputElement_OnPointerPressed">
+                <Rectangle Fill="{DynamicResource InfoColor}"  IsVisible="{Binding IsActive}"/>
+                <TextBlock Grid.Column="1" Text="{Binding TimelineName}" Width="50" Margin="20,0,0,0" PointerPressed="InputElement_OnPointerPressed">
+                    <TextBlock.RenderTransform>
+                        <RotateTransform Angle="-90"></RotateTransform>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
             </Grid>
-            <Slider Minimum="{Binding ScrubA}" Maximum="{Binding ScrubB}" Value="{Binding CurrentFrame}"/>
-        </StackPanel>
-    </Grid>
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+                <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding CurrentFrame}"/>
+                <Grid>
+                    <Grid.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceInclude Source="../Styles/Scrubs.axaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </Grid.Resources>
+                    
+                    <ItemsControl ItemsSource="{Binding Markers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><Grid/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <m:Marker Theme="{StaticResource Marker}" Value="{Binding Position}" Minimum="{Binding Start}" Maximum="{Binding End}" Orientation="Horizontal" VerticalAlignment="Center" PointerPressed="Marker_OnPointerPressed"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
+                    <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubA}"/>
+                    <Slider Minimum="{Binding Start}" Maximum="{Binding End}" Value="{Binding ScrubB}"/>
+                </Grid>
+                <Slider Minimum="{Binding ScrubA}" Maximum="{Binding ScrubB}" Value="{Binding CurrentFrame}"/>
+            </StackPanel>
+        </Grid>
+    </Panel>
 </UserControl>
