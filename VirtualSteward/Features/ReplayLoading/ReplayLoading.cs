@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,7 +27,7 @@ public partial class ReplayLoading : StateFeature
 	private readonly MessageManager _messageManager;
 	
 	private readonly VMProgress _progress = new();
-	private readonly FeatureCommand _openReplay; 
+	private readonly FeatureCommand _openReplay,_mergeReplay; 
 
 	[ObservableProperty] private string _title = "Current file:";
 
@@ -38,9 +39,14 @@ public partial class ReplayLoading : StateFeature
 		_openReplay = new FeatureCommand( )
 		{
 			Icon = "\xf1f9",
-			Text = "Open replay file",
 			Tooltip = "Open replay file",
 			RoutedCommand = LoadReplayCommand
+		};
+		_mergeReplay = new FeatureCommand( )
+		{
+			Icon = "\xf1fa",
+			Tooltip = "Merge replay file",
+			RoutedCommand = MergeReplayCommand
 		};
 	}
 
@@ -52,13 +58,16 @@ public partial class ReplayLoading : StateFeature
 	public override Feature AddCommands( UIItemList commands )
 	{
 		commands.Add( _openReplay );
+		commands.Add( _mergeReplay );
 		
 		return this;
 	}
 
 	public override void OnReplayChanged(VMReplay replay)
 	{
-		OnPropertyChanged(nameof(CurrentReplay));
+		OnPropertyChanged( nameof( CurrentReplay ) );
+
+		MergeReplayCommand.NotifyCanExecuteChanged(  );
 	}
 	
 	[RelayCommand( CanExecute = nameof(CanLoadReplay) )]
@@ -72,14 +81,13 @@ public partial class ReplayLoading : StateFeature
 			{
 				IStorageFile file = task.Result[0];
 				filename = file.TryGetLocalPath( );
-				
 			}
 		}
 		if( filename != null )
 		{
 			_openReplay.IsBusy = true;
 
-			await LoadReplay( filename,_state,_fileManager,_messageManager,_progress );
+			await LoadReplay( filename,_state,_fileManager,_messageManager,false,_progress );
 			
 			_openReplay.IsBusy = false;
 		}
@@ -94,7 +102,48 @@ public partial class ReplayLoading : StateFeature
 		return true;
 	}
 
-	private static async Task LoadReplay( string filename,State state,FilesManager filesManager,MessageManager messageManager,VMProgress? progress = null )
+	[RelayCommand( CanExecute = nameof(CanMergeReplay) )]
+	public async Task MergeReplay( string? e )
+	{
+		string? filename = e; 
+		if( e == null )
+		{
+			var task = PickFilesAsync( "/mnt/data/Users/Sim Racing/Documents/Assetto Corsa/replay/",ACReplayFiles );
+			if( task is not null && await task is { Count: > 0 } )
+			{
+				IStorageFile file = task.Result[0];
+				
+				filename = file.TryGetLocalPath( );
+			}
+		}
+		if( filename != null )
+		{
+			string? error = CheckReplayCompatibility( _state.Replay.FileFullPath,filename );
+			
+			if( error is null )
+			{
+				_openReplay.IsBusy = true;
+
+				await LoadReplay( filename,_state,_fileManager,_messageManager,true,_progress );
+
+				_openReplay.IsBusy = false;
+			}
+			else
+			{
+				_messageManager.ShowError( "Incompatible replays",error );
+			}
+		}
+		else
+		{
+			// TODO: error
+		}
+	}
+	private bool CanMergeReplay()
+	{
+		return _state.Replay.IsLoaded;
+	}
+
+	private static async Task LoadReplay( string filename,State state,FilesManager filesManager,MessageManager messageManager,bool mergeReplay,VMProgress? progress = null )
 	{
 		try
 		{
@@ -108,11 +157,12 @@ public partial class ReplayLoading : StateFeature
 			
 			if( acReplay != null )
 			{
-				VMReplay replay = new( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
+				VMReplay replay = mergeReplay ? state.Replay : new VMReplay( acReplay,acReplay.TrackObjects,acReplay.TrackObjectsNumber );
 				VMPlayerList players = state.Players;
 
 				//players.SupressNotification = true;
-				players.Clear( );
+				if( !mergeReplay )
+					players.Clear( );
 
 				int id = 0;
 				foreach( var newCar in acReplay.Cars )
@@ -140,22 +190,23 @@ public partial class ReplayLoading : StateFeature
 				//state.Replay.FileName = replay.FileName;
 				players.SupressNotification = false;
 				
-				state.Replay = replay;
+				if( !mergeReplay )
+					state.Replay = replay;
 			}
 			progress?.Report( -1 );
-			messageManager.ShowSuccess("Replay loaded");
+			messageManager.ShowSuccess( "Replay loaded" );
 		}
 		catch( TaskAlreadyRunning )
 		{
 			//logger?.Error("Task already running: {message}", tx.Task);
-			messageManager.ShowError("Error loading replay","Another replay is already loading");
+			messageManager.ShowError( "Error loading replay","Another replay is already loading" );
 		}
 		catch( Exception ex )
 		{
 			//logger?.Error("Error in LoadReplayFileAsync: {message}", ex.Message);
 
 			progress?.Report( -2 );
-			messageManager.ShowError("Error loading replay",ex.Message);
+			messageManager.ShowError( "Error loading replay",ex.Message );
 		}
 	}
 
@@ -163,4 +214,33 @@ public partial class ReplayLoading : StateFeature
 	{
 		Patterns = ["*.acreplay"],
 	};  
+	
+	private static string? CheckReplayCompatibility( string replayA,string replayB )
+	{
+		if( File.Exists( replayA ) && File.Exists( replayB ) )
+		{
+			try
+			{
+				ReplayInfo? infoA = ReplayInfo.LoadReplayInfo( replayA );
+				ReplayInfo? infoB = ReplayInfo.LoadReplayInfo( replayB );
+
+				if( infoA != null && infoB != null )
+				{
+					if( infoA.TrackID != infoB.TrackID || infoA.TrackVariantID != infoB.TrackVariantID )
+					{
+						return "Cannot merge replay files from different tracks";
+					}
+					if( infoA.Frequency != infoB.Frequency )
+					{
+						return "Cannot merge replay files with different recording frequency";
+					}
+					return null;
+				}
+			}
+			catch( Exception )
+			{
+			}
+		}
+		return "Error checking replays compatibility";
+	}
 }

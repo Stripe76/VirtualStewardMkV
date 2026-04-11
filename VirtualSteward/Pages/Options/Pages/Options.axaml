@@ -4,11 +4,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:VirtualSteward.Pages.Options"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Background="{DynamicResource BackgroundColor}">
     <Design.DataContext>
         <vm:Options/>
     </Design.DataContext>
     <StackPanel>
-        <ContentControl Content="{Binding Settings}"/>
+        <StackPanel>
+            <ContentControl Content="{Binding Settings}"/>
+            <TextBlock></TextBlock>
+        </StackPanel>
+        <shadui:Card Width="340" IsVisible="False">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>
+                    Sound Effect by
+                    <InlineUIContainer>
+                        <HyperlinkButton NavigateUri="https://pixabay.com/users/universfield-28281460/">Universfield</HyperlinkButton>
+                    </InlineUIContainer>
+                </TextBlock>
+            </StackPanel>
+        </shadui:Card>
     </StackPanel>
 </UserControl>

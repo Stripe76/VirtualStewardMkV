@@ -31,6 +31,7 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="SoundFlow" Version="1.4.0" />
         <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.9.5" />
     </ItemGroup>
 
@@ -51,6 +52,7 @@
 
     <ItemGroup>
       <None Remove="Assets\favicon.ico" />
+      <AvaloniaResource Include="Assets\error.mp3" />
       <AvaloniaResource Include="Assets\favicon.ico" />
       <None Update="Cars\base.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -89,5 +91,7 @@
       </None>
       <None Remove="Assets\ADLarge.png" />
       <AvaloniaResource Include="Assets\ADLarge.png" />
+      <None Remove="Assets\error.mp3" />
+      <None Remove="Assets\error2.mp3" />
     </ItemGroup>
 </Project>

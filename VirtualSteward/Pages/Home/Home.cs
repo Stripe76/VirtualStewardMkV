@@ -231,15 +231,22 @@ public partial class Home : StateFeature
             new FeatureCommand( )
             {
                 Icon = "\xf1ec",
-                Tooltip = "Loads the replay",
+                Tooltip = "Load the replay",
                 IsDefault = true,
                 RoutedCommand = LoadReplayCommand,
                 CommandParameter = filename
             },
             new FeatureCommand( )
             {
+                Icon = "\xf1fa",
+                Tooltip = "Merge the replay",
+                RoutedCommand = MergeReplayCommand,
+                CommandParameter = filename
+            },
+            new FeatureCommand( )
+            {
                 Icon = "\xf202",
-                Tooltip = "Starts the server",
+                Tooltip = "Start the server",
                 RoutedCommand = StartServerCommand,
                 CommandParameter = filename
             },
@@ -254,6 +261,10 @@ public partial class Home : StateFeature
     [RelayCommand] private async Task LoadReplay( string filename )
     {
         await _replays.LoadReplay( filename );
+    }
+    [RelayCommand] private async Task MergeReplay( string filename )
+    {
+        await _replays.MergeReplay( filename );
     }
     [RelayCommand] private async Task StartServer( string filename )
     {

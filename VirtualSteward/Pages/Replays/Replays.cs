@@ -90,9 +90,15 @@ public class Replays : StateFeature
     {
         if( reset ) ResetReplay( );
         if( makeActive ) IsActive = true;
-        //if( makeActive ) IsActive = true;
 
         await _replayLoading.LoadReplay( filename );
+    }
+    public async Task MergeReplay( string filename,bool reset = true,bool makeActive = true )
+    {
+        if( _state.Replay.IsLoaded )
+            await _replayLoading.MergeReplay( filename );
+        else
+            await _replayLoading.LoadReplay( filename );
     }
     
     public override Feature AddDataTemplates(DataTemplates templates)
