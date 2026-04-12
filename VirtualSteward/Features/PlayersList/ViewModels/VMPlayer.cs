@@ -37,8 +37,9 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 
   public VMPlayerInfo PlayerInfo { get; }
 
-  public VMMapLineStyle LineStyle { get; }
   public VMMapImage CarImage { get; }
+  public VMMapLineStyle LineStyle { get; }
+  public VMMapLabelStyle LabelStyle { get; }
 
   public VMPlayerLapList Laps
   {
@@ -53,7 +54,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 
   public FeatureCommandList Commands { get; } = [];
 
-  public VMPlayer( int playerID,VMPlayer copyPlayer,CarDatasource datasource,VMMapLineStyle lineStyle,VMMapImage carImage,ShowCommand commands = ShowCommand.All )
+  public VMPlayer( int playerID,VMPlayer copyPlayer,CarDatasource datasource,VMMapLabelStyle labelStyle,VMMapLineStyle lineStyle,VMMapImage carImage,ShowCommand commands = ShowCommand.All )
   {
     _playerID = playerID;
 
@@ -64,12 +65,13 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     CarImage.BindIsVisible( this );
 
     LineStyle = lineStyle;
+    LabelStyle = labelStyle;
 
     InfoEditing = new VMPlayerInfoEditing( this );
     
     CreateCommands( commands );
   }
-  public VMPlayer( int idPlayer,ReplayCar replayCar,ReplayTail replayTail,VMCarInfo carInfo,VMCarSkinInfo skinInfo,VMMapLineStyle lineStyle,VMMapImage carImage )
+  public VMPlayer( int idPlayer,ReplayCar replayCar,ReplayTail replayTail,VMCarInfo carInfo,VMCarSkinInfo skinInfo,VMMapLabelStyle labelStyle,VMMapLineStyle lineStyle,VMMapImage carImage )
   {
     _playerID = idPlayer;
 
@@ -80,6 +82,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     CarImage.BindIsVisible( this );
     
     LineStyle = lineStyle;
+    LabelStyle = labelStyle; 
 
     InfoEditing = new VMPlayerInfoEditing( this );
     
@@ -150,6 +153,13 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
       //arPoints.Add( arPoints[0] );
     }
     return linesPoints;
+  }
+
+  public int CompareTo(VMPlayer? obj)
+  {
+    if (obj == null)
+      return 0;
+    return _playerID.CompareTo(obj._playerID);
   }
 
   private void CreateCommands( ShowCommand commands )
@@ -237,13 +247,6 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     bestLaps.AddRange(allLaps);
     return bestLaps;
   }
-
-  public int CompareTo(VMPlayer? obj)
-  {
-    if (obj == null)
-      return 0;
-    return _playerID.CompareTo(obj._playerID);
-  }
 }
 
 public class VMPlayerList( bool multiSelect = false,bool multiActive = false ) : MultiList<VMPlayer>( multiSelect,multiActive )
@@ -262,4 +265,3 @@ public class VMPlayerList( bool multiSelect = false,bool multiActive = false ) :
     }
   }
 }
-

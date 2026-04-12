@@ -18,10 +18,11 @@ namespace VirtualSteward.Classes;
 
 public partial class State : ObservableObject
 {
-    private readonly FilesManager _filesMmanger;
+    private readonly FilesManager _filesManager;
 
     private readonly SortedList<string,CarInfo> _cars = [];
     private readonly SortedList<string,TrackInfo> _tracks = [];
+    private readonly VMMapLabelStyle _playerLabelStyle = new ( ); 
 
     [ObservableProperty] private string _ACFolder = "";
     [ObservableProperty] private string _replaysFolder = "";
@@ -35,7 +36,20 @@ public partial class State : ObservableObject
 
     public State( FilesManager filesManager)
     {
-        _filesMmanger = filesManager;
+        _filesManager = filesManager;
+    }
+
+    public VMMapLineStyle GetPlayerLineStyle( int playerID )
+    {
+        return new VMMapLineStyle( 2,VMMapLineStyle.LineColors[playerID % VMMapLineStyle.LineColors.Count] );
+    }
+    public VMMapLabelStyle GetPlayerLabelStyle( )
+    {
+        return _playerLabelStyle;
+    }
+    public VMMapImage GetPlayerCarImage( int playerID,string carID,string skinID )
+    {
+        return new VMMapImage( _filesManager.GetCarImage( carID,skinID,VMMapLineStyle.LineColors[playerID % VMMapLineStyle.LineColors.Count] ) );
     }
 
     public CarInfo GetCarInfo( string carID )
@@ -43,7 +57,7 @@ public partial class State : ObservableObject
         if( _cars.TryGetValue( carID,out CarInfo? value ) )
             return value;
         
-        CarInfo? info = CarInfo.LoadCarInfo( _filesMmanger.ACCarsFolder,carID );
+        CarInfo? info = CarInfo.LoadCarInfo( _filesManager.ACCarsFolder,carID );
         if( info != null )
         {
             lock( _cars )
@@ -63,10 +77,10 @@ public partial class State : ObservableObject
 //                value.CSPSettingsFilePath = GetCSPSettingsFile( value.TrackID );
             return value;
         }
-        TrackInfo? info = TrackInfo.LoadTrackInfo( _filesMmanger.ACTracksFolder,trackID,variantID );
+        TrackInfo? info = TrackInfo.LoadTrackInfo( _filesManager.ACTracksFolder,trackID,variantID );
         if( info != null )
         {
-            VMTrackInfo newInfo = new ( info,_filesMmanger.ACTracksFolder );
+            VMTrackInfo newInfo = new ( info,_filesManager.ACTracksFolder );
             //if( setCSPSettingsFile && newInfo.CSPSettingsFilePath == null )
 //                newInfo.CSPSettingsFilePath = GetCSPSettingsFile( newInfo.TrackID );
 

@@ -169,20 +169,17 @@ public partial class ReplayLoading : StateFeature
 				{
 					VMCarInfo carInfo = new ( state.GetCarInfo( newCar.CarID ),newCar.NumberOfWings,filesManager.ACCarsFolder );
 					IImmutableSolidColorBrush carColor = VMMapLineStyle.LineColors[id % VMMapLineStyle.LineColors.Count];
-					
-					VMPlayer newPlayer = new ( 
+
+					VMPlayer newPlayer = new(
 						id,
 						newCar,
 						acReplay.TailData[id],
 						carInfo,
 						carInfo.GetSkin( newCar.CarSkinID ),
-						new VMMapLineStyle( 2,carColor ),
-						new VMMapImage( filesManager.GetCarImage( newCar.CarID,newCar.CarSkinID,carColor ) )
-						)
-					{
-						//PlayerName = newCar.PlayerName
-						//ShowDetails = true
-					};
+						state.GetPlayerLabelStyle( ),
+						state.GetPlayerLineStyle( id ),
+						state.GetPlayerCarImage( id,newCar.CarID,newCar.CarSkinID ) 
+						);
 					players.Add( newPlayer );
 
 					id++;

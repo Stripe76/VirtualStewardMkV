@@ -11,6 +11,7 @@ using VirtualSteward.Features.CurrentReplay;
 using VirtualSteward.Features.FileTemplates;
 using VirtualSteward.Features.LapsMerge;
 using VirtualSteward.Features.PlayersCars;
+using VirtualSteward.Features.PlayersLabels;
 using VirtualSteward.Features.PlayersLines;
 using VirtualSteward.Features.PlayersList;
 using VirtualSteward.Features.ReplayLoading;
@@ -63,10 +64,11 @@ public class Replays : StateFeature
         
         _ = new CurrentReplay( state,window );
         _replayReset = (ResetReplay) new ResetReplay( state ).AddCommands( RightToolbar );
-        _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter(Footers);
+        _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter( Footers );
         _ = new PlayersList( templates );
         _ = new PlayersLines( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
+        _ = new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers );
 
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 

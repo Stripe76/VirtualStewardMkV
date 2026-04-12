@@ -202,8 +202,9 @@ public partial class LapsMerge : StateFeature
             playerID,
             copyPlayer,
             datasource,
-            new VMMapLineStyle( 2,carColor ),
-            new VMMapImage( _filesManager.GetCarImage( copyPlayer.PlayerInfo.CarInfo.CarID,copyPlayer.PlayerInfo.CarSkinInfo.SkinID,carColor ) ),
+            _state.GetPlayerLabelStyle(  ),
+            _state.GetPlayerLineStyle( playerID ),
+            _state.GetPlayerCarImage( playerID,copyPlayer.PlayerInfo.CarInfo.CarID,copyPlayer.PlayerInfo.CarSkinInfo.SkinID ),
             VMPlayer.ShowCommand.Edit /*| VMPlayer.ShowCommand.Delete*/
         );
         newPlayer.PlayerInfo.PlayerName = copyPlayer.PlayerInfo.PlayerName + " - Lap " + lap.LapName;

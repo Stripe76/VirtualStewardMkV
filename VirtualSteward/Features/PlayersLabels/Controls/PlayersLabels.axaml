@@ -1,34 +1,32 @@
-<UserControl x:Class="VirtualSteward.Features.PlayersCars.Controls.PlayersCars"
+<UserControl x:Class="VirtualSteward.Features.PlayersLabels.Controls.PlayersLabels"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersCars.ViewModels"
-             xmlns:vm1="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersLabels"
+             xmlns:cm="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" IsVisible="{Binding IsVisible}">
     <Design.DataContext>
-        <vm:VMPlayersCarsLayer/>
+        <vm:PlayersLabels/>
     </Design.DataContext>
-    
-    <Grid>
+
+    <Panel>
         <ItemsControl ItemsSource="{Binding Players}">
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><Canvas/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas RenderTransform="{Binding CarImage.Transforms}">
-                        <Image Source="{Binding CarImage.Image}" IsVisible="{Binding IsVisible}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300" PointerPressed="InputElement_OnPointerPressed" />
-                    </Canvas>
+                    <TextBlock Text="{Binding PlayerInfo.PlayerName}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.Styles>
-                <Style Selector="ContentPresenter" x:DataType="vm1:VMPlayer">
+                <Style Selector="ContentPresenter" x:DataType="cm:VMPlayer">
                     <Design.DataContext>
-                        <vm1:VMPlayer/>
+                        <cm:VMPlayer/>
                     </Design.DataContext>
                     <Setter Property="Canvas.Left" Value="{Binding CarImage.Position.X}"/>
                     <Setter Property="Canvas.Top" Value="{Binding CarImage.Position.Y}"/>
                 </Style>
             </ItemsControl.Styles>
         </ItemsControl>
-    </Grid>
+    </Panel>
 </UserControl>
