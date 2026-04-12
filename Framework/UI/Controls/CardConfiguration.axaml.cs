@@ -3,9 +3,9 @@ using Avalonia.Controls;
 
 namespace Framework.UI.Controls;
 
-public partial class Configuration : UserControl
+public partial class CardConfiguration : UserControl
 {
-    public Configuration( )
+    public CardConfiguration( )
     {
         InitializeComponent( );
     }

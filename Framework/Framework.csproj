@@ -64,4 +64,11 @@
       <AvaloniaXaml Include="UI\Controls\TreePathViewNode.xaml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="UI\Controls\BaseConfiguration.axaml.cs">
+        <DependentUpon>BaseConfiguration.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>

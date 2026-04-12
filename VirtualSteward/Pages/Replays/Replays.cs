@@ -68,7 +68,8 @@ public class Replays : StateFeature
         _ = new PlayersList( templates );
         _ = new PlayersLines( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
-        _ = new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers );
+
+        AddLoadingPage( new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers ) );
 
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
@@ -84,10 +85,18 @@ public class Replays : StateFeature
         Panels.FirstAlwaysActive = true;
     }
 
+    public override Feature AddDataTemplates(DataTemplates templates)
+    {
+      templates.Add( new FuncDataTemplate<Replays>( (_,_) => new Pages.Replays( ) ) );
+
+      return this;
+    }
+
     public void ResetReplay( )
     {
         _replayReset.ReplayReset(  );
     }
+    
     public async Task LoadReplay( string filename,bool reset = true,bool makeActive = true )
     {
         if( reset ) ResetReplay( );
@@ -101,12 +110,5 @@ public class Replays : StateFeature
             await _replayLoading.MergeReplay( filename );
         else
             await _replayLoading.LoadReplay( filename );
-    }
-    
-    public override Feature AddDataTemplates(DataTemplates templates)
-    {
-      templates.Add( new FuncDataTemplate<Replays>( (_,_) => new Pages.Replays( ) ) );
-
-      return this;
     }
 }

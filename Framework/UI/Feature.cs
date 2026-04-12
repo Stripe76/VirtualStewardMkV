@@ -30,13 +30,13 @@ public partial class Feature : UIItem
         if (templates != null) AddDataTemplates(templates);
     }
 
-    public void AddConfiguration( Configuration configuration )
-    {
-        _configurations.Add( configuration );
-    }
     public void AddLoadingPage( Feature feature )
     {
         _loadingList.Add( feature );
+    }
+    public void AddConfiguration( Configuration configuration )
+    {
+        _configurations.Add( configuration );
     }
 
     public virtual Feature AddDataTemplates(DataTemplates templates)
@@ -99,7 +99,7 @@ public partial class Feature : UIItem
 
     public static void AddDefaultDataTemplates(DataTemplates templates)
     {
-        templates.Add(new FuncDataTemplate<Configuration>((_, _) => new Controls.Configuration()));
+        templates.Add(new FuncDataTemplate<Configuration>((_, _) => new Controls.CardConfiguration()));
 
         templates.Add( new FuncDataTemplate<TreeLeafCheckbox>( ( _,_ ) => new Controls.TreePathViewLeafCheckbox( ) ) );
         templates.Add( new FuncDataTemplate<TreeLeaf>( ( _,_ ) => new Controls.TreePathViewLeaf( ) ) );
