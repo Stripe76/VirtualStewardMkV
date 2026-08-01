@@ -13,12 +13,12 @@
     
     <Grid ColumnDefinitions="280 *">
         <StackPanel>
-            <ContentControl Content="{Binding SelectedCars.ActiveItem}">
+            <ContentControl Content="{Binding CarsList.ActiveItem}">
                 <ContentControl.DataTemplates>
                     <DataTemplate DataType="ci:VMCarInfo"><uc:CarInfoDisplay/></DataTemplate>
                 </ContentControl.DataTemplates>
             </ContentControl>
-            <ItemsControl ItemsSource="{Binding SelectedCars.SelectedItems}">
+            <ItemsControl ItemsSource="{Binding CarsList.SelectedItems}">
                 <ItemsControl.DataTemplates>
                     <DataTemplate DataType="ci:VMCarInfo"><uc:CarsListItem/></DataTemplate>
                 </ItemsControl.DataTemplates>
