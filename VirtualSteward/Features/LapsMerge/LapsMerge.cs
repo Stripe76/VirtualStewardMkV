@@ -89,6 +89,7 @@ public partial class LapsMerge : StateFeature
     public override void OnReplayChanged( VMReplay replay )
     {
         IsVisible = false;
+        EnableCheckpoints = false;
         Chekpoints.EditingMode = false;
     }
 
@@ -284,14 +285,33 @@ public partial class LapsMerge : StateFeature
 
         if( !EnableCheckpoints )
             _checkpoints.EditingMode = false;
+        else if ( _checkpoints.CheckpointList.Count <= 0 )
+            _checkpoints.EditingMode = true;
         
         SyncSelectedPlayers( );
+    }
+    [RelayCommand]
+    private void RemoveNoLapsPlayers( )
+    {
+        VMPlayerList players = _state.Players;
+        VMPlayerList toRemove = [];
+
+        foreach( var player in players )
+        {
+            if( player.IsNoLapPlayer )
+                toRemove.Add( player );
+        }
+        foreach( var player in toRemove )
+        {
+            players.Remove( player );
+        }
     }
 
     private void LapsMerge_PropertyChanged( object? sender,PropertyChangedEventArgs e )
     {
-        if( e.PropertyName.Equals( nameof( IsVisible ) ) )
+        if( e.PropertyName is nameof( IsVisible ) )
         {
+            /*
             foreach( var player in _state.Players )
             {
                 player.Header = IsVisible
@@ -304,6 +324,7 @@ public partial class LapsMerge : StateFeature
                     } )
                     : null;
             }
+            */
             if( IsVisible && SyncWithPlayers )
                 SyncSelectedPlayers( );
             UpdateTimeline(  );

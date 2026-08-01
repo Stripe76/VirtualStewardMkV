@@ -17,8 +17,9 @@
                         <Viewbox><TextBlock Text="&#xf26e;" Classes="LucideIcon" Foreground="{DynamicResource MutedColor}"/></Viewbox>
                     </MenuItem.Header>
                     <MenuItem Header="Enable checkpoints" Command="{Binding SwitchEnableCheckpointsCommand}" IsChecked="{Binding Chekpoints.ShowCheckpoints}"/>
-                    <Separator/>
                     <MenuItem Header="Edit checkpoints" Command="{Binding SwitchCheckpointsEditingCommand}" IsEnabled="{Binding Chekpoints.ShowCheckpoints}" IsChecked="{Binding Chekpoints.EditingMode}"/>
+                    <Separator/>
+                    <MenuItem Header="Remove no laps players" Command="{Binding RemoveNoLapsPlayersCommand}"/>
                 </MenuItem>
             </Menu>
         </Grid>

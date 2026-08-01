@@ -32,7 +32,9 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   [ObservableProperty] private bool _isEditingMode;
 
   public int PlayerID => _playerID;
-  
+
+  public bool IsNoLapPlayer => Laps.Count == 0 || (Laps.Count == 1 && Laps[0].LapTime == 0);
+
   public CarDatasource Datasource { get; }
 
   public VMPlayerInfo PlayerInfo { get; }
