@@ -35,8 +35,8 @@ public partial class ResetReplay( State state ) : StateFeature( state )
     //Realtime.Stop( );
     //Server.StopServer( );
 
-    _state.Replay = new VMReplay( );
     _state.Players.Clear( );
+    _state.Replay = new VMReplay( );
     //_state.MergedPlayers.Clear( );
 
     //_state.Track = new VMTrackInfo( "","" );

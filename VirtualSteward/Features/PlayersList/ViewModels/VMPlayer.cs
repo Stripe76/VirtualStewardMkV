@@ -34,6 +34,13 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   public int PlayerID => _playerID;
 
   public bool IsNoLapPlayer => Laps.Count == 0 || (Laps.Count == 1 && Laps[0].LapTime == 0);
+  public bool HasCalculatedLaptimes
+  {
+    get
+    {
+      return Laps.Any( lap => lap is { Calculated: true,LapTime: > 0 } );
+    }
+  }
 
   public CarDatasource Datasource { get; }
 
@@ -84,7 +91,9 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     CarImage.BindIsVisible( this );
     
     LineStyle = lineStyle;
-    LabelStyle = labelStyle; 
+    LabelStyle = labelStyle;
+
+    Laps = LoadLapsTimes( replayCar );
 
     InfoEditing = new VMPlayerInfoEditing( this );
     
@@ -196,31 +205,69 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
       } );
     }
   }
-  
+
+  private VMPlayerLapList? LoadLapsTimes( ReplayCar replayCar )
+  {
+    VMPlayerLapList lapsList = new( true );
+
+    uint currentLap = (replayCar.Laps.Length == 0) ? (uint)1 : 0;
+    uint frames = (uint)Datasource.Length;
+    for( uint i = 1; i < frames; i++ )
+    {
+      uint lapTime = Datasource.GetLapTime( i );
+      uint prevLapTime = Datasource.GetLapTime( i - 1 );
+
+      if( i == 1 && prevLapTime != 0 )
+      {
+        lapsList.Add( new VMPlayerLap( currentLap,0,frames,LineStyle ) );
+      }
+      // Giri e tempi sul giro
+      if( lapTime < prevLapTime || (lapTime > 0 && prevLapTime == 0) )
+      {
+        if( lapsList.Count > 0 )
+        {
+          VMPlayerLap lastLap = lapsList[^1];
+          lastLap.EndFrame = i - 1;
+
+          if( replayCar.Laps.Length >= lapsList.Count )
+          {
+            lastLap.Calculated = false;
+            lastLap.LapTime = replayCar.Laps[lapsList.Count - 1].LapTime;
+          }
+          else
+          {
+            lastLap.LapTime = prevLapTime;
+          }
+        }
+        lapsList.Add( new VMPlayerLap( ++currentLap,i,frames,LineStyle ) );
+      }
+    }
+    return lapsList;
+  }
+
   private VMPlayerLapList CreateLapsList()
   {
-    VMPlayerLapList lapList = new(true);
+    VMPlayerLapList lapsList = new( true );
 
     uint currentLap = 0;
     uint frames = (uint)Datasource.Length;
-    for (uint i = 1; i < frames; i++)
+    for( uint i = 1; i < frames; i++ )
     {
-      uint lapTime = Datasource.GetLapTime(i);
-      uint prevLapTime = Datasource.GetLapTime(i - 1);
+      uint lapTime = Datasource.GetLapTime( i );
+      uint prevLapTime = Datasource.GetLapTime( i - 1 );
 
       //if( pos != null && last != null )
       {
-        if (i == 1 && prevLapTime != 0)
+        if( i == 1 && prevLapTime != 0 )
         {
-          lapList.Add(new VMPlayerLap(currentLap, 0, frames,LineStyle));
+          lapsList.Add( new VMPlayerLap( currentLap,0,frames,LineStyle ) );
         }
-
         // Giri e tempi sul giro
-        if ((lapTime < prevLapTime) || (lapTime > 0 && prevLapTime == 0))
+        if( (lapTime < prevLapTime) || (lapTime > 0 && prevLapTime == 0) )
         {
-          if (lapList.Count > 0)
+          if( lapsList.Count > 0 )
           {
-            VMPlayerLap lastLap = lapList[^1];
+            VMPlayerLap lastLap = lapsList[^1];
             lastLap.EndFrame = i - 1;
 
             //if( pos.LastLapTime > 0 )
@@ -228,11 +275,11 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
             //else
             lastLap.LapTime = prevLapTime;
           }
-          lapList.Add(new VMPlayerLap(++currentLap, i, frames,LineStyle) );
+          lapsList.Add( new VMPlayerLap( ++currentLap,i,frames,LineStyle ) );
         }
       }
     }
-    return lapList;
+    return lapsList;
   }
   private VMPlayerLapList CreateBestLapsList()
   {

@@ -18,6 +18,7 @@ using VirtualSteward.Features.ReplayLoading;
 using VirtualSteward.Features.Tracklines;
 using VirtualSteward.Features.TrackMap;
 using VirtualSteward.Features.PlayersList.ViewModels;
+using VirtualSteward.Features.PlayersMessage;
 using VirtualSteward.Features.Realtime;
 using VirtualSteward.Features.Realtime.ViewModels;
 using VirtualSteward.Features.ReplayExport;
@@ -41,12 +42,14 @@ public class Replays : StateFeature
     public ReplayTimelines Timelines { get; }
 
     public LapsMerge LapsMerge { get; }
+    public PlayersMessage PlayersMessage { get; }
 
     public UIBaseList Headers { get; } = [];
     public UIItemList Panels { get; } = new UIItemList( ) { MultiActiveEnabled = true };
     public UIBaseList Footers { get; } = [];
 
     public VMPlayerList Players => _state.Players;
+    
     public VMFrameValidationTimeline FrameValidation => _realtime.FrameValidation;
     
     public Replays( State state,
@@ -70,6 +73,7 @@ public class Replays : StateFeature
         _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
 
         AddLoadingPage( new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers ) );
+        AddLoadingPage( PlayersMessage = new PlayersMessage( state,templates ) );
 
         _replayLoading = (ReplayLoading) new ReplayLoading( state,templates,filesManager,messageManager ).AddCommands( LeftToolbar );
 
@@ -79,7 +83,8 @@ public class Replays : StateFeature
         Checkpoints chekpoints = new Checkpoints( state,templates,filesManager,TrackMap.Map );
         Panels.Add( chekpoints );
         
-        LapsMerge = (LapsMerge)new LapsMerge( _state,templates,filesManager,Timelines.Timelines,TrackMap,chekpoints ) { IsVisible = false }.AddCommands( LeftToolbar );
+        LapsMerge = (LapsMerge)new LapsMerge( state,templates,filesManager,Timelines.Timelines,TrackMap,chekpoints ) { IsVisible = false }.AddCommands( LeftToolbar );
+        
         _ = new TimelinesScrubs( state,templates,state.Players,TrackMap.Map,Timelines.ReplayTimeline );
 
         Panels.FirstAlwaysActive = true;

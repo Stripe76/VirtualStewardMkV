@@ -33,6 +33,7 @@
                 </StackPanel.Styles>
                 <ContentControl Content="{Binding LapsMerge}"/>
                 <ItemsControl ItemsSource="{Binding Players}"/>
+                <ContentControl Content="{Binding PlayersMessage}"/>
             </StackPanel>
         </ScrollViewer>
         

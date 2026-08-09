@@ -23,6 +23,7 @@
             <TextBlock Classes="Date" VerticalAlignment="Top" HorizontalAlignment="Right" Text="{Binding ReplayInfo.ReplayDate,StringFormat={}{0:d}}" TextWrapping="Wrap" Margin="4,4,16,4"/>
             <TextBlock Classes="Date" VerticalAlignment="Top" HorizontalAlignment="Right" Padding="0,15,0,0" Text="{Binding ReplayInfo.ReplayDate,StringFormat={}{0:t}}" TextWrapping="Wrap" Margin="4,4,16,4"/>
             <TextBlock Classes="Title" VerticalAlignment="Bottom" Text="{Binding ReplayInfo.CarInfo.Title}" TextWrapping="Wrap" Margin="16,4,4,4"/>
+            <TextBlock Classes="Title" VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="{Binding ReplayInfo.BestLapText}" TextWrapping="Wrap" Margin="4,4,16,4"/>
             
             <ItemsControl HorizontalAlignment="Right" VerticalAlignment="Bottom" ItemsSource="{Binding Commands}">
                 <ItemsControl.ItemsPanel>

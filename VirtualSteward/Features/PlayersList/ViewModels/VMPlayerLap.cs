@@ -9,6 +9,8 @@ namespace VirtualSteward.Features.PlayersList.ViewModels;
 
 public class VMPlayerLap( uint lapNumber,uint startFrame,uint endFrame,VMMapLineStyle lineStyle ) : UIItem
 {
+    public bool Calculated { get; set; } = true; 
+    
     public uint LapNumber { get; set; } = lapNumber;
     public uint LapTime { get; set; } = 0;
 
@@ -18,7 +20,7 @@ public class VMPlayerLap( uint lapNumber,uint startFrame,uint endFrame,VMMapLine
     }
     public string LapTimeText
     {
-        get => $"{LapTime / 60000:00}:{LapTime / 1000 % 60:00}:{LapTime % 1000:000}";
+        get => $"{LapTime / 60000:00}:{LapTime / 1000 % 60:00}:{LapTime % 1000:000}" + (Calculated ? "*" : "");
     }
     public string LapTimeFullText
     {
