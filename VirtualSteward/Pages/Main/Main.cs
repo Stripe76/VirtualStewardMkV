@@ -31,7 +31,7 @@ public partial class Main : Feature
 #if !DEBUG
 #error Update version
 #endif
-        window.Title = "Virtual Steward MkV - BETA 1";
+        window.Title = "Virtual Steward MkV - BETA 2";
 
         _settings = settings;
         _fileManager = new FilesManager( _settings,carsSettings );

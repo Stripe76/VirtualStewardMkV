@@ -296,7 +296,7 @@ public class MultiList<T> : ObservableCollectionEx<T> where T : class,IMultiList
     }
   }
 
-  #region Notify propery changed
+  #region Notify property changed
   protected bool SetProperty<P>( ref P storage,P value,[CallerMemberName] string? propertyName = null )
   {
     if( Equals( storage,value ) )

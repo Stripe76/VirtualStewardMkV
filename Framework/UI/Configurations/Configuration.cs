@@ -1,5 +1,4 @@
-﻿using Framework.IniFiles;
-using Framework.UI.Values;
+﻿using Framework.UI.Values;
 
 namespace Framework.UI.Configurations;
 
@@ -8,15 +7,16 @@ public class Configuration : UIBase
   private List<object>? _values = null;
 
   public string Name { get; }
-  public double Width { get; init; } = 340.0f;
+  public double Width { get; init; }
   public object? Header { get; }
   
   public List<object> Values => _values ??= PopulateValues( );
 
-  public Configuration( string name,object? header = null )
+  public Configuration( string name,object? header = null,double width = 340f )
   {
     Name = name;
     Header = header;
+    Width = width;
 
     IsExpanded = true;
   }

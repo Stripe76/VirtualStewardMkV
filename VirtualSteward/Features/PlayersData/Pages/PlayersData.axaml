@@ -1,0 +1,28 @@
+<UserControl x:Class="VirtualSteward.Features.PlayersData.Pages.PlayersData"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersData"
+             xmlns:ctrl="clr-namespace:VirtualSteward.Features.PlayersData.Controls"
+             xmlns:vm1="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" IsVisible="{Binding IsVisible}">
+    <Design.DataContext>
+        <vm:PlayersData/>
+    </Design.DataContext>
+    
+    <UserControl.Styles>
+        <StyleInclude Source="../../../Features/PlayersList/Styles/PlayersList.axaml" />
+    </UserControl.Styles>
+
+    <StackPanel>
+        <CheckBox Classes="Muted" Margin="10,5,5,5" Content="Auto select lap" IsChecked="{Binding LapAutoSelect}"/>
+        <ItemsControl ItemsSource="{Binding Players}">
+            <ItemsControl.DataTemplates>
+                <DataTemplate DataType="vm1:VMPlayer">
+                    <ctrl:PlayerData/>
+                </DataTemplate>
+            </ItemsControl.DataTemplates>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

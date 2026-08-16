@@ -11,6 +11,8 @@ using VirtualSteward.Features.CurrentReplay;
 using VirtualSteward.Features.FileTemplates;
 using VirtualSteward.Features.LapsMerge;
 using VirtualSteward.Features.PlayersCars;
+using VirtualSteward.Features.PlayersData;
+using VirtualSteward.Features.PlayersFollow;
 using VirtualSteward.Features.PlayersLabels;
 using VirtualSteward.Features.PlayersLines;
 using VirtualSteward.Features.PlayersList;
@@ -42,6 +44,7 @@ public class Replays : StateFeature
     public ReplayTimelines Timelines { get; }
 
     public LapsMerge LapsMerge { get; }
+    public PlayersData PlayersData { get; }
     public PlayersMessage PlayersMessage { get; }
 
     public UIBaseList Headers { get; } = [];
@@ -69,8 +72,11 @@ public class Replays : StateFeature
         _replayReset = (ResetReplay) new ResetReplay( state ).AddCommands( RightToolbar );
         _ = new Tracklines( state,templates,TrackMap.Map,filesManager ).AddFooter( Footers );
         _ = new PlayersList( templates );
-        _ = new PlayersLines( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
+        _ = new PlayersLines( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers );
         _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
+        _ = new PlayersFollow( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
+
+        PlayersData = (PlayersData) new PlayersData( state,templates,state.Players,Timelines.ReplayTimeline ).AddFooter( Footers );
 
         AddLoadingPage( new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers ) );
         AddLoadingPage( PlayersMessage = new PlayersMessage( state,templates ) );
