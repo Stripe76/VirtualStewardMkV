@@ -1,0 +1,34 @@
+<UserControl x:Class="VirtualSteward.Features.PlayersData.Controls.PlayerData"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:VirtualSteward.Features.PlayersList.ViewModels"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
+    <Design.DataContext>
+        <vm:VMPlayer></vm:VMPlayer>
+    </Design.DataContext>
+
+    <shadui:Card Classes.Accent="{Binding IsActive}" Classes="PlayerInfo" PointerPressed="Player_PointerPressed"> 
+        <Grid Margin="2" Width="130" RowDefinitions="Auto * Auto" ColumnDefinitions="Auto *">
+            <Ellipse Grid.Column="0" Classes="PlayerInfo" HorizontalAlignment="Left" Fill="{Binding LineStyle.Color}"/>
+            <TextBlock Classes="Muted" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,0,0" Text="{Binding PlayerInfo.PlayerName}"/>
+            <Image Grid.Row="1" Grid.Column="0" ToolTip.Tip="{Binding PlayerData.Steering,StringFormat={}{0:0.0}°}" Source="../../../../Assets/SW_Dark.png" Width="50" Height="50" RenderTransformOrigin="50%,50%">
+                <Image.RenderTransform >
+                    <RotateTransform Angle="{Binding PlayerData.Steering}" />
+                </Image.RenderTransform>            
+            </Image>
+            <Grid Grid.Row="1" Grid.Column="1" Height="60" ColumnDefinitions="Auto Auto Auto" Margin="20,5,5,5">
+                <Border BorderThickness="1" BorderBrush="Gray" Margin="4" ToolTip.Tip="{Binding PlayerData.BrakePedal,StringFormat={}{0:P0}}">
+                    <Rectangle Width="10" VerticalAlignment="Bottom" Height="{Binding PlayerData.BrakeBarHeight}" StrokeThickness="0" Fill="Firebrick"></Rectangle>
+                </Border>
+                <Border Grid.Column="1" BorderThickness="1" BorderBrush="Gray" Margin="4" ToolTip.Tip="{Binding PlayerData.GasPedal,StringFormat={}{0:P0}}">
+                    <Rectangle Width="10" VerticalAlignment="Bottom" Height="{Binding PlayerData.GasBarHeight}" StrokeThickness="0" Fill="ForestGreen"></Rectangle>
+                </Border>
+            </Grid>
+            <TextBlock Classes="Muted" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="{Binding PlayerData.Gear}"/>
+            <TextBlock Classes="Muted" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" Text="{Binding PlayerData.Rpm,StringFormat={}{0:0} RPM}"/>
+        </Grid>
+    </shadui:Card>
+</UserControl>

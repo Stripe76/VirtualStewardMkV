@@ -24,6 +24,7 @@
             <ItemsControl ItemsSource="{Binding Timelines.Timelines}"/>
             <ItemsControl ItemsSource="{Binding Headers}"/>
             <ContentControl Content="{Binding Panels.ActiveItem}"/>
+            <ContentControl Content="{Binding PlayersData}" HorizontalAlignment="Left"/>
         </StackPanel>
         
         <ScrollViewer Grid.Row="1" Grid.Column="0">

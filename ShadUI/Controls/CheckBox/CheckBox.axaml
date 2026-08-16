@@ -19,7 +19,7 @@
         <Setter Property="CornerRadius" Value="{DynamicResource SmCornerRadius}" />
         <Setter Property="Padding" Value="4,0,0,0" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="TextBlock.FontSize" Value="14" />
+        <Setter Property="TextBlock.FontSize" Value="12" />
         <Setter Property="TextBlock.FontWeight" Value="Medium" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Template">
@@ -122,6 +122,9 @@
             <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Opacity" Value="0.5" />
             </Style>
+        </Style>
+        <Style Selector="^.Muted">
+            <Setter Property="Foreground" Value="{DynamicResource MutedColor}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

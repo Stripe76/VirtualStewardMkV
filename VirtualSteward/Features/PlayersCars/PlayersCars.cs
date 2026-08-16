@@ -28,16 +28,16 @@ public partial class PlayersCars : StateFeature
         map.AddLayer( _carsLayer = new VMPlayersCarsLayer( _players ) );
     }
 
-    public override Feature AddDataTemplates(DataTemplates templates)
+    public override Feature AddDataTemplates( DataTemplates templates )
     {
-        templates.Add(new FuncDataTemplate<VMPlayersCarsLayer>((_, _) => new Controls.PlayersCars( )));
+        templates.Add( new FuncDataTemplate<VMPlayersCarsLayer>( ( _,_ ) => new Controls.PlayersCars( ) ) );
 
         return this;
     }
 
     public override void OnMapChange( VMMap map )
     {
-        UpdatePlayersCars();
+        UpdatePlayersCars( );
     }
     public override void OnTimelineChange( VMTimeline timeline,StateFeature.TimelineChangeType type )
     {
@@ -49,14 +49,14 @@ public partial class PlayersCars : StateFeature
 
     private void UpdatePlayersCars( )
     {
-        foreach (var player in _players)
+        foreach( var player in _players )
         {
-            VMCarPosition? pos = player.Datasource.GetPositionAndRotation(_timeline.CurrentFrame);
-            if (pos != null)
+            VMCarPosition? pos = player.Datasource.GetPositionAndRotation( _timeline.CurrentFrame );
+            if( pos != null )
             {
                 //player.CarImage ??= new VMMapImage( _filesManager.GetCarImage( player.PlayerInfo.CarInfo.CarID,player.PlayerInfo.CarInfo.SkinID,player.LineStyle.Color ) );
-                player.CarImage.PointerPressed ??= PlayerSelectedCommand; 
-                
+                player.CarImage.PointerPressed ??= PlayerSelectedCommand;
+
                 player.CarImage.Position = _map.TrackToCanvas( pos.Position.X,pos.Position.Y );
                 player.CarImage.Scale = _map.Zoom;
                 player.CarImage.Rotation = Mathematics.Degrees( pos.Rotation.X );

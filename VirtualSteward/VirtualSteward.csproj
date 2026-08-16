@@ -93,5 +93,11 @@
       <AvaloniaResource Include="Assets\ADLarge.png" />
       <None Remove="Assets\error.mp3" />
       <None Remove="Assets\error2.mp3" />
+      <None Remove="Assets\SW.jpg" />
+      <AvaloniaResource Include="Assets\SW.jpg" />
+      <None Remove="Assets\SW.png" />
+      <AvaloniaResource Include="Assets\SW.png" />
+      <None Remove="Assets\SW_Dark.png" />
+      <AvaloniaResource Include="Assets\SW_Dark.png" />
     </ItemGroup>
 </Project>

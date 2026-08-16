@@ -11,6 +11,7 @@ using Framework.Bindables;
 using VirtualSteward.Datasources;
 using VirtualSteward.Datasources.ViewModels;
 using VirtualSteward.Features.CarSelection.ViewModels;
+using VirtualSteward.Features.PlayersData.ViewModels;
 using VirtualSteward.Features.TrackMap.ViewModels;
 
 namespace VirtualSteward.Features.PlayersList.ViewModels;
@@ -45,6 +46,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   public CarDatasource Datasource { get; }
 
   public VMPlayerInfo PlayerInfo { get; }
+  public VMPlayerData PlayerData { get; }
 
   public VMMapImage CarImage { get; }
   public VMMapLineStyle LineStyle { get; }
@@ -67,6 +69,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   {
     _playerID = playerID;
 
+    PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( copyPlayer.PlayerInfo );
     Datasource = datasource;
     
@@ -84,6 +87,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   {
     _playerID = idPlayer;
 
+    PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( replayCar,carInfo,skinInfo );
     Datasource = new ReplayFileDatasource( replayCar,replayTail );
 
@@ -103,6 +107,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   {
     _playerID = playerID;
     
+    PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( playerName,playerNation,playerTeam,carID,skinID );
 
     //_lineColor = LineColors[((PlayerID < 0) ? 0 : PlayerID) % LineColors.Count];
@@ -112,6 +117,16 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
     CreateCommands( ShowCommand.All );
   }
 
+  public VMPlayerLap? GetLap( uint frame )
+  {
+    foreach( var lap in Laps )
+    {
+      if( lap.StartFrame <= frame && lap.EndFrame >= frame )
+        return lap;
+    }
+    return null;
+  }
+  
   public PointCollection GetLineSegment(uint start, uint end, int maxLength = 24000)
   {
     PointCollection points = [];

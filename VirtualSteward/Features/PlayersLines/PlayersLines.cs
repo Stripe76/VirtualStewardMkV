@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia.Controls.Templates;
-
+using Framework.UI;
 using VirtualSteward.Classes;
 using VirtualSteward.Features.TrackMap.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 using VirtualSteward.Features.Timelines.ViewModels;
+using VirtualSteward.Features.PlayersLines.Configurations;
 
 namespace VirtualSteward.Features.PlayersLines;
 
@@ -15,6 +16,8 @@ public class PlayersLines : StateFeature
     private readonly VMMapLineList _lines  = [];
     private readonly VMMapLinesLayer _linesLayer; 
     private readonly ObservableCollection<VMPlayer> _players;
+    
+    public PlayersLinesOptions Options { get; }
 
     public PlayersLines( State state,DataTemplates? templates,VMMap map,VMTimeline timeline,VMPlayerList players ) : base( state,templates,null,timeline )
     {
@@ -25,6 +28,22 @@ public class PlayersLines : StateFeature
         UpdateLines( );
 
         map.Layers.Add( _linesLayer = new VMMapLinesLayer( _lines ) );
+
+        Options = new PlayersLinesOptions( _linesLayer );
+        Options.LinesVisible.Value = true;
+    }
+
+    public override Feature AddDataTemplates( DataTemplates templates )
+    {
+        templates.Add( new FuncDataTemplate<PlayersLinesOptions>( ( _,_ ) => new Framework.UI.Panels.BaseConfiguration( ) ) );
+
+        return this;
+    }
+    public override Feature AddFooter( UIBaseList pages,string? headerTitle = null )
+    {
+        pages.Add( Options );
+        
+        return this;
     }
 
     public override void OnTimelineChange( VMTimeline timeline,TimelineChangeType type )

@@ -14,10 +14,10 @@ public partial class Player : UserControl
     
     private void Player_PointerPressed(object sender, PointerPressedEventArgs e)
     {
-        // Event handling logic goes here
         if( DataContext is not null and VMPlayer player )
         {
             var point = e.GetCurrentPoint( sender as Control );
+            /*
             if( point.Properties.IsRightButtonPressed )
             {
                 if( (e.KeyModifiers & KeyModifiers.Control) != 0 )
@@ -25,7 +25,9 @@ public partial class Player : UserControl
                 else
                     player.IsActive = !player.IsActive;
             }
-            else if( point.Properties.IsLeftButtonPressed )
+            else
+            */
+            if( point.Properties.IsLeftButtonPressed )
                 player.IsSelected = !player.IsSelected;
             e.Handled = true;
         }
