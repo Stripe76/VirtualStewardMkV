@@ -13,19 +13,18 @@
     <shadui:Card Classes.Accent="{Binding IsActive}" Classes="PlayerInfo" PointerPressed="Player_PointerPressed"> 
         <Grid Margin="2" Width="130" RowDefinitions="Auto * Auto" ColumnDefinitions="Auto *">
             <Ellipse Grid.Column="0" Classes="PlayerInfo" HorizontalAlignment="Left" Fill="{Binding LineStyle.Color}"/>
-            <TextBlock Classes="Muted" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,0,0" Text="{Binding PlayerInfo.PlayerName}"/>
+            <TextBlock Classes="Muted" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,0,0,0" Width="110" Text="{Binding PlayerInfo.PlayerName}"/>
             <Image Grid.Row="1" Grid.Column="0" ToolTip.Tip="{Binding PlayerData.Steering,StringFormat={}{0:0.0}°}" Source="../../../../Assets/SW_Dark.png" Width="50" Height="50" RenderTransformOrigin="50%,50%">
                 <Image.RenderTransform >
                     <RotateTransform Angle="{Binding PlayerData.Steering}" />
                 </Image.RenderTransform>            
             </Image>
             <Grid Grid.Row="1" Grid.Column="1" Height="60" ColumnDefinitions="Auto Auto Auto" Margin="20,5,5,5">
-                <Border BorderThickness="1" BorderBrush="Gray" Margin="4" ToolTip.Tip="{Binding PlayerData.BrakePedal,StringFormat={}{0:P0}}">
-                    <Rectangle Width="10" VerticalAlignment="Bottom" Height="{Binding PlayerData.BrakeBarHeight}" StrokeThickness="0" Fill="Firebrick"></Rectangle>
-                </Border>
-                <Border Grid.Column="1" BorderThickness="1" BorderBrush="Gray" Margin="4" ToolTip.Tip="{Binding PlayerData.GasPedal,StringFormat={}{0:P0}}">
-                    <Rectangle Width="10" VerticalAlignment="Bottom" Height="{Binding PlayerData.GasBarHeight}" StrokeThickness="0" Fill="ForestGreen"></Rectangle>
-                </Border>
+                <Rectangle Grid.Column="0" Width="12" Height="50" Margin="4" VerticalAlignment="Bottom" StrokeThickness="0" Fill="#434343" ToolTip.Tip="{Binding PlayerData.BrakePedal,StringFormat={}{0:P0}}"/>
+                <Rectangle Grid.Column="0" Width="12" Height="{Binding PlayerData.BrakeBarHeight}" Margin="4" VerticalAlignment="Bottom" StrokeThickness="0" Fill="Firebrick" ToolTip.Tip="{Binding PlayerData.BrakePedal,StringFormat={}{0:P0}}"/>
+
+                <Rectangle Grid.Column="1" Width="12" Height="50" Margin="4" VerticalAlignment="Bottom" StrokeThickness="0" Fill="#434343" ToolTip.Tip="{Binding PlayerData.GasPedal,StringFormat={}{0:P0}}"/>
+                <Rectangle Grid.Column="1" Width="12" Height="{Binding PlayerData.GasBarHeight}" Margin="4" VerticalAlignment="Bottom" StrokeThickness="0" Fill="ForestGreen" ToolTip.Tip="{Binding PlayerData.GasPedal,StringFormat={}{0:P0}}"/>
             </Grid>
             <TextBlock Classes="Muted" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="{Binding PlayerData.Gear}"/>
             <TextBlock Classes="Muted" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" Text="{Binding PlayerData.Rpm,StringFormat={}{0:0} RPM}"/>

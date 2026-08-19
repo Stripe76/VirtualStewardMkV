@@ -47,6 +47,8 @@ public class Replays : StateFeature
     public PlayersData PlayersData { get; }
     public PlayersMessage PlayersMessage { get; }
 
+    public PlayersData PlayersDataMerge { get; }
+
     public UIBaseList Headers { get; } = [];
     public UIItemList Panels { get; } = new UIItemList( ) { MultiActiveEnabled = true };
     public UIBaseList Footers { get; } = [];
@@ -76,7 +78,7 @@ public class Replays : StateFeature
         _ = new PlayersCars( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
         _ = new PlayersFollow( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players );
 
-        PlayersData = (PlayersData) new PlayersData( state,templates,state.Players,Timelines.ReplayTimeline ).AddFooter( Footers );
+        PlayersData = (PlayersData) new PlayersData( state,templates,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers );
 
         AddLoadingPage( new PlayersLabels( state,templates,TrackMap.Map,Timelines.ReplayTimeline,state.Players ).AddFooter( Footers ) );
         AddLoadingPage( PlayersMessage = new PlayersMessage( state,templates ) );
@@ -89,7 +91,9 @@ public class Replays : StateFeature
         Checkpoints chekpoints = new Checkpoints( state,templates,filesManager,TrackMap.Map );
         Panels.Add( chekpoints );
         
-        LapsMerge = (LapsMerge)new LapsMerge( state,templates,filesManager,Timelines.Timelines,TrackMap,chekpoints ) { IsVisible = false }.AddCommands( LeftToolbar );
+        LapsMerge = (LapsMerge) new LapsMerge( state,templates,filesManager,Timelines.Timelines,TrackMap,chekpoints ) { IsVisible = false }.AddCommands( LeftToolbar );
+        PlayersDataMerge = new PlayersData( state,null,LapsMerge.Timeline,LapsMerge.MergedPlayers );
+        _ = new PlayersFollow( state,templates,TrackMap.Map,LapsMerge.Timeline,LapsMerge.MergedPlayers );
         
         _ = new TimelinesScrubs( state,templates,state.Players,TrackMap.Map,Timelines.ReplayTimeline );
 

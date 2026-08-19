@@ -32,6 +32,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   [ObservableProperty] private object? _header;
   [ObservableProperty] private bool _isEditingMode;
 
+  public int UniqueID { get; init; }
   public int PlayerID => _playerID;
 
   public bool IsNoLapPlayer => Laps.Count == 0 || (Laps.Count == 1 && Laps[0].LapTime == 0);
@@ -67,7 +68,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
 
   public VMPlayer( int playerID,VMPlayer copyPlayer,CarDatasource datasource,VMMapLabelStyle labelStyle,VMMapLineStyle lineStyle,VMMapImage carImage,ShowCommand commands = ShowCommand.All )
   {
-    _playerID = playerID;
+    _playerID = UniqueID = playerID;
 
     PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( copyPlayer.PlayerInfo );
@@ -85,7 +86,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   }
   public VMPlayer( int idPlayer,ReplayCar replayCar,ReplayTail replayTail,VMCarInfo carInfo,VMCarSkinInfo skinInfo,VMMapLabelStyle labelStyle,VMMapLineStyle lineStyle,VMMapImage carImage )
   {
-    _playerID = idPlayer;
+    _playerID = UniqueID = idPlayer;
 
     PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( replayCar,carInfo,skinInfo );
@@ -105,7 +106,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   }
   public VMPlayer( int playerID,string playerName,string playerNation,string playerTeam,string carID,string skinID,CarDatasource? datasource = null )
   {
-    _playerID = playerID;
+    _playerID = UniqueID = playerID;
     
     PlayerData = new VMPlayerData( );
     PlayerInfo = new VMPlayerInfo( playerName,playerNation,playerTeam,carID,skinID );

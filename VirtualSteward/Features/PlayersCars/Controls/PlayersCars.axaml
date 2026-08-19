@@ -13,20 +13,34 @@
     <Grid>
         <ItemsControl ItemsSource="{Binding Players}">
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><Canvas/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+    
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas RenderTransform="{Binding CarImage.Transforms}">
-                        <Image Source="{Binding CarImage.Image}" IsVisible="{Binding IsVisible}" Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300" PointerPressed="InputElement_OnPointerPressed" />
+                        <Image Source="{Binding CarImage.Image}"
+                               IsVisible="{Binding IsVisible}" 
+                               Canvas.Left="-75" Canvas.Top="-150" Width="150" Height="300"
+                               RenderOptions.BitmapInterpolationMode="HighQuality"
+                               PointerPressed="InputElement_OnPointerPressed" />
                     </Canvas>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+    
             <ItemsControl.Styles>
                 <Style Selector="ContentPresenter" x:DataType="vm1:VMPlayer">
-                    <Design.DataContext>
-                        <vm1:VMPlayer/>
-                    </Design.DataContext>
+                    <Design.DataContext><vm1:VMPlayer/></Design.DataContext>
+                    <Setter Property="UseLayoutRounding" Value="False"/>
                     <Setter Property="Canvas.Left" Value="{Binding CarImage.Position.X}"/>
                     <Setter Property="Canvas.Top" Value="{Binding CarImage.Position.Y}"/>
+
+                    <!--
+                    <Setter Property="Transitions">
+                        <Transitions>
+                            <DoubleTransition Property="(Canvas.Left)" Duration="0:0:0.15" Easing="LinearEasing"/>
+                            <DoubleTransition Property="(Canvas.Top)" Duration="0:0:0.15" Easing="LinearEasing"/>
+                        </Transitions>
+                    </Setter>
+                    -->
                 </Style>
             </ItemsControl.Styles>
         </ItemsControl>

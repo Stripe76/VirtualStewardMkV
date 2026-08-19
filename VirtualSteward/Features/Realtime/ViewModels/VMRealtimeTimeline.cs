@@ -45,7 +45,7 @@ public class VMRealtimeTimeline : VMRealtime
   {
     base.Stop( );
 
-    _timeline.CurrentFrame = _timeline.CurrentFrame;
+    _timeline.CurrentFrame = _frameOffset = _timeline.CurrentFrame;
   }
 
   public override void NextFrame( )

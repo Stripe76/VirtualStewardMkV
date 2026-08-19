@@ -13,6 +13,7 @@ namespace VirtualSteward.Features.PlayersLines;
 public class PlayersLines : StateFeature
 {
     private readonly VMMap _map;
+    private readonly VMTimeline _timeline;
     private readonly VMMapLineList _lines  = [];
     private readonly VMMapLinesLayer _linesLayer; 
     private readonly ObservableCollection<VMPlayer> _players;
@@ -22,6 +23,7 @@ public class PlayersLines : StateFeature
     public PlayersLines( State state,DataTemplates? templates,VMMap map,VMTimeline timeline,VMPlayerList players ) : base( state,templates,null,timeline )
     {
         _map = map;
+        _timeline = timeline;
         _players = players.SelectedItems;
         _players.CollectionChanged += SelectedPlayers_CollectionChanged;
 
@@ -29,7 +31,7 @@ public class PlayersLines : StateFeature
 
         map.Layers.Add( _linesLayer = new VMMapLinesLayer( _lines ) );
 
-        Options = new PlayersLinesOptions( _linesLayer );
+        Options = new PlayersLinesOptions( this );
         Options.LinesVisible.Value = true;
     }
 
@@ -49,7 +51,12 @@ public class PlayersLines : StateFeature
     public override void OnTimelineChange( VMTimeline timeline,TimelineChangeType type )
     {
         if( type == TimelineChangeType.IsActive )
-            _linesLayer.IsVisible = timeline.IsActive;
+            UpdateVisibility( );
+    }
+
+    public void UpdateVisibility( )
+    {
+        _linesLayer.IsVisible = _timeline.IsActive && Options.LinesVisible.Value;
     }
 
     private void UpdateLines()

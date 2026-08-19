@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Avalonia.Controls.ApplicationLifetimes;
@@ -152,20 +153,20 @@ public partial class Feature : UIItem
             return null;
 
         var window = desktop.MainWindow;
-        if (window is { StorageProvider.CanOpen: true })
+        if( window is { StorageProvider.CanOpen: true } )
         {
             //var directory = window.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder));
+            var topLevel = TopLevel.GetTopLevel( window );
 
-            var task = window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
+            if( topLevel != null )
             {
-                FileTypeFilter = [fileTypes],
-                //SuggestedStartLocation = directory
-            });
-            //return await task;
-
-            return task;
+                var task = topLevel.StorageProvider.OpenFilePickerAsync( new FilePickerOpenOptions( )
+                {
+                    FileTypeFilter = [fileTypes],
+                } );
+                return task;
+            }
         }
-
         return null;
     }
 }

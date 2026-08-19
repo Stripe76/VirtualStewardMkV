@@ -4,11 +4,11 @@ using VirtualSteward.Features.TrackMap.ViewModels;
 
 namespace VirtualSteward.Features.PlayersLines.Configurations;
 
-public class PlayersLinesOptions( VMMapLinesLayer linesLayer ) : Configuration( "PLAYERS_LINES",null,115 )
+public class PlayersLinesOptions( PlayersLines playersLines ) : Configuration( "PLAYERS_LINES",null,115 )
 {
     public BaseBool LinesVisible = new BaseBool( "LINES_VISIBLE","Players lines" )
     {
-        ValueChanged = ( value ) => linesLayer.IsVisible = value,
+        ValueChanged = ( value ) => playersLines.UpdateVisibility( ),
         MinWidth = 90
     };
 }

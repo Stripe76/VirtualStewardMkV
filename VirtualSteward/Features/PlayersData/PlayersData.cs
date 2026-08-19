@@ -12,14 +12,18 @@ namespace VirtualSteward.Features.PlayersData;
 
 public partial class PlayersData : StateFeature
 {
+    private readonly VMTimeline _timeline;
+
     [ObservableProperty] private bool _lapAutoSelect = false;
 
     public ObservableCollection<VMPlayer> Players { get; }
 
     public PlayersDataOptions Options { get; }
 
-    public PlayersData( State state,DataTemplates templates,VMPlayerList players,VMTimeline timeline ) : base( state,templates,null,timeline )
+    public PlayersData( State state,DataTemplates? templates,VMTimeline timeline,VMPlayerList players ) : base( state,templates,null,timeline )
     {
+        _timeline = timeline;
+            
         Players = players.SelectedItems;
 
         players.SelectedItemChanged += ( sender,player ) => UpdateVisibility( );
@@ -27,7 +31,7 @@ public partial class PlayersData : StateFeature
         Options = new PlayersDataOptions( this );
         Options.DataVisible.Value = true;
 
-        IsVisible = false;
+        UpdateVisibility( );
     }
 
     public override Feature AddDataTemplates( DataTemplates templates )
@@ -48,11 +52,13 @@ public partial class PlayersData : StateFeature
     {
         if( type == TimelineChangeType.CurrentFrame )
             UpdatePlayersData( timeline );
+        else if( type == TimelineChangeType.IsActive )
+            UpdateVisibility( );
     }
 
     public void UpdateVisibility( )
     {
-        IsVisible = Players.Count > 0 && Options.DataVisible.Value;
+        IsVisible = Players.Count > 0 && _timeline.IsActive && Options.DataVisible.Value;
     }
     
     private void UpdatePlayersData( VMTimeline timeline )

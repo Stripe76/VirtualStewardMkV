@@ -24,6 +24,7 @@ public partial class LapsMerge : StateFeature
     private readonly VMTimeline _timeline;
     private readonly VMTimelineList _timelines;
     private readonly VMPlayerList _mergedPlayers = new VMPlayerList( true,false );
+    private readonly List<VMPlayer> _copyPlayers = [];
     private readonly Checkpoints.Checkpoints _checkpoints;
 
     private bool _syncWithPlayers = true;
@@ -45,6 +46,7 @@ public partial class LapsMerge : StateFeature
         }
     }
 
+    public VMTimeline Timeline => _timeline;
     public VMPlayerList MergedPlayers => _mergedPlayers;
 
     public LapsMerge( State state,DataTemplates templates,FilesManager filesManager,VMTimelineList timelines,TrackMap.TrackMap map,Checkpoints.Checkpoints checkpoints ) :
@@ -73,7 +75,6 @@ public partial class LapsMerge : StateFeature
 
         return this;
     }
-
     public override Feature AddCommands( UIItemList commands )
     {
         commands.Add( new ToggleCommand( )
@@ -91,13 +92,22 @@ public partial class LapsMerge : StateFeature
         IsVisible = false;
         EnableCheckpoints = false;
         Chekpoints.EditingMode = false;
+        
+        _copyPlayers.Clear(  );
+        _mergedPlayers.Clear( );
     }
 
     #region Merge manager
     private void SyncSelectedPlayers( )
     {
         uint frame = _timeline.CurrentFrame;
-        
+
+        foreach( var player in _mergedPlayers )
+        {
+            VMPlayer? found = _copyPlayers.Find( found => found.UniqueID == player.UniqueID );
+            if( found == null )
+                _copyPlayers.Add( player );
+        }
         _mergedPlayers.Clear( );
 
         foreach( var player in _state.Players.SelectedItems )
@@ -110,24 +120,36 @@ public partial class LapsMerge : StateFeature
         _timeline.CurrentFrame = frame;
     }
 
-    private void AddPlayerLaps( VMPlayer player,bool updateTimeline )
+    private int AddPlayerLaps( VMPlayer player,int playerID,bool updateTimeline )
     {
         foreach( var lap in player.Laps.SelectedItems )
         {
-            VMPlayer? newPlayer = CreateMergedLapCar( player,lap,player.PlayerID );
-            if( newPlayer != null )
-                _mergedPlayers.Add( newPlayer );
+            int uniqueID = (player.PlayerID + 1) * 1000 + (int)lap.LapNumber;
+            VMPlayer? found = _copyPlayers.Find( found => found.UniqueID == uniqueID );
+            if( found != null )
+            {
+                playerID++;
+                
+                _mergedPlayers.Add( found );
+            }
+            else
+            {
+                VMPlayer? newPlayer = CreateMergedLapCar( player,lap,playerID++ );
+                if( newPlayer != null )
+                    _mergedPlayers.Add( newPlayer );
+            }
         }
+        return playerID;
     }
     private void AddSelectedPlayersLaps( VMPlayerList players,bool updateTimeline = true )
     {
+        int playerID = 0;
         foreach( var player in players.SelectedItems )
         {
-            AddPlayerLaps( player,false );
+            playerID = AddPlayerLaps( player,playerID,false );
         }
         if( EnableCheckpoints )
             AddCheckpoints( );
-        
         if( updateTimeline )
             UpdateTimeline( );
         IsVisible = true;
@@ -203,11 +225,14 @@ public partial class LapsMerge : StateFeature
             playerID,
             copyPlayer,
             datasource,
-            _state.GetPlayerLabelStyle(  ),
+            _state.GetPlayerLabelStyle( ),
             _state.GetPlayerLineStyle( playerID ),
             _state.GetPlayerCarImage( playerID,copyPlayer.PlayerInfo.CarInfo.CarID,copyPlayer.PlayerInfo.CarSkinInfo.SkinID ),
             VMPlayer.ShowCommand.Edit /*| VMPlayer.ShowCommand.Delete*/
-        );
+        )
+        {
+            UniqueID = (copyPlayer.PlayerID+1) * 1000 + (int)lap.LapNumber
+        };
         newPlayer.PlayerInfo.PlayerName = copyPlayer.PlayerInfo.PlayerName + " - Lap " + lap.LapName;
         
         uint start = lap.StartFrame;
@@ -271,7 +296,7 @@ public partial class LapsMerge : StateFeature
     [RelayCommand]
     private void AddPlayerLaps( VMPlayer player )
     {
-        AddPlayerLaps( player,true );
+        AddPlayerLaps( player,player.PlayerID,true );
     }
     [RelayCommand]
     private void SwitchCheckpointsEditing( )
@@ -339,7 +364,7 @@ public partial class LapsMerge : StateFeature
     {
         if( _syncWithPlayers && IsVisible )
         {
-            if( e.Action == NotifyCollectionChangedAction.Add  || e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset  )
+            if( e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset )
             {
                 SyncSelectedPlayers( );
             }
