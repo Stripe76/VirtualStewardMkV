@@ -80,7 +80,17 @@ public class ACReplayExport( ) : BaseExport( "ACReplay","As AC replay file" )
   }
   private static ReplayCarLap[] GetReplayCarLaps( VMPlayer player )
   {
-    return player.Datasource.GetCarLaps( );
+    var carLaps = new ReplayCarLap[player.Laps.Count];
+    for( int i = 0; i < player.Laps.Count; i++ )
+    {
+      if( !player.Laps[i].Calculated )
+        carLaps[i] = new ReplayCarLap( player.Laps[i].LapTime );
+      else
+        carLaps[i] = new ReplayCarLap( 0 );
+    }
+    return carLaps;
+
+    //return player.Datasource.GetCarLaps( );
   }
   private static ReplayCarData[] GetReplayCarData( CarDatasource datasource,uint startFrame,uint endFrame )
   {

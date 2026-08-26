@@ -1,12 +1,9 @@
 ﻿using System.Collections.Specialized;
-using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Framework.UI;
 using Framework.Bindables;
 
-using VirtualSteward.Datasources.ViewModels;
-using VirtualSteward.Features.TrackMap.ViewModels;
 using VirtualSteward.Features.PlayersList.ViewModels;
 
 namespace VirtualSteward.Features.Timelines.ViewModels;

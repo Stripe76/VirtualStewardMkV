@@ -83,9 +83,12 @@ public partial class PlayersData : StateFeature
             if( LapAutoSelect && player.IsSelected )
             {
                 VMPlayerLap? lap = player.GetLap( timeline.CurrentFrame );
-                player.Laps.MultiSelectedEnabled = false;
-                player.Laps.SelectedItem = lap; 
-                player.Laps.MultiSelectedEnabled = true;
+                if( lap != null )
+                {
+                    player.Laps.MultiSelectedEnabled = false;
+                    player.Laps.SelectedItem = lap;
+                    player.Laps.MultiSelectedEnabled = true;
+                }
             }
         }
     }

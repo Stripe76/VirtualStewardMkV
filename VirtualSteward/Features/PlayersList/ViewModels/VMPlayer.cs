@@ -226,7 +226,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
   {
     VMPlayerLapList lapsList = new( true );
 
-    uint currentLap = (replayCar.Laps.Length == 0) ? (uint)1 : 0;
+    uint currentLap = (replayCar.Laps.Length == 0 || replayCar.Laps[0].LapTime == 0) ? (uint)1 : 0;
     uint frames = (uint)Datasource.Length;
     for( uint i = 1; i < frames; i++ )
     {
@@ -245,7 +245,7 @@ public partial class VMPlayer : UIItem,IComparable<VMPlayer>
           VMPlayerLap lastLap = lapsList[^1];
           lastLap.EndFrame = i - 1;
 
-          if( replayCar.Laps.Length >= lapsList.Count )
+          if( replayCar.Laps.Length >= lapsList.Count && replayCar.Laps[lapsList.Count - 1].LapTime > 0 )
           {
             lastLap.Calculated = false;
             lastLap.LapTime = replayCar.Laps[lapsList.Count - 1].LapTime;
